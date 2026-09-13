@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "genealadin"
+version = "0.1.0"
+description = "Intelligence Platform - Web scraping and data analysis service"
+authors = ["robebe4611-lang <your-email@example.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.black]
+line-length = 100
+target-version = ['py311']
+
+[tool.isort]
+profile = "black"
+line_length = 100
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q --strict-markers"
+testpaths = ["tests"]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
