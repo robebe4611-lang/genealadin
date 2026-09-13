@@ -87,6 +87,34 @@ genealadin/
 └── .gitignore
 ```
 
+## ⚡ Quick Demo (proof of concept)
+
+A working slice of the platform is implemented: register/login with JWT auth,
+a real RSS-feed scraper, and keyword search over the scraped results — all
+backed by SQLite so there's nothing else to install.
+
+```bash
+cd backend
+python -m venv venv && source venv/bin/activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
+
+Open http://localhost:8000/docs and try it:
+
+1. `POST /api/v1/auth/register` — create a user
+2. `POST /api/v1/auth/login` — get a JWT (use the "Authorize" button in the docs UI)
+3. `POST /api/v1/scraping/jobs` — e.g. `{"source_name": "Demo Wire", "source_url": "<any public RSS/Atom feed URL>", "source_type": "news"}`
+4. `GET /api/v1/scraping/results/{job_id}` — see what was scraped
+5. `POST /api/v1/search` — e.g. `{"query": "trade"}` to search stored articles
+
+Run the test suite (covers this whole flow): `pytest` from `backend/`.
+
+This scrapes RSS/Atom feeds specifically (public syndication endpoints, not
+arbitrary page scraping), and jobs run synchronously for simplicity. The
+production design (Scrapy/Selenium scrapers, Celery task queue, Postgres,
+multi-source aggregation, reports) described below is the next phase.
+
 ## 🔧 Installation
 
 ```bash

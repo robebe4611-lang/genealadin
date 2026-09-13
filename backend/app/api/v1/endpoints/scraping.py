@@ -1,0 +1,77 @@
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
+
+from app.api.deps import get_current_user
+from app.db.session import get_db
+from app.models.article import Article
+from app.models.data_source import DataSource
+from app.models.scraping_job import ScrapingJob
+from app.models.user import User
+from app.schemas.article import ArticleRead
+from app.schemas.scraping import ScrapingJobCreate, ScrapingJobRead
+from app.scrapers.rss_scraper import fetch_feed
+from datetime import datetime, timezone
+
+router = APIRouter()
+
+
+@router.post("/jobs", response_model=ScrapingJobRead, status_code=status.HTTP_201_CREATED)
+def create_scraping_job(
+    job_in: ScrapingJobCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> ScrapingJob:
+    source = DataSource(
+        name=job_in.source_name, url=str(job_in.source_url), source_type=job_in.source_type
+    )
+    db.add(source)
+    db.flush()
+
+    job = ScrapingJob(data_source_id=source.id, created_by=current_user.id, status="running")
+    db.add(job)
+    db.flush()
+
+    # Synchronous for this demo; a real deployment would hand this to Celery.
+    try:
+        items = fetch_feed(str(job_in.source_url))
+        for item in items:
+            db.add(
+                Article(
+                    scraping_job_id=job.id,
+                    data_source_id=source.id,
+                    title=item.title,
+                    link=item.link,
+                    summary=item.summary,
+                    published_at=item.published_at,
+                )
+            )
+        job.status = "completed"
+        job.result_count = len(items)
+    except Exception as exc:  # noqa: BLE001 - surfaced to the caller via job.error_message
+        job.status = "failed"
+        job.error_message = str(exc)[:1024]
+
+    job.completed_at = datetime.now(timezone.utc)
+    db.commit()
+    db.refresh(job)
+    return job
+
+
+@router.get("/jobs/{job_id}", response_model=ScrapingJobRead)
+def get_scraping_job(
+    job_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)
+) -> ScrapingJob:
+    job = db.query(ScrapingJob).filter(ScrapingJob.id == job_id).first()
+    if not job:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Job not found")
+    return job
+
+
+@router.get("/results/{job_id}", response_model=list[ArticleRead])
+def get_scraping_results(
+    job_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)
+) -> list[Article]:
+    job = db.query(ScrapingJob).filter(ScrapingJob.id == job_id).first()
+    if not job:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Job not found")
+    return db.query(Article).filter(Article.scraping_job_id == job_id).all()
