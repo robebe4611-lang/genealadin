@@ -1,27 +1,16 @@
 """Fetches public RSS/Atom feeds. Feeds are explicitly published for syndication,
 so this avoids the ToS and anti-bot concerns of scraping arbitrary pages."""
 
-from dataclasses import dataclass
 from xml.etree import ElementTree
 
 import requests
 
 from app.core.config import settings
+from app.scrapers.base import ScrapedItem as FeedItem
 
 
-@dataclass
-class FeedItem:
-    title: str
-    link: str
-    summary: str | None
-    published_at: str | None
-
-
-def fetch_feed(url: str) -> list[FeedItem]:
-    response = requests.get(url, timeout=settings.SCRAPE_TIMEOUT, headers={"User-Agent": "genealadin-demo/0.1"})
-    response.raise_for_status()
-
-    root = ElementTree.fromstring(response.content)
+def parse_feed(content: bytes) -> list[FeedItem]:
+    root = ElementTree.fromstring(content)
     items: list[FeedItem] = []
 
     # RSS 2.0: rss/channel/item
@@ -50,6 +39,12 @@ def fetch_feed(url: str) -> list[FeedItem]:
             )
 
     return items
+
+
+def fetch_feed(url: str) -> list[FeedItem]:
+    response = requests.get(url, timeout=settings.SCRAPE_TIMEOUT, headers={"User-Agent": "genealadin-demo/0.1"})
+    response.raise_for_status()
+    return parse_feed(response.content)
 
 
 def _text(element: ElementTree.Element, tag: str, ns: dict | None = None) -> str | None:

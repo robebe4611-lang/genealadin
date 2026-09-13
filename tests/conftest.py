@@ -12,7 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "backend"))
 from app.db.base import Base  # noqa: E402
 from app.db.session import get_db  # noqa: E402
 from app.main import app  # noqa: E402
-from app.models import article, data_source, scraping_job, user  # noqa: E402,F401
+from app.models import article, data_source, report, scraping_job, user  # noqa: E402,F401
 
 TEST_DATABASE_URL = "sqlite:///:memory:"
 engine = create_engine(

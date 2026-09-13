@@ -90,8 +90,10 @@ genealadin/
 ## ⚡ Quick Demo (proof of concept)
 
 A working slice of the platform is implemented: register/login with JWT auth,
-a real RSS-feed scraper, and keyword search over the scraped results — all
-backed by SQLite so there's nothing else to install.
+two real scrapers (RSS/Atom feeds, and a generic HTML scraper for pages
+without a feed), keyword search over scraped results, and a reports endpoint
+that aggregates matches by source. Backed by SQLite by default so there's
+nothing else to install.
 
 ```bash
 cd backend
@@ -104,16 +106,32 @@ Open http://localhost:8000/docs and try it:
 
 1. `POST /api/v1/auth/register` — create a user
 2. `POST /api/v1/auth/login` — get a JWT (use the "Authorize" button in the docs UI)
-3. `POST /api/v1/scraping/jobs` — e.g. `{"source_name": "Demo Wire", "source_url": "<any public RSS/Atom feed URL>", "source_type": "news"}`
+3. `POST /api/v1/scraping/jobs`:
+   - RSS/Atom: `{"source_name": "Demo Wire", "source_url": "<feed URL>", "source_type": "news"}`
+   - HTML page (no feed): `{"source_name": "Demo Site", "source_url": "<page URL>", "source_type": "legal", "scraper_type": "html", "selector": ".headline a"}` — `selector` is any CSS selector pointing at the linked items
 4. `GET /api/v1/scraping/results/{job_id}` — see what was scraped
 5. `POST /api/v1/search` — e.g. `{"query": "trade"}` to search stored articles
+6. `POST /api/v1/reports` — e.g. `{"query": "trade"}` (optionally add `"source_type": "news"`) to get a saved report with a source breakdown and the matching articles
+7. `GET /api/v1/reports/{report_id}` — re-fetch a saved report
 
-Run the test suite (covers this whole flow): `pytest` from `backend/`.
+Run the test suite (covers all of this): `pytest` from `backend/`.
 
-This scrapes RSS/Atom feeds specifically (public syndication endpoints, not
-arbitrary page scraping), and jobs run synchronously for simplicity. The
-production design (Scrapy/Selenium scrapers, Celery task queue, Postgres,
-multi-source aggregation, reports) described below is the next phase.
+### Run with Docker (one command, real Postgres)
+
+```bash
+docker compose up --build
+```
+
+This builds the API image and starts it alongside a Postgres container —
+no local Python/Postgres setup needed. The API is on http://localhost:8000/docs.
+Data persists in a Docker volume across restarts; `docker compose down -v` wipes it.
+
+The RSS scraper works with any public feed; the HTML scraper works with any
+static page where a CSS selector can target the linked items (JS-heavy pages
+still need the planned Selenium scraper below). Jobs run synchronously for
+simplicity. The full production design (Scrapy/Selenium scrapers, Celery
+task queue, Alembic migrations, multi-source aggregation) described below is
+the next phase.
 
 ## 🔧 Installation
 

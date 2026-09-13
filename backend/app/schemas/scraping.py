@@ -7,6 +7,8 @@ class ScrapingJobCreate(BaseModel):
     source_name: str
     source_url: HttpUrl
     source_type: str = "news"
+    scraper_type: str = "rss"  # "rss" or "html"
+    selector: str | None = None  # CSS selector, required when scraper_type is "html"
 
 
 class ScrapingJobRead(BaseModel):
