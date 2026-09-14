@@ -52,7 +52,8 @@ def test_scraping_job_and_search(client):
     assert response.status_code == 200
     assert len(response.json()) == 2
 
-    response = client.post("/api/v1/search", json={"query": "trade"}, headers=headers)
+    with patch("app.api.v1.endpoints.search.live_search_google_news"):
+        response = client.post("/api/v1/search", json={"query": "trade"}, headers=headers)
     assert response.status_code == 200
     results = response.json()
     assert len(results) == 1

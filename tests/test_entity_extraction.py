@@ -65,7 +65,8 @@ def test_person_search_links_coincident_emails(client):
             headers=headers,
         )
 
-    response = client.post("/api/v1/search/person", json={"name": "John Smith"}, headers=headers)
+    with patch("app.api.v1.endpoints.search.live_search_google_news"):
+        response = client.post("/api/v1/search/person", json={"name": "John Smith"}, headers=headers)
     assert response.status_code == 200
     body = response.json()
     assert len(body["matched_articles"]) == 1

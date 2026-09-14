@@ -7,6 +7,7 @@ from app.db.session import get_db
 from app.models.article import Article
 from app.models.user import User
 from app.schemas.article import ArticleRead, PersonSearchRequest, PersonSearchResult, SearchRequest
+from app.scrapers.live_search import live_search_google_news
 
 router = APIRouter()
 
@@ -17,6 +18,8 @@ def search_articles(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> list[Article]:
+    live_search_google_news(db, search_in.query, current_user.id)
+
     pattern = f"%{search_in.query}%"
     return (
         db.query(Article)
@@ -36,6 +39,8 @@ def search_person(
     """Finds articles mentioning a name and surfaces emails that co-occur with it in
     the same scraped text - a lead to review, not a confirmed identity match. Email
     co-occurrence only works on articles scraped with extract_entities=True."""
+    live_search_google_news(db, search_in.name, current_user.id)
+
     pattern = f"%{search_in.name}%"
     articles = (
         db.query(Article)

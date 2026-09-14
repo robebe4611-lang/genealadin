@@ -119,10 +119,10 @@ Open http://localhost:8000/docs and try it:
    - RSS/Atom: `{"source_name": "Demo Wire", "source_url": "<feed URL>", "source_type": "news"}`
    - HTML page (no feed): `{"source_name": "Demo Site", "source_url": "<page URL>", "source_type": "legal", "scraper_type": "html", "selector": ".headline a"}` — `selector` is any CSS selector pointing at the linked items
 4. `GET /api/v1/scraping/results/{job_id}` — see what was scraped
-5. `POST /api/v1/search` — e.g. `{"query": "trade"}` to search stored articles
+5. `POST /api/v1/search` — e.g. `{"query": "trade"}`. This also live-queries Google News' own search feed for the term, saves whatever it finds, and includes it in the results — so search isn't limited to whatever was manually pre-scraped. Falls back to local-only search if the live fetch fails.
 6. `POST /api/v1/reports` — e.g. `{"query": "trade"}` (optionally add `"source_type": "news"`) to get a saved report with a source breakdown and the matching articles
 7. `GET /api/v1/reports/{report_id}` — re-fetch a saved report
-8. `POST /api/v1/search/person` — e.g. `{"name": "John Smith"}` to find articles mentioning that name and surface any email addresses that co-occur with it in the same scraped text. This is a co-occurrence lead for an investigator to verify, not a confirmed identity match — labelled as such in the response.
+8. `POST /api/v1/search/person` — e.g. `{"name": "John Smith"}` — same live-search behavior as above, plus surfaces any email addresses that co-occur with the name in the same scraped text. This is a co-occurrence lead for an investigator to verify, not a confirmed identity match — labelled as such in the response.
 
 Run the test suite (covers all of this): `pytest` from `backend/`.
 
