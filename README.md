@@ -113,8 +113,18 @@ Open http://localhost:8000/docs and try it:
 5. `POST /api/v1/search` — e.g. `{"query": "trade"}` to search stored articles
 6. `POST /api/v1/reports` — e.g. `{"query": "trade"}` (optionally add `"source_type": "news"`) to get a saved report with a source breakdown and the matching articles
 7. `GET /api/v1/reports/{report_id}` — re-fetch a saved report
+8. `POST /api/v1/search/person` — e.g. `{"name": "John Smith"}` to find articles mentioning that name and surface any email addresses that co-occur with it in the same scraped text. This is a co-occurrence lead for an investigator to verify, not a confirmed identity match — labelled as such in the response.
 
 Run the test suite (covers all of this): `pytest` from `backend/`.
+
+### Optional: Claude-powered entity extraction and AI summaries
+
+Set `ANTHROPIC_API_KEY` (get one from [console.anthropic.com](https://console.anthropic.com) — note this is separate from a claude.ai chat subscription, which doesn't include API access) to unlock two things, both off by default so nothing calls the API — or spends money — unless you opt in per-request:
+
+- `POST /api/v1/scraping/jobs` with `"extract_entities": true` uses Claude to pull names/emails/usernames/organizations out of each scraped item (instead of nothing) — this is what powers `search/person`'s email linking.
+- `POST /api/v1/reports` with `"use_ai_summary": true` replaces the plain source-count breakdown with a short analyst-style summary of the matched articles.
+
+Without the key, both flags are silently no-ops (extraction fields stay empty, report summary falls back to the plain breakdown) — nothing breaks, nothing is charged.
 
 ### Run with Docker (one command, real Postgres)
 

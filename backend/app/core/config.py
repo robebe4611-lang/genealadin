@@ -22,6 +22,10 @@ class Settings(BaseSettings):
 
     SCRAPE_TIMEOUT: int = 30
 
+    # Optional: entity extraction and AI report summaries are skipped when unset.
+    ANTHROPIC_API_KEY: str | None = None
+    ANTHROPIC_MODEL: str = "claude-opus-5"
+
     @property
     def cors_origins(self) -> list[str]:
         return [origin.strip() for origin in self.ALLOWED_ORIGINS.split(",") if origin.strip()]

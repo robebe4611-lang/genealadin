@@ -9,6 +9,7 @@ class ScrapingJobCreate(BaseModel):
     source_type: str = "news"
     scraper_type: str = "rss"  # "rss" or "html"
     selector: str | None = None  # CSS selector, required when scraper_type is "html"
+    extract_entities: bool = False  # uses Claude; needs ANTHROPIC_API_KEY configured
 
 
 class ScrapingJobRead(BaseModel):

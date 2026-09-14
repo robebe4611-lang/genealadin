@@ -12,6 +12,7 @@ from app.models.report import Report
 from app.models.user import User
 from app.schemas.article import ArticleRead
 from app.schemas.report import ReportCreate, ReportDetail
+from app.llm.summarization import summarize_articles
 from datetime import datetime, timezone
 
 router = APIRouter()
@@ -47,6 +48,15 @@ def create_report(
     summary = f'{len(articles)} article(s) matched "{report_in.query}"'
     if breakdown_text:
         summary += f" — by source: {breakdown_text}"
+
+    if report_in.use_ai_summary:
+        ai_summary = summarize_articles(
+            report_in.query, [(a.title, a.summary) for a in articles]
+        )
+        if ai_summary:
+            summary = ai_summary
+        else:
+            summary += " (AI summary unavailable — check ANTHROPIC_API_KEY is configured)"
 
     report = Report(
         created_by=current_user.id,

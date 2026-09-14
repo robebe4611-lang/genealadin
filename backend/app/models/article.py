@@ -19,3 +19,8 @@ class Article(Base):
     scraped_at: Mapped[datetime] = mapped_column(
         DateTime, default=lambda: datetime.now(timezone.utc)
     )
+
+    # Optional, comma-separated: only populated when a scraping job requests
+    # extract_entities=True (needs ANTHROPIC_API_KEY configured).
+    extracted_names: Mapped[str | None] = mapped_column(Text, nullable=True)
+    extracted_emails: Mapped[str | None] = mapped_column(Text, nullable=True)

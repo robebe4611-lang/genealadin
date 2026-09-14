@@ -8,6 +8,7 @@ from app.schemas.article import ArticleRead
 class ReportCreate(BaseModel):
     query: str
     source_type: str | None = None
+    use_ai_summary: bool = False  # uses Claude; needs ANTHROPIC_API_KEY configured
 
 
 class ReportRead(BaseModel):

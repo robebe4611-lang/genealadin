@@ -9,6 +9,7 @@ from app.models.scraping_job import ScrapingJob
 from app.models.user import User
 from app.schemas.article import ArticleRead
 from app.schemas.scraping import ScrapingJobCreate, ScrapingJobRead
+from app.llm.entity_extraction import extract_entities
 from app.scrapers.html_scraper import fetch_html_items
 from app.scrapers.rss_scraper import fetch_feed
 from datetime import datetime, timezone
@@ -50,6 +51,13 @@ def create_scraping_job(
         else:
             items = fetch_feed(str(job_in.source_url))
         for item in items:
+            extracted_names = extracted_emails = None
+            if job_in.extract_entities:
+                entities = extract_entities(f"{item.title}\n{item.summary or ''}")
+                if entities:
+                    extracted_names = ", ".join(entities.names)
+                    extracted_emails = ", ".join(entities.emails)
+
             db.add(
                 Article(
                     scraping_job_id=job.id,
@@ -58,6 +66,8 @@ def create_scraping_job(
                     link=item.link,
                     summary=item.summary,
                     published_at=item.published_at,
+                    extracted_names=extracted_names,
+                    extracted_emails=extracted_emails,
                 )
             )
         job.status = "completed"
