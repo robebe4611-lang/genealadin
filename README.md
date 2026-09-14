@@ -102,6 +102,15 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
 
+### For a non-technical user: a plain Hebrew web UI
+
+Open **http://localhost:8000/** — a simple client-facing page (register, log in,
+search, add a source to track, run a person search, generate a report) with no
+technical jargon, JSON, or API concepts visible. This is what to hand a client;
+`/docs` below is for developers.
+
+### For developers: the interactive API docs
+
 Open http://localhost:8000/docs and try it:
 
 1. `POST /api/v1/auth/register` — create a user

@@ -48,6 +48,6 @@ def on_startup() -> None:
     Base.metadata.create_all(bind=engine)
 
 
-@app.get("/")
-def root() -> dict[str, str]:
-    return {"name": settings.PROJECT_NAME, "version": settings.PROJECT_VERSION, "docs": "/docs"}
+# The plain client-facing UI, served last so it only catches paths no API
+# route above already handled (e.g. "/", "/app.js").
+app.mount("/", StaticFiles(directory=Path(__file__).parent / "static" / "app", html=True), name="frontend")

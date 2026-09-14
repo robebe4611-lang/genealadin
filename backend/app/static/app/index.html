@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Genealadin</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">Genealadin</div>
+    <nav id="nav" class="nav hidden">
+      <button data-tab="search" class="tab-btn active">חיפוש</button>
+      <button data-tab="person" class="tab-btn">חיפוש אדם</button>
+      <button data-tab="source" class="tab-btn">הוספת מקור</button>
+      <button data-tab="reports" class="tab-btn">דוחות</button>
+      <button id="logoutBtn" class="tab-btn logout">התנתקות</button>
+    </nav>
+  </header>
+
+  <main class="container">
+
+    <!-- Auth -->
+    <section id="authSection" class="card auth-card">
+      <div class="auth-toggle">
+        <button id="showLoginBtn" class="toggle-btn active">התחברות</button>
+        <button id="showRegisterBtn" class="toggle-btn">הרשמה</button>
+      </div>
+
+      <form id="loginForm" class="form">
+        <label>אימייל</label>
+        <input type="email" id="loginEmail" required />
+        <label>סיסמה</label>
+        <input type="password" id="loginPassword" required />
+        <button type="submit">התחבר</button>
+      </form>
+
+      <form id="registerForm" class="form hidden">
+        <label>שם מלא (לא חובה)</label>
+        <input type="text" id="registerName" />
+        <label>אימייל</label>
+        <input type="email" id="registerEmail" required />
+        <label>סיסמה</label>
+        <input type="password" id="registerPassword" required minlength="6" />
+        <button type="submit">הרשם</button>
+      </form>
+
+      <p id="authMessage" class="message"></p>
+    </section>
+
+    <!-- App (visible after login) -->
+    <section id="appSection" class="hidden">
+
+      <div id="tab-search" class="tab-panel">
+        <div class="card">
+          <h2>חיפוש בכתבות שנאספו</h2>
+          <div class="row">
+            <input type="text" id="searchQuery" placeholder="לדוגמה: מסחר, בית משפט, שם חברה..." />
+            <button id="searchBtn">חפש</button>
+          </div>
+        </div>
+        <div id="searchResults" class="results"></div>
+      </div>
+
+      <div id="tab-person" class="tab-panel hidden">
+        <div class="card">
+          <h2>חיפוש לפי שם אדם</h2>
+          <p class="hint">מציג כתבות שמזכירות את השם, וכל מייל שמופיע יחד איתו באותו טקסט (רמז לבדיקה, לא אימות חד-משמעי).</p>
+          <div class="row">
+            <input type="text" id="personName" placeholder="שם מלא..." />
+            <button id="personBtn">חפש</button>
+          </div>
+        </div>
+        <div id="personResults" class="results"></div>
+      </div>
+
+      <div id="tab-source" class="tab-panel hidden">
+        <div class="card">
+          <h2>הוספת מקור למעקב</h2>
+          <p class="hint">הכנס קישור ל-RSS/פיד חדשות ציבורי. המערכת תאסוף ממנו כתבות אוטומטית.</p>
+          <div class="form">
+            <label>שם המקור</label>
+            <input type="text" id="sourceName" placeholder="לדוגמה: חדשות כלכליות" />
+            <label>קישור ה-RSS</label>
+            <input type="text" id="sourceUrl" placeholder="https://example.com/rss.xml" />
+            <button id="sourceBtn">הוסף ואסוף עכשיו</button>
+          </div>
+          <p id="sourceMessage" class="message"></p>
+        </div>
+      </div>
+
+      <div id="tab-reports" class="tab-panel hidden">
+        <div class="card">
+          <h2>יצירת דוח</h2>
+          <div class="row">
+            <input type="text" id="reportQuery" placeholder="נושא לדוח..." />
+            <button id="reportBtn">צור דוח</button>
+          </div>
+        </div>
+        <div id="reportResults" class="results"></div>
+      </div>
+
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

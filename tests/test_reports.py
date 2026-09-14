@@ -43,10 +43,12 @@ def test_report_creation_and_retrieval(client):
     assert report["article_count"] == 1
     assert len(report["articles"]) == 1
     assert "Trade summit" in report["articles"][0]["title"]
+    assert report["source_breakdown"] == {"Demo Feed": 1}
 
     response = client.get(f"/api/v1/reports/{report['id']}", headers=headers)
     assert response.status_code == 200
     assert response.json()["article_count"] == 1
+    assert response.json()["source_breakdown"] == {"Demo Feed": 1}
 
 
 def test_report_with_no_matches(client):

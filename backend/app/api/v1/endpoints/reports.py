@@ -79,6 +79,7 @@ def create_report(
         summary=report.summary,
         created_at=report.created_at,
         articles=[ArticleRead.model_validate(a) for a in articles],
+        source_breakdown=dict(breakdown),
     )
 
 
@@ -93,6 +94,14 @@ def get_report(
     ids = [int(x) for x in report.article_ids.split(",") if x]
     articles = db.query(Article).filter(Article.id.in_(ids)).all() if ids else []
 
+    sources_by_id = {
+        s.id: s.name
+        for s in db.query(DataSource).filter(
+            DataSource.id.in_({a.data_source_id for a in articles})
+        )
+    }
+    breakdown = Counter(sources_by_id.get(a.data_source_id, "unknown") for a in articles)
+
     return ReportDetail(
         id=report.id,
         query=report.query,
@@ -101,4 +110,5 @@ def get_report(
         summary=report.summary,
         created_at=report.created_at,
         articles=[ArticleRead.model_validate(a) for a in articles],
+        source_breakdown=dict(breakdown),
     )

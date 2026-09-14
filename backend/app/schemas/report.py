@@ -24,3 +24,4 @@ class ReportRead(BaseModel):
 
 class ReportDetail(ReportRead):
     articles: list[ArticleRead] = []
+    source_breakdown: dict[str, int] = {}
