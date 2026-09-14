@@ -203,10 +203,7 @@ document.getElementById("sourceBtn").addEventListener("click", async () => {
   msg.textContent = "אוסף נתונים...";
   msg.className = "message";
   try {
-    const job = await api("/scraping/jobs", {
-      method: "POST",
-      body: JSON.stringify({ source_name, source_url, source_type: "news", scraper_type: "rss" }),
-    });
+    const job = await runScrapingJob(source_name, source_url);
     if (job.status === "completed") {
       msg.textContent = `הצלחה! נאספו ${job.result_count} פריטים.`;
       msg.className = "message success";
@@ -218,6 +215,54 @@ document.getElementById("sourceBtn").addEventListener("click", async () => {
     }
   } catch (err) {
     msg.textContent = err.message;
+    msg.className = "message error";
+  }
+});
+
+async function runScrapingJob(source_name, source_url) {
+  return api("/scraping/jobs", {
+    method: "POST",
+    body: JSON.stringify({ source_name, source_url, source_type: "news", scraper_type: "rss" }),
+  });
+}
+
+// ---- Quick seed: a handful of real, public news RSS feeds ----
+
+const DEFAULT_SOURCES = [
+  { name: "חדשות Google (עברית)", url: "https://news.google.com/rss?hl=iw&gl=IL&ceid=IL:iw" },
+  { name: "חדשות Google (עולם)", url: "https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en" },
+  { name: "Ynet", url: "https://www.ynet.co.il/Integration/StoryRss2.xml" },
+  { name: "BBC World", url: "http://feeds.bbci.co.uk/news/world/rss.xml" },
+];
+
+document.getElementById("seedBtn").addEventListener("click", async () => {
+  const msg = document.getElementById("seedMessage");
+  let totalItems = 0;
+  let failedSources = [];
+
+  for (const source of DEFAULT_SOURCES) {
+    msg.textContent = `אוסף מ-${source.name}...`;
+    msg.className = "message";
+    try {
+      const job = await runScrapingJob(source.name, source.url);
+      if (job.status === "completed") {
+        totalItems += job.result_count;
+      } else {
+        failedSources.push(source.name);
+      }
+    } catch (err) {
+      failedSources.push(source.name);
+    }
+  }
+
+  if (totalItems > 0) {
+    msg.textContent = `הצלחה! נאספו ${totalItems} כתבות ממקורות חדשות.`;
+    msg.className = "message success";
+    if (failedSources.length) {
+      msg.textContent += ` (לא הצלחנו לאסוף מ: ${failedSources.join(", ")})`;
+    }
+  } else {
+    msg.textContent = "לא הצלחנו לאסוף מאף מקור כרגע. נסה שוב מאוחר יותר, או הוסף מקור ידנית למטה.";
     msg.className = "message error";
   }
 });
