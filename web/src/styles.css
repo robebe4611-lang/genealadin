@@ -255,8 +255,17 @@
   background-image: repeating-linear-gradient(91deg, transparent 0, transparent 2px, color-mix(in oklab, var(--color-background) 22%, transparent) 3px);
   mix-blend-mode: soft-light;
 }
-.hawam-hero--revealed .inner-curtain--left { transform: translateX(-100%); }
-.hawam-hero--revealed .inner-curtain--right { transform: translateX(100%); }
+/* Not -100%: that only moves each panel by its OWN width, which starts
+   in the middle of the viewport (35.5%/57.75% from the left) — it just
+   lands adjacent to its start position, still overlapping the glass.
+   These panels need to travel roughly 2-3x their own width to actually
+   clear the frame, so the distance is expressed in vw (viewport-relative)
+   instead of % (self-relative): exact clearance is -57.75vw (left) /
+   42.25vw (right) — the panel's far edge reaching the viewport edge —
+   plus a safety margin, matching how the outer curtain's -108%/108% adds
+   margin past its own exact clearing point. */
+.hawam-hero--revealed .inner-curtain--left { transform: translateX(-63vw); }
+.hawam-hero--revealed .inner-curtain--right { transform: translateX(47vw); }
 
 /* Reliable alignment depends on the photo's full width being visible
    (true on desktop, where the viewport is wider-than-the-photo's aspect
@@ -362,7 +371,7 @@
                0 .02rem .12rem color-mix(in oklab, var(--color-foreground) 70%, transparent);
 }
 .entrance-cta {
-  margin-top: 2rem; border: 0; background: transparent; color: var(--gold); cursor: pointer; font-family: var(--font-sans); font-size: .83rem; font-weight: 300; letter-spacing: .06em; pointer-events: auto;
+  margin-top: 2rem; border: 0; background: transparent; color: var(--color-background); cursor: pointer; font-family: var(--font-sans); font-size: .83rem; font-weight: 300; letter-spacing: .06em; pointer-events: auto;
   text-shadow: 0 .06rem .35rem color-mix(in oklab, var(--color-foreground) 60%, transparent);
 }
 .entrance-line { display: block; width: 2.9rem; height: 1px; margin: .8rem auto 0; background: currentColor; transition: width .3s ease; }
