@@ -121,9 +121,12 @@ export function ServicesSection() {
 export function AboutSection() {
   return (
     <section className="about" aria-labelledby="about-title">
-      <div className="about-number">
-        <strong>50</strong>
-        <span>שנות ניסיון<br />ומסורת</span>
+      <div className="about-photo">
+        <img src={softRomanImage} alt="וילון רומאי רך במטבח" />
+        <div className="about-stat">
+          <strong>50</strong>
+          <span>שנות ניסיון<br />ומסורת</span>
+        </div>
       </div>
       <div className="about-copy">
         <span>הסיפור שלנו</span>
@@ -206,10 +209,14 @@ export function TestimonialsSection() {
         <h2 id="testimonials-title">האמון שלהם הוא הגאווה שלנו</h2>
         <p>המלצות אמיתיות מלקוחות שבחרו בחוואם דיזיין לבית שלהם.</p>
       </div>
-      <div className="testimonial-grid">
+      <div className="testimonials-stat">
+        <strong>5.0</strong>
+        <Stars />
+        <small>מבוסס על {TESTIMONIALS.length} ביקורות אמיתיות</small>
+      </div>
+      <div className="testimonial-list">
         {TESTIMONIALS.map((t) => (
           <article className="testimonial-card" key={`${t.name}-${t.city ?? ""}`}>
-            <Stars />
             <blockquote>&ldquo;{t.quote}&rdquo;</blockquote>
             <footer>
               <strong>{t.name}</strong>

@@ -131,9 +131,9 @@ export function HawamExperience() {
       <SiteTopBar />
       <main>
         <HawamHero revealed={open} />
+        <AboutSection />
         <OfferSection />
         <ServicesSection />
-        <AboutSection />
         <GallerySection />
         <TestimonialsSection />
         <ProcessSection />
