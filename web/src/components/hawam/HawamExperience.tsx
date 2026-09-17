@@ -1,8 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import curtainFabricImage from "@/assets/curtain-panel.jpg";
 import interiorImage from "@/assets/hawam-interior.jpg";
 import { Button } from "@/components/ui/button";
+import {
+  AboutSection,
+  AreasSection,
+  FinalCtaSection,
+  GallerySection,
+  LeadFormSection,
+  MobileActionBar,
+  OfferSection,
+  ProcessSection,
+  ServicesSection,
+  SiteFooter,
+  SiteTopBar,
+  TestimonialsSection,
+} from "@/components/hawam/SiteSections";
 
 type CurtainSide = "left" | "right";
 
@@ -59,7 +73,7 @@ function CurtainEntrance({ open, onOpen }: { open: boolean; onOpen: () => void }
 
 function HawamHero({ revealed }: { revealed: boolean }) {
   return (
-    <main className={`hawam-hero${revealed ? " hawam-hero--revealed" : ""}`}>
+    <section id="top" className={`hawam-hero${revealed ? " hawam-hero--revealed" : ""}`}>
       <img
         className="hero-image"
         src={interiorImage}
@@ -85,16 +99,35 @@ function HawamHero({ revealed }: { revealed: boolean }) {
         </Button>
         <p className="hero-services">מדידה · התאמה אישית · תפירה · התקנה</p>
       </div>
-    </main>
+    </section>
   );
 }
 
 export function HawamExperience() {
   const [open, setOpen] = useState(false);
 
+  useEffect(() => {
+    document.body.classList.toggle("curtain-locked", !open);
+    return () => document.body.classList.remove("curtain-locked");
+  }, [open]);
+
   return (
     <div className="hawam-experience">
-      <HawamHero revealed={open} />
+      <SiteTopBar />
+      <main>
+        <HawamHero revealed={open} />
+        <OfferSection />
+        <ServicesSection />
+        <AboutSection />
+        <GallerySection />
+        <TestimonialsSection />
+        <ProcessSection />
+        <AreasSection />
+        <LeadFormSection />
+        <FinalCtaSection />
+      </main>
+      <SiteFooter />
+      <MobileActionBar />
       <CurtainEntrance open={open} onOpen={() => setOpen(true)} />
     </div>
   );
