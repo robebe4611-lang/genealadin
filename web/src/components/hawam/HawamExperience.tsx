@@ -78,8 +78,8 @@ function HawamHero({ revealed }: { revealed: boolean }) {
         className="hero-image"
         src={interiorImage}
         alt="חלל מגורים מודרני עם וילונות בגובה מלא ואור טבעי חם"
-        width={1920}
-        height={1280}
+        width={1264}
+        height={843}
         fetchPriority="high"
       />
 
