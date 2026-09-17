@@ -1,0 +1,349 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Design system definition.
+ *
+ * The @theme inline block maps CSS custom properties to Tailwind utility
+ * classes (e.g. --color-primary -> bg-primary, text-primary).
+ *
+ * The :root and .dark blocks define the actual color values using oklch.
+ * All colors MUST use oklch format.
+ *
+ * To add a new semantic color:
+ * 1. Add the variable to :root (light value) and .dark (dark value)
+ * 2. Register it in @theme inline as --color-<name>: var(--<name>)
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-curtain-light: var(--curtain-light);
+  --color-curtain-mid: var(--curtain-mid);
+  --color-curtain-deep: var(--curtain-deep);
+  --color-overlay: var(--overlay);
+  --font-display: "Cormorant Garamond", "Noto Serif Hebrew", serif;
+  --font-sans: "Heebo", sans-serif;
+}
+
+:root {
+  --radius: 0.625rem;
+  --background: oklch(0.964 0.009 85.5);
+  --foreground: oklch(0.257 0.006 67.7);
+  --card: oklch(0.964 0.009 85.5);
+  --card-foreground: oklch(0.257 0.006 67.7);
+  --popover: oklch(0.964 0.009 85.5);
+  --popover-foreground: oklch(0.257 0.006 67.7);
+  --primary: oklch(0.257 0.006 67.7);
+  --primary-foreground: oklch(0.964 0.009 85.5);
+  --secondary: oklch(0.905 0.018 76.4);
+  --secondary-foreground: oklch(0.257 0.006 67.7);
+  --muted: oklch(0.905 0.018 76.4);
+  --muted-foreground: oklch(0.517 0.012 70.4);
+  --accent: oklch(0.79 0.026 72.1);
+  --accent-foreground: oklch(0.257 0.006 67.7);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.984 0.003 247.858);
+  --border: oklch(0.79 0.026 72.1);
+  --input: oklch(0.79 0.026 72.1);
+  --ring: oklch(0.517 0.012 70.4);
+  --curtain-light: oklch(0.91 0.022 78);
+  --curtain-mid: oklch(0.77 0.035 72);
+  --curtain-deep: oklch(0.52 0.029 66);
+  --overlay: oklch(0.18 0.012 63 / 52%);
+  /* Matte gold — a flat, solid text color (no gradient/shine). Used only
+     for the entrance screen's brand/CTA text (closed-curtain state); the
+     hero copy underneath stays off-white (var(--color-background)). */
+  --gold: oklch(0.72 0.1 76);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.984 0.003 247.858);
+  --sidebar-foreground: oklch(0.129 0.042 264.695);
+  --sidebar-primary: oklch(0.208 0.042 265.755);
+  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
+  --sidebar-accent: oklch(0.968 0.007 247.896);
+  --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
+  --sidebar-border: oklch(0.929 0.013 255.508);
+  --sidebar-ring: oklch(0.704 0.04 256.788);
+}
+
+.dark {
+  --background: oklch(0.129 0.042 264.695);
+  --foreground: oklch(0.984 0.003 247.858);
+  --card: oklch(0.208 0.042 265.755);
+  --card-foreground: oklch(0.984 0.003 247.858);
+  --popover: oklch(0.208 0.042 265.755);
+  --popover-foreground: oklch(0.984 0.003 247.858);
+  --primary: oklch(0.929 0.013 255.508);
+  --primary-foreground: oklch(0.208 0.042 265.755);
+  --secondary: oklch(0.279 0.041 260.031);
+  --secondary-foreground: oklch(0.984 0.003 247.858);
+  --muted: oklch(0.279 0.041 260.031);
+  --muted-foreground: oklch(0.704 0.04 256.788);
+  --accent: oklch(0.279 0.041 260.031);
+  --accent-foreground: oklch(0.984 0.003 247.858);
+  --destructive: oklch(0.704 0.191 22.216);
+  --destructive-foreground: oklch(0.984 0.003 247.858);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.551 0.027 264.364);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.208 0.042 265.755);
+  --sidebar-foreground: oklch(0.984 0.003 247.858);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
+  --sidebar-accent: oklch(0.279 0.041 260.031);
+  --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.551 0.027 264.364);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    overflow: hidden;
+  }
+}
+
+@keyframes hero-enter {
+  from { transform: scale(1); }
+  to { transform: scale(1.035); }
+}
+
+@keyframes copy-enter {
+  from { opacity: 0; transform: translateY(1.5rem); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Small independent wobble for each fold, fired the instant the panel
+   starts moving so cloth reads as catching the motion unevenly rather
+   than the whole panel twitching as one rigid piece. Short (.5s) against
+   the now-fast .9s panel exit, so it's felt more than seen. */
+@keyframes fold-flutter {
+  0%   { transform: rotateZ(0deg); }
+  32%  { transform: rotateZ(1.3deg); }
+  60%  { transform: rotateZ(-0.8deg); }
+  100% { transform: rotateZ(0deg); }
+}
+
+@utility hawam-focus {
+  &:focus-visible { outline: 1px solid var(--color-background); outline-offset: 5px; }
+}
+
+.hawam-experience,
+.hawam-hero,
+.entrance-layer {
+  width: 100%;
+  height: 100svh;
+  min-height: 35rem;
+}
+
+.hawam-experience { position: relative; overflow: hidden; background: var(--color-foreground); }
+.hawam-hero { position: absolute; inset: 0; overflow: hidden; }
+.hero-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.hawam-hero--revealed .hero-image { animation: hero-enter 9s cubic-bezier(.2,.7,.2,1) forwards; }
+.hero-shade { position: absolute; inset: 0; background: color-mix(in oklab, var(--color-foreground) 24%, transparent); }
+
+.hero-brand-mark {
+  position: absolute; top: 2.5rem; left: 3rem; display: flex; flex-direction: column;
+  /* Off-white here (not gold) per request — gold is reserved for the
+     entrance screen only. Kept the stronger shadow below regardless of
+     color: that's what stops it fading over the bright window/sky. */
+  color: var(--color-background);
+  text-shadow: 0 .08rem .4rem color-mix(in oklab, var(--color-foreground) 70%, transparent);
+  font-family: var(--font-display); font-size: .78rem; line-height: .9; letter-spacing: .16em;
+}
+.hero-content {
+  position: absolute; z-index: 2; top: 50%; left: clamp(2rem, 8vw, 9rem); width: min(38rem, 41vw);
+  color: var(--color-background);
+  /* Two-layer shadow: a wide soft one plus a tight near one, so the text
+     stays legible whether it's sitting over the dark furniture or the
+     bright window/sky in the photo — the original single soft shadow was
+     too weak and let it wash out over bright areas. */
+  text-shadow: 0 .1rem .6rem color-mix(in oklab, var(--color-foreground) 65%, transparent),
+               0 .02rem .15rem color-mix(in oklab, var(--color-foreground) 80%, transparent);
+  text-align: right; opacity: 0; transform: translateY(1.5rem);
+}
+.hawam-hero--revealed .hero-content { animation: copy-enter 1s .9s cubic-bezier(.22,1,.36,1) forwards; }
+.hero-kicker { margin-bottom: 1.2rem; font-family: var(--font-display); font-size: clamp(.75rem, .8vw, .88rem); letter-spacing: .24em; text-align: right; }
+.hero-content h1 { font-family: var(--font-display); font-size: clamp(3.7rem, 6.4vw, 7.2rem); font-weight: 400; line-height: .86; letter-spacing: 0; text-wrap: balance; }
+.hero-lede { margin: 1.8rem 0 2.2rem; max-width: 31rem; margin-inline-start: auto; color: color-mix(in oklab, var(--color-background) 88%, transparent); font-size: clamp(1rem, 1.25vw, 1.25rem); font-weight: 300; line-height: 1.8; }
+.hero-services { margin-top: 1.3rem; color: color-mix(in oklab, var(--color-background) 72%, transparent); font-size: .7rem; letter-spacing: .08em; }
+.hero-index {
+  position: absolute; right: 3rem; bottom: 2.3rem;
+  color: color-mix(in oklab, var(--color-background) 70%, transparent);
+  text-shadow: 0 .06rem .3rem color-mix(in oklab, var(--color-foreground) 60%, transparent);
+  font-family: var(--font-display); font-size: .65rem; letter-spacing: .2em;
+}
+
+/* Inner window curtain — covers the photographed glass itself. Position
+   is measured directly from the source photo (35.5%–80% of frame width
+   is the glass, sampled pixel-by-pixel), not eyeballed, so it lines up
+   with the curtains already visible at the sides of that photo. Delayed
+   1.1s so it only starts once the entrance curtain (.9s) has fully
+   cleared — the room's own curtain opens second, after you're "inside." */
+.inner-curtain {
+  position: absolute;
+  top: 13%;
+  bottom: 0;
+  width: 22.25%;
+  overflow: hidden;
+  z-index: 1;
+  background-color: var(--color-curtain-mid);
+  box-shadow: inset 0 0 3rem color-mix(in oklab, var(--color-curtain-deep) 50%, transparent);
+  transition: transform 1.1s cubic-bezier(.16,1,.3,1) 1.1s;
+  will-change: transform;
+}
+.inner-curtain--left { left: 35.5%; }
+.inner-curtain--right { left: 57.75%; }
+.inner-curtain-folds { position: absolute; inset: 0; display: flex; }
+.inner-curtain-fold {
+  flex: 1; height: 101%;
+  background: linear-gradient(90deg, var(--color-curtain-deep) 0%, var(--color-curtain-mid) 30%, var(--color-curtain-light) 55%, var(--color-curtain-mid) 78%, var(--color-curtain-deep) 100%);
+}
+.inner-curtain-fold:nth-child(3n) { filter: brightness(.93); }
+.inner-curtain-weave {
+  position: absolute; inset: 0; opacity: .15;
+  background-image: repeating-linear-gradient(91deg, transparent 0, transparent 2px, color-mix(in oklab, var(--color-background) 22%, transparent) 3px);
+  mix-blend-mode: soft-light;
+}
+.hawam-hero--revealed .inner-curtain--left { transform: translateX(-100%); }
+.hawam-hero--revealed .inner-curtain--right { transform: translateX(100%); }
+
+/* Reliable alignment depends on the photo's full width being visible
+   (true on desktop, where the viewport is wider-than-the-photo's aspect
+   so object-fit:cover only crops vertically). Mobile's object-position
+   override crops the width instead, which would throw the measured %
+   positions off — simplest correct fix is to not show it there. */
+@media (max-width: 767px) {
+  .inner-curtain { display: none; }
+}
+
+.entrance-layer { position: absolute; z-index: 10; inset: 0; pointer-events: auto; }
+.entrance-layer--open { pointer-events: none; }
+.curtain-trigger { position: absolute; inset: 0; width: 100%; cursor: pointer; border: 0; background: transparent; padding: 0; }
+.curtain-panel {
+  position: absolute; top: 0; bottom: 0; width: 52.5%; transform-origin: top center;
+  /* Fast + sharp per request: was 1.85s cubic-bezier(.64,.01,.12,1) — a
+     slow-building ease-in curve. This starts at speed and decelerates
+     quickly instead, which reads as decisive/snappy rather than a slow
+     theatrical draw. */
+  transition: transform .9s cubic-bezier(.16,1,.3,1), filter .9s ease;
+  will-change: transform;
+}
+.curtain-panel--left { left: -1%; }
+.curtain-panel--right { right: -1%; }
+.curtain-fabric { position: absolute; inset: 0; overflow: hidden; background-color: var(--color-curtain-mid); box-shadow: inset 0 0 5rem color-mix(in oklab, var(--color-curtain-deep) 55%, transparent), 0 0 2rem color-mix(in oklab, var(--color-foreground) 28%, transparent); }
+.curtain-folds { position: absolute; inset: 0; display: flex; }
+.curtain-fold { flex: 1; height: 102%; transform-origin: top; background: linear-gradient(90deg, var(--color-curtain-deep) 0%, var(--color-curtain-mid) 27%, var(--color-curtain-light) 52%, var(--color-curtain-mid) 74%, var(--color-curtain-deep) 100%); filter: brightness(var(--fold-light, 1)); clip-path: polygon(8% 0, 90% 0, 100% 100%, 0 100%); }
+.curtain-fold:nth-child(3n) { --fold-light: .92; transform: scaleX(1.12); }
+.curtain-fold:nth-child(4n) { --fold-light: 1.07; transform: scaleX(.9); }
+.curtain-weave { position: absolute; inset: 0; opacity: .17; background-image: repeating-linear-gradient(91deg, transparent 0, transparent 2px, color-mix(in oklab, var(--color-background) 24%, transparent) 3px), repeating-linear-gradient(0deg, transparent 0, transparent 4px, color-mix(in oklab, var(--color-foreground) 13%, transparent) 5px); mix-blend-mode: soft-light; }
+.curtain-inner-shadow { position: absolute; inset: 0; box-shadow: inset 0 -4rem 5rem color-mix(in oklab, var(--color-foreground) 32%, transparent); }
+.curtain-panel--left .curtain-inner-shadow { box-shadow: inset -2.2rem 0 2rem color-mix(in oklab, var(--color-foreground) 35%, transparent), inset 0 -4rem 5rem color-mix(in oklab, var(--color-foreground) 28%, transparent); }
+.curtain-panel--right .curtain-inner-shadow { box-shadow: inset 2.2rem 0 2rem color-mix(in oklab, var(--color-foreground) 35%, transparent), inset 0 -4rem 5rem color-mix(in oklab, var(--color-foreground) 28%, transparent); }
+.entrance-layer--open .curtain-panel--left { transform: translateX(-84%) skewX(1.2deg) scaleX(.83); filter: brightness(.88); }
+.entrance-layer--open .curtain-panel--right { transform: translateX(84%) skewX(-1.2deg) scaleX(.83); filter: brightness(.88); }
+
+.entrance-layer--open .curtain-fold {
+  animation: fold-flutter .5s cubic-bezier(.33,1,.68,1) both;
+}
+.entrance-layer--open .curtain-fold:nth-child(2n) { animation-delay: .015s; }
+.entrance-layer--open .curtain-fold:nth-child(3n) { animation-delay: .04s; }
+.entrance-layer--open .curtain-fold:nth-child(4n) { animation-delay: .025s; }
+.entrance-layer--open .curtain-fold:nth-child(5n) { animation-delay: .055s; }
+.entrance-layer--open .curtain-fold:nth-child(6n) { animation-delay: .07s; }
+
+.curtain-track { position: absolute; z-index: 3; top: 0; left: 0; right: 0; height: .72rem; background: var(--color-foreground); box-shadow: 0 .35rem .9rem color-mix(in oklab, var(--color-foreground) 44%, transparent); transition: opacity .6s 1.3s; }
+.curtain-track span { display: block; width: 14%; height: 1px; margin: .36rem auto 0; background: var(--color-stone, var(--color-border)); opacity: .7; }
+.entrance-layer--open .curtain-track { opacity: 0; }
+/* pointer-events:none here + auto on .entrance-cta below: without this,
+   the empty space around "HAWAM DESIGN" and the CTA's own padding sit on
+   top of .curtain-trigger and swallow clicks — only the CTA's exact text
+   opened the curtain, everywhere else in this centered block was dead. */
+.entrance-copy { position: absolute; z-index: 4; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--gold); text-align: center; transition: opacity .45s ease, transform .7s ease; pointer-events: none; }
+.entrance-brand { font-family: var(--font-display); font-size: clamp(1.55rem, 2.2vw, 2.45rem); font-weight: 500; letter-spacing: .22em; white-space: nowrap; }
+.entrance-cta { margin-top: 2rem; border: 0; background: transparent; color: var(--gold); cursor: pointer; font-family: var(--font-sans); font-size: .83rem; font-weight: 300; letter-spacing: .06em; pointer-events: auto; }
+.entrance-line { display: block; width: 2.9rem; height: 1px; margin: .8rem auto 0; background: currentColor; transition: width .3s ease; }
+.entrance-cta:hover .entrance-line { width: 4rem; }
+.entrance-layer--open .entrance-copy { opacity: 0; transform: translate(-50%, -47%); }
+.skip-intro { position: absolute; z-index: 5; right: 1.25rem; bottom: 1.25rem; display: none; border: 0; background: transparent; color: var(--color-foreground); cursor: pointer; font-family: var(--font-display); font-size: .72rem; letter-spacing: .08em; }
+.entrance-layer--open .skip-intro { opacity: 0; }
+
+@media (max-width: 767px) {
+  .hawam-experience, .hawam-hero, .entrance-layer { min-height: 32rem; }
+  .hero-image { object-position: 56% center; }
+  .hero-shade { background: color-mix(in oklab, var(--color-foreground) 31%, transparent); }
+  .hero-brand-mark { top: 1.5rem; left: 1.35rem; font-size: .62rem; }
+  .hero-content { top: auto; bottom: 2.2rem; left: 1.35rem; right: 1.35rem; width: auto; }
+  .hero-kicker { margin-bottom: .8rem; font-size: .68rem; }
+  .hero-content h1 { max-width: 21rem; margin-inline-start: auto; font-size: clamp(3.1rem, 16vw, 4.8rem); line-height: .9; }
+  .hero-lede { max-width: 19rem; margin: 1.1rem 0 1.35rem auto; font-size: .96rem; line-height: 1.65; }
+  .hero-services { margin-top: 1rem; font-size: .58rem; }
+  .hero-index { display: none; }
+  .curtain-panel { width: 53.5%; transition-duration: .7s; }
+  .entrance-layer--open .curtain-panel--left { transform: translateX(-80%) scaleX(.8); }
+  .entrance-layer--open .curtain-panel--right { transform: translateX(80%) scaleX(.8); }
+  .entrance-brand { font-size: 1.45rem; letter-spacing: .15em; }
+  .entrance-cta { margin-top: 1.4rem; }
+  .skip-intro { display: block; }
+  .hawam-hero--revealed .hero-content { animation-delay: .55s; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0ms !important; transition-duration: .01ms !important; transition-delay: 0ms !important; scroll-behavior: auto !important; }
+  .entrance-layer--open { visibility: hidden; }
+}
