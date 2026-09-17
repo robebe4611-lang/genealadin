@@ -1,22 +1,21 @@
 import { useEffect, useState } from "react";
 
+import curtainFabricImage from "@/assets/curtain-panel.jpg";
 import interiorImage from "@/assets/hawam-interior.jpg";
 import { Button } from "@/components/ui/button";
 
 type CurtainSide = "left" | "right";
 
+/* curtain-panel.jpg is a single real photograph of a *pair* of curtain
+   panels meeting at a center seam (client-supplied, generated then
+   cropped to remove the wall/floor margins so it fills edge to edge).
+   Rather than duplicate it, each side shows its own half via
+   background-position (left/right) — see .curtain-fabric in styles.css. */
 function CurtainPanel({ side }: { side: CurtainSide }) {
-  const folds = Array.from({ length: 14 }, (_, index) => index);
-
   return (
     <div className={`curtain-panel curtain-panel--${side}`} aria-hidden="true">
       <div className="curtain-fabric">
-        <div className="curtain-folds">
-          {folds.map((fold) => (
-            <span key={fold} className="curtain-fold" />
-          ))}
-        </div>
-        <div className="curtain-weave" />
+        <img className="curtain-fabric-img" src={curtainFabricImage} alt="" />
         <div className="curtain-inner-shadow" />
       </div>
     </div>

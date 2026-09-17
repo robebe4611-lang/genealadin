@@ -168,17 +168,6 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Small independent wobble for each fold, fired the instant the panel
-   starts moving so cloth reads as catching the motion unevenly rather
-   than the whole panel twitching as one rigid piece. Short (.5s) against
-   the now-fast .9s panel exit, so it's felt more than seen. */
-@keyframes fold-flutter {
-  0%   { transform: rotateZ(0deg); }
-  32%  { transform: rotateZ(1.3deg); }
-  60%  { transform: rotateZ(-0.8deg); }
-  100% { transform: rotateZ(0deg); }
-}
-
 @utility hawam-focus {
   &:focus-visible { outline: 1px solid var(--color-background); outline-offset: 5px; }
 }
@@ -286,26 +275,37 @@
 }
 .curtain-panel--left { left: -1%; }
 .curtain-panel--right { right: -1%; }
-.curtain-fabric { position: absolute; inset: 0; overflow: hidden; background-color: var(--color-curtain-mid); box-shadow: inset 0 0 5rem color-mix(in oklab, var(--color-curtain-deep) 55%, transparent), 0 0 2rem color-mix(in oklab, var(--color-foreground) 28%, transparent); }
-.curtain-folds { position: absolute; inset: 0; display: flex; }
-.curtain-fold { flex: 1; height: 102%; transform-origin: top; background: linear-gradient(90deg, var(--color-curtain-deep) 0%, var(--color-curtain-mid) 27%, var(--color-curtain-light) 52%, var(--color-curtain-mid) 74%, var(--color-curtain-deep) 100%); filter: brightness(var(--fold-light, 1)); clip-path: polygon(8% 0, 90% 0, 100% 100%, 0 100%); }
-.curtain-fold:nth-child(3n) { --fold-light: .92; transform: scaleX(1.12); }
-.curtain-fold:nth-child(4n) { --fold-light: 1.07; transform: scaleX(.9); }
-.curtain-weave { position: absolute; inset: 0; opacity: .17; background-image: repeating-linear-gradient(91deg, transparent 0, transparent 2px, color-mix(in oklab, var(--color-background) 24%, transparent) 3px), repeating-linear-gradient(0deg, transparent 0, transparent 4px, color-mix(in oklab, var(--color-foreground) 13%, transparent) 5px); mix-blend-mode: soft-light; }
+
+/* Real photograph now, not procedural gradient folds — see the comment
+   above CurtainPanel in HawamExperience.tsx for how curtain-panel.jpg
+   (one photo of both panels meeting at a seam) supplies each side. An
+   <img> with object-fit:cover (not a CSS background-size percentage) is
+   what makes this work: the photo's aspect ratio (tall/narrow) is very
+   different from the panel's (wide/short at typical desktop widths) —
+   background-size:auto left gaps where the narrower image didn't reach,
+   and background-size:200% stretched it. object-fit:cover crops to fill
+   completely with a uniform scale, no distortion either way. */
+.curtain-fabric {
+  position: absolute; inset: 0; overflow: hidden;
+  box-shadow: 0 0 2rem color-mix(in oklab, var(--color-foreground) 28%, transparent);
+}
+.curtain-fabric-img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.curtain-panel--left .curtain-fabric-img { object-position: left center; }
+.curtain-panel--right .curtain-fabric-img { object-position: right center; }
+
 .curtain-inner-shadow { position: absolute; inset: 0; box-shadow: inset 0 -4rem 5rem color-mix(in oklab, var(--color-foreground) 32%, transparent); }
 .curtain-panel--left .curtain-inner-shadow { box-shadow: inset -2.2rem 0 2rem color-mix(in oklab, var(--color-foreground) 35%, transparent), inset 0 -4rem 5rem color-mix(in oklab, var(--color-foreground) 28%, transparent); }
 .curtain-panel--right .curtain-inner-shadow { box-shadow: inset 2.2rem 0 2rem color-mix(in oklab, var(--color-foreground) 35%, transparent), inset 0 -4rem 5rem color-mix(in oklab, var(--color-foreground) 28%, transparent); }
-.entrance-layer--open .curtain-panel--left { transform: translateX(-84%) skewX(1.2deg) scaleX(.83); filter: brightness(.88); }
-.entrance-layer--open .curtain-panel--right { transform: translateX(84%) skewX(-1.2deg) scaleX(.83); filter: brightness(.88); }
-
-.entrance-layer--open .curtain-fold {
-  animation: fold-flutter .5s cubic-bezier(.33,1,.68,1) both;
-}
-.entrance-layer--open .curtain-fold:nth-child(2n) { animation-delay: .015s; }
-.entrance-layer--open .curtain-fold:nth-child(3n) { animation-delay: .04s; }
-.entrance-layer--open .curtain-fold:nth-child(4n) { animation-delay: .025s; }
-.entrance-layer--open .curtain-fold:nth-child(5n) { animation-delay: .055s; }
-.entrance-layer--open .curtain-fold:nth-child(6n) { animation-delay: .07s; }
+/* translateX only — no scaleX/skewX here. Those squashed the old
+   procedural gradient to fake "gathering," but non-uniform scaling a
+   real photograph visibly warps and stretches its pixels, which is
+   exactly the distortion tell a photo-based curtain needs to avoid. */
+.entrance-layer--open .curtain-panel--left { transform: translateX(-84%); filter: brightness(.88); }
+.entrance-layer--open .curtain-panel--right { transform: translateX(84%); filter: brightness(.88); }
 
 .curtain-track { position: absolute; z-index: 3; top: 0; left: 0; right: 0; height: .72rem; background: var(--color-foreground); box-shadow: 0 .35rem .9rem color-mix(in oklab, var(--color-foreground) 44%, transparent); transition: opacity .6s 1.3s; }
 .curtain-track span { display: block; width: 14%; height: 1px; margin: .36rem auto 0; background: var(--color-stone, var(--color-border)); opacity: .7; }
