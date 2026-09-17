@@ -1,0 +1,59 @@
+/* ==========================================================================
+   HAWAM DESIGN — Design Tokens
+   Single source of truth for color, type, motion and spacing.
+   Nothing outside this file should hard-code a color or timing value.
+   ========================================================================== */
+
+:root {
+  /* Palette — restrained on purpose. Do not add colors outside this set. */
+  --color-ivory: #F6F3ED;   /* Warm Ivory — page ground */
+  --color-sand: #E9E2D8;    /* Soft Sand — secondary surfaces */
+  --color-stone: #C9BDAE;   /* Stone — curtain fabric base */
+  --color-charcoal: #252422;/* Charcoal — ink, deep shadow */
+  --color-muted: #716B63;   /* Muted Text — secondary copy */
+  --color-white: #FFFFFF;
+
+  /* Typography */
+  --font-display: 'Fraunces', 'Georgia', serif;        /* Latin editorial headline */
+  --font-hebrew: 'Frank Ruhl Libre', 'David Libre', serif; /* Hebrew editorial headline */
+  --font-body: 'Assistant', 'Heebo', -apple-system, sans-serif; /* Bilingual body/UI */
+
+  /* Motion — a single luxury easing curve used everywhere so every
+     transition reads as one hand-tuned system rather than defaults. */
+  --ease-luxury: cubic-bezier(0.16, 1, 0.3, 1);  /* slow, weighted deceleration */
+  --ease-soft: cubic-bezier(0.45, 0, 0.2, 1);
+  --ease-settle: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --curtain-duration: 1.8s;
+  --curtain-stagger: 0.045s;
+  --reveal-duration: 1.2s;
+  --camera-duration: 14s;
+
+  /* Spacing scale */
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2.5rem;
+  --space-5: 4rem;
+  --space-6: 6rem;
+
+  --container-max: 1440px;
+}
+
+/* Mobile: entrance should feel fast and simplified per spec (~1–1.5s). */
+@media (max-width: 760px) {
+  :root {
+    --curtain-duration: 1.25s;
+    --curtain-stagger: 0.03s;
+    --reveal-duration: 0.9s;
+    --camera-duration: 9s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --curtain-duration: 0.001s;
+    --reveal-duration: 0.001s;
+    --camera-duration: 0.001s;
+  }
+}

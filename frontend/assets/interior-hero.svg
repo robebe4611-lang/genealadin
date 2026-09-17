@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" role="img" aria-label="">
+  <!--
+    Abstract impression of a sunlit contemporary interior with a
+    floor-to-ceiling window — a soft-focus editorial placeholder built
+    entirely from gradients, standing in for real architectural
+    photography until that is shot. Palette is restricted to the
+    HAWAM DESIGN tokens (ivory / sand / stone / charcoal / white).
+    Swap this file for a real photograph later without touching any CSS —
+    frontend/css/hero.css only references its path.
+  -->
+  <defs>
+    <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F6F3ED"/>
+      <stop offset="55%" stop-color="#F1ECE2"/>
+      <stop offset="100%" stop-color="#E9E2D8"/>
+    </linearGradient>
+
+    <radialGradient id="sun" cx="78%" cy="10%" r="65%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95"/>
+      <stop offset="45%" stop-color="#F6F3ED" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#F6F3ED" stop-opacity="0"/>
+    </radialGradient>
+
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.85"/>
+      <stop offset="60%" stop-color="#E9E2D8" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#C9BDAE" stop-opacity="0.25"/>
+    </linearGradient>
+
+    <linearGradient id="floor" x1="0" y1="0" x2="1" y2="0.25">
+      <stop offset="0%" stop-color="#C9BDAE"/>
+      <stop offset="55%" stop-color="#BDAF9C"/>
+      <stop offset="100%" stop-color="#A79A87"/>
+    </linearGradient>
+
+    <linearGradient id="drape" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#F6F3ED" stop-opacity="0"/>
+      <stop offset="35%" stop-color="#E9E2D8" stop-opacity="0.65"/>
+      <stop offset="60%" stop-color="#C9BDAE" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#8A8072" stop-opacity="0.55"/>
+    </linearGradient>
+
+    <radialGradient id="vignette" cx="50%" cy="60%" r="75%">
+      <stop offset="60%" stop-color="#252422" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#252422" stop-opacity="0.22"/>
+    </radialGradient>
+
+    <filter id="blurSoft" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="55"/>
+    </filter>
+    <filter id="blurMed" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="22"/>
+    </filter>
+    <filter id="blurFine" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="7"/>
+    </filter>
+  </defs>
+
+  <!-- wall / ambient light -->
+  <rect x="0" y="0" width="1920" height="1080" fill="url(#wall)"/>
+  <rect x="0" y="0" width="1920" height="1080" fill="url(#sun)"/>
+
+  <!-- floor plane, soft perspective -->
+  <polygon points="0,1080 1920,1080 1920,760 0,830" fill="url(#floor)" filter="url(#blurMed)"/>
+  <g filter="url(#blurMed)" stroke="#252422" stroke-opacity="0.05" stroke-width="3">
+    <line x1="0" y1="920" x2="1920" y2="900"/>
+    <line x1="0" y1="985" x2="1920" y2="965"/>
+    <line x1="0" y1="1045" x2="1920" y2="1030"/>
+  </g>
+
+  <!-- soft furniture silhouette, far out of focus -->
+  <rect x="60" y="810" width="620" height="90" rx="30" fill="#252422" fill-opacity="0.08" filter="url(#blurSoft)"/>
+
+  <!-- floor-to-ceiling window -->
+  <rect x="1180" y="0" width="620" height="1080" fill="url(#glass)"/>
+  <g stroke="#252422" stroke-opacity="0.16" stroke-width="4">
+    <line x1="1180" y1="0" x2="1180" y2="1080"/>
+    <line x1="1490" y1="0" x2="1490" y2="1080"/>
+    <line x1="1800" y1="0" x2="1800" y2="1080"/>
+    <line x1="1180" y1="360" x2="1800" y2="360"/>
+    <line x1="1180" y1="720" x2="1800" y2="720"/>
+  </g>
+
+  <!-- soft sheer drape framing the window, echoing the curtain motif -->
+  <path d="M1130,-20 C1080,220 1250,420 1120,700 C1040,880 1150,1000 1110,1100 L1300,1100 C1300,760 1230,560 1290,340 C1330,180 1260,60 1300,-20 Z"
+        fill="url(#drape)" filter="url(#blurFine)"/>
+
+  <!-- vignette -->
+  <rect x="0" y="0" width="1920" height="1080" fill="url(#vignette)"/>
+</svg>

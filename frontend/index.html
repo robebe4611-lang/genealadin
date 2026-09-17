@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HAWAM DESIGN — החלון משנה את החלל</title>
+  <meta name="description" content="HAWAM DESIGN — ווילונות בהתאמה אישית לעיצוב, לאור ולחיים שלכם." />
+
+  <!-- Fonts: one editorial serif per script + one shared bilingual body face -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Frank+Ruhl+Libre:wght@400;500;700&family=Assistant:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/entrance.css" />
+  <link rel="stylesheet" href="css/hero.css" />
+
+  <noscript>
+    <style>
+      .curtain-overlay { display: none !important; }
+      body.no-scroll { overflow: auto !important; height: auto !important; }
+      .hero__content > * { opacity: 1 !important; transform: none !important; }
+    </style>
+  </noscript>
+</head>
+<body class="no-scroll">
+
+  <!-- Always reachable by keyboard, first in the tab order. -->
+  <a class="skip-intro" href="#hero" id="skipIntro">Skip intro</a>
+
+  <!-- ======================= CURTAIN ENTRANCE ======================= -->
+  <div class="curtain-overlay" id="curtainOverlay">
+    <div class="curtain-overlay__ambience" aria-hidden="true"></div>
+
+    <div class="curtain-stage">
+      <div class="curtain-rail" aria-hidden="true"></div>
+
+      <button
+        class="curtain-trigger"
+        id="curtainTrigger"
+        type="button"
+        aria-label="פתחו את החלל — כניסה ל‑HAWAM DESIGN"
+      >
+        <span class="curtain-panel curtain-panel--left" aria-hidden="true">
+          <span class="curtain-panel__ripple"></span>
+          <span class="curtain-panel__ripple"></span>
+          <span class="curtain-panel__ripple"></span>
+          <span class="curtain-panel__ripple"></span>
+          <span class="curtain-panel__ripple"></span>
+          <span class="curtain-panel__ripple"></span>
+        </span>
+        <span class="curtain-panel curtain-panel--right" aria-hidden="true">
+          <span class="curtain-panel__ripple"></span>
+          <span class="curtain-panel__ripple"></span>
+          <span class="curtain-panel__ripple"></span>
+          <span class="curtain-panel__ripple"></span>
+          <span class="curtain-panel__ripple"></span>
+          <span class="curtain-panel__ripple"></span>
+        </span>
+
+        <span class="curtain-content">
+          <span class="curtain-content__brand" dir="ltr">HAWAM DESIGN</span>
+          <span class="curtain-content__cta">פתחו את החלל</span>
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ============================ HERO =============================== -->
+  <main id="hero" class="hero">
+    <div class="hero__visual" aria-hidden="true">
+      <img class="hero__visual-img" src="assets/interior-hero.svg" alt="" fetchpriority="high" />
+    </div>
+    <div class="hero__scrim" aria-hidden="true"></div>
+
+    <div class="hero__content">
+      <p class="hero__brand" dir="ltr">HAWAM DESIGN</p>
+      <h1 class="hero__tagline">החלון משנה את החלל.</h1>
+      <p class="hero__subtext">ווילונות בהתאמה אישית לעיצוב, לאור ולחיים שלכם.</p>
+      <div class="hero__actions">
+        <a class="hero__cta" href="#contact">לתיאום פגישת עיצוב</a>
+      </div>
+      <p class="hero__meta">מדידה · התאמה אישית · תפירה · התקנה</p>
+    </div>
+  </main>
+
+  <script src="js/curtain.js" defer></script>
+  <script src="js/hero.js" defer></script>
+</body>
+</html>

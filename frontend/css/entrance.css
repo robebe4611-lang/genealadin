@@ -1,0 +1,344 @@
+/* ==========================================================================
+   HAWAM DESIGN — Cinematic Curtain Entrance
+   ==========================================================================
+   Structure:
+     .curtain-overlay        fixed, full-viewport stage
+       .curtain-rail          the ceiling track the panels hang from
+       .curtain-trigger       the single accessible hit target (click/tap/Enter)
+         .curtain-panel--l/r   the fabric itself (gradient folds + grain)
+           .curtain-panel__ripple × 6   thin strips that add a reactive sway
+         .curtain-content      brand lockup + CTA sitting on the closed seam
+     .skip-intro              subtle escape hatch, always reachable by tab
+
+   How the "real fabric" look is built (all pure CSS, no images):
+     1. A repeating-linear-gradient across each panel alternates deep
+        charcoal shadow / stone / ivory highlight bands at an angle —
+        this is what reads as cylindrical pleats instead of a flat rectangle.
+     2. A soft radial "window light" wash sits on top, brighter near the
+        rail, so the folds look lit rather than printed.
+     3. An SVG feTurbulence noise data-URI is blended over everything at
+        very low opacity to kill the "flat vector" look and add fabric grain.
+     4. A handful of thin ripple strips animate independently, staggered by
+        a few milliseconds each, so the fabric appears to catch the motion
+        unevenly — like real cloth with inertia — instead of moving as one
+        rigid slab.
+   ========================================================================== */
+
+.curtain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Deliberately no opaque background here: the fabric panels themselves
+     cover the stage, and .curtain-overlay__ambience needs a genuinely
+     transparent view through to the hero behind it for its backdrop-filter
+     peek to work. An opaque root background would blur its own paint. */
+  background: transparent;
+  transition: opacity 0.6s var(--ease-soft) 0.15s;
+}
+
+/* Once the panels have cleared the stage, the whole overlay fades and is
+   removed from the layout by JS (display:none) so it can't intercept clicks
+   on the hero below. */
+.curtain-overlay.is-dismissed {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.curtain-stage {
+  position: relative;
+  width: min(94vw, var(--container-max));
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* A thin strip of the interior is visible above the rail and at the outer
+   edges — real curtains rarely bleed to the literal edge of a room. This
+   layer literally looks through to the hero sitting behind the overlay
+   (backdrop-filter, not a copy of the art) and softens it, so the reveal
+   is continuous rather than a cut to different art. Where backdrop-filter
+   isn't supported it falls back to a plain dim scrim — a safe, quieter
+   version of the same idea. */
+.curtain-overlay__ambience {
+  position: absolute;
+  inset: 0;
+  background: rgba(37, 36, 34, 0.45);
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .curtain-overlay__ambience {
+    background: rgba(37, 36, 34, 0.22);
+    -webkit-backdrop-filter: blur(20px) brightness(0.85) saturate(1.05);
+    backdrop-filter: blur(20px) brightness(0.85) saturate(1.05);
+  }
+}
+
+.curtain-rail {
+  position: absolute;
+  top: 6.5vh;
+  left: 1%;
+  right: 1%;
+  height: 6px;
+  background: linear-gradient(180deg, #3a3835 0%, var(--color-charcoal) 55%, #171613 100%);
+  border-radius: 2px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+  z-index: 3;
+}
+
+/* Rings along the rail — pure gradient dots, no images. */
+.curtain-rail::before {
+  content: "";
+  position: absolute;
+  inset: -3px 0 auto 0;
+  height: 10px;
+  background-image: radial-gradient(circle, #4a4744 0 3px, transparent 3.5px);
+  background-size: 3.2% 100%;
+  background-repeat: repeat-x;
+  background-position: 1.6% center;
+  opacity: 0.85;
+}
+
+.curtain-trigger {
+  position: absolute;
+  inset: 6.5vh 0 0 0;
+  width: 100%;
+  height: calc(100% - 6.5vh);
+  display: block;
+  text-align: initial;
+}
+
+.curtain-panel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 51%;
+  will-change: transform;
+  transform-origin: top center;
+  /* The fold pattern, built as two stacked opaque repeating gradients so
+     the fabric colour never mixes with whatever sits behind the panel
+     (that mixing is what made an earlier pass look grey instead of warm):
+       1. a wide, rounded-highlight repeat — the cylindrical pleat itself,
+          shadow-to-light-to-shadow, using only palette tones;
+       2. a fine 6px repeat at very low opacity on top — a directional
+          weave/fibre cue so the fold doesn't read as a flat gradient. */
+  background-image:
+    repeating-linear-gradient(
+      98deg,
+      rgba(37, 36, 34, 0.05) 0 1px,
+      transparent 1px 6px
+    ),
+    radial-gradient(130% 55% at 50% -8%, rgba(246, 243, 237, 0.6), transparent 60%),
+    repeating-linear-gradient(
+      98deg,
+      var(--color-charcoal) 0%,
+      var(--color-muted) 1.6%,
+      var(--color-stone) 4%,
+      var(--color-sand) 6.25%,
+      var(--color-ivory) 8%,
+      var(--color-sand) 9.75%,
+      var(--color-stone) 12%,
+      var(--color-muted) 14.4%,
+      var(--color-charcoal) 16%
+    );
+  box-shadow: 0 25px 55px rgba(37, 36, 34, 0.4);
+}
+
+.curtain-panel--left {
+  left: 0;
+  border-radius: 2px 18px 30px 6px;
+  transition: transform var(--curtain-duration) var(--ease-luxury);
+}
+
+.curtain-panel--right {
+  right: 0;
+  border-radius: 18px 2px 6px 30px;
+  transform: scaleX(-1); /* mirror the same fold pattern for the right panel */
+  transition: transform var(--curtain-duration) var(--ease-luxury);
+}
+
+/* Fabric grain — SVG feTurbulence rendered inline as a data URI, blended
+   softly over the gradient folds so they stop reading as flat vector art. */
+.curtain-panel::after,
+.hero__visual::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  mix-blend-mode: overlay;
+  opacity: 0.09;
+  pointer-events: none;
+}
+
+.curtain-panel--right::after {
+  transform: scaleX(-1);
+}
+
+/* Weighted hem — a soft gradient band suggesting fabric pooling and a
+   contact shadow where the curtain meets the floor. */
+.curtain-panel::before {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 5%;
+  background: linear-gradient(to bottom, transparent, rgba(37, 36, 34, 0.4));
+}
+
+/* Reactive ripple strips — thin vertical highlights that sway independently
+   once the curtain starts moving, staggered a few ms apart per strip so the
+   fabric appears to catch the motion rather than translate as one rigid
+   block. Idle (no .is-opening) they sit still. */
+.curtain-panel__ripple {
+  position: absolute;
+  top: 0;
+  bottom: 5%;
+  width: 5%;
+  background: linear-gradient(90deg, transparent, rgba(246, 243, 237, 0.35), transparent);
+  mix-blend-mode: soft-light;
+  transform-origin: top center;
+}
+
+.curtain-panel__ripple:nth-child(1) { left: 6%; }
+.curtain-panel__ripple:nth-child(2) { left: 20%; }
+.curtain-panel__ripple:nth-child(3) { left: 34%; }
+.curtain-panel__ripple:nth-child(4) { left: 48%; }
+.curtain-panel__ripple:nth-child(5) { left: 62%; }
+.curtain-panel__ripple:nth-child(6) { left: 76%; }
+
+/* Brand lockup sitting on the closed seam, above the fabric. */
+.curtain-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  text-align: center;
+  padding: var(--space-4) var(--space-5);
+  transition: opacity 0.5s var(--ease-soft), filter 0.5s var(--ease-soft);
+}
+
+.curtain-content::before {
+  content: "";
+  position: absolute;
+  inset: -40% -60%;
+  z-index: -1;
+  background: radial-gradient(closest-side, rgba(37, 36, 34, 0.38), transparent 72%);
+}
+
+.curtain-content__brand {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  letter-spacing: 0.28em;
+  color: var(--color-ivory);
+  text-transform: uppercase;
+}
+
+.curtain-content__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-family: var(--font-hebrew);
+  font-size: clamp(1.05rem, 1.6vw, 1.3rem);
+  color: var(--color-ivory);
+  letter-spacing: 0.02em;
+  padding-block-start: var(--space-1);
+  border-top: 1px solid rgba(246, 243, 237, 0.35);
+}
+
+.curtain-content__cta::after {
+  content: "";
+  width: 22px;
+  height: 1px;
+  background: var(--color-ivory);
+  transition: width 0.4s var(--ease-soft);
+}
+
+.curtain-trigger:hover .curtain-content__cta::after,
+.curtain-trigger:focus-visible .curtain-content__cta::after {
+  width: 38px;
+}
+
+/* ---- Opening state -------------------------------------------------- */
+/* JS adds .is-opening to .curtain-overlay the instant the trigger fires.
+   Each panel gathers toward its own rail edge: translate off-stage while
+   scaling down on X, which reads as the fabric bunching at the point it is
+   tied back — not a flat slide of a rectangle. */
+.curtain-overlay.is-opening .curtain-panel--left {
+  transform: translateX(-46%) scaleX(0.38);
+}
+
+.curtain-overlay.is-opening .curtain-panel--right {
+  transform: translateX(46%) scaleX(-0.38);
+}
+
+.curtain-overlay.is-opening .curtain-panel__ripple {
+  animation: fold-sway var(--curtain-duration) var(--ease-settle) both;
+}
+
+/* Stagger each ripple a fraction of a second so the sway travels across
+   the fabric instead of firing uniformly. */
+.curtain-panel__ripple:nth-child(1) { animation-delay: calc(var(--curtain-stagger) * 1); }
+.curtain-panel__ripple:nth-child(2) { animation-delay: calc(var(--curtain-stagger) * 2); }
+.curtain-panel__ripple:nth-child(3) { animation-delay: calc(var(--curtain-stagger) * 3); }
+.curtain-panel__ripple:nth-child(4) { animation-delay: calc(var(--curtain-stagger) * 4); }
+.curtain-panel__ripple:nth-child(5) { animation-delay: calc(var(--curtain-stagger) * 5); }
+.curtain-panel__ripple:nth-child(6) { animation-delay: calc(var(--curtain-stagger) * 6); }
+
+@keyframes fold-sway {
+  0%   { transform: rotateZ(0deg) translateX(0); }
+  35%  { transform: rotateZ(1.1deg) translateX(1.5%); }
+  60%  { transform: rotateZ(-0.6deg) translateX(-0.8%); }
+  100% { transform: rotateZ(0deg) translateX(0); }
+}
+
+.curtain-overlay.is-opening .curtain-content {
+  opacity: 0;
+  filter: blur(6px);
+  transition: opacity 0.5s var(--ease-soft), filter 0.5s var(--ease-soft);
+}
+
+/* ---- Skip intro ------------------------------------------------------ */
+.skip-intro {
+  position: fixed;
+  top: var(--space-3);
+  inset-inline-end: var(--space-3);
+  z-index: 110;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(246, 243, 237, 0.7);
+  text-decoration: none;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid rgba(246, 243, 237, 0.25);
+  border-radius: 999px;
+  background: rgba(37, 36, 34, 0.25);
+  backdrop-filter: blur(6px);
+  transition: color 0.3s var(--ease-soft), border-color 0.3s var(--ease-soft), opacity 0.5s var(--ease-soft);
+}
+
+.skip-intro:hover,
+.skip-intro:focus-visible {
+  color: var(--color-ivory);
+  border-color: rgba(246, 243, 237, 0.6);
+}
+
+body.entrance-done .skip-intro {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (max-width: 760px) {
+  .curtain-stage { width: 100vw; }
+  .curtain-rail { top: 5vh; }
+  .curtain-trigger { inset: 5vh 0 0 0; height: calc(100% - 5vh); }
+  .curtain-content { padding: var(--space-3) var(--space-2); gap: var(--space-2); }
+  .curtain-panel__ripple { width: 8%; }
+  .curtain-overlay.is-opening .curtain-panel--left { transform: translateX(-52%) scaleX(0.3); }
+  .curtain-overlay.is-opening .curtain-panel--right { transform: translateX(52%) scaleX(-0.3); }
+}

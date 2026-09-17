@@ -1,0 +1,164 @@
+/* ==========================================================================
+   HAWAM DESIGN — Hero
+   ==========================================================================
+   The hero occupies the same 100vh frame the curtain stage sat on top of,
+   so when the panels clear there is no hard cut — it's the same art,
+   already in place, simply uncovered.
+   ========================================================================== */
+
+:root {
+  /* Warm fallback tint shown while assets/interior-hero.svg loads (and
+     used by the curtain's blurred "ambience" peek — see entrance.css). */
+  --hero-art: linear-gradient(160deg, var(--color-ivory) 0%, var(--color-sand) 55%, var(--color-stone) 100%);
+}
+
+.hero {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 640px;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  background: var(--hero-art);
+}
+
+.hero__visual {
+  position: absolute;
+  inset: 0;
+  transform: scale(1);
+  /* Ken-Burns style camera drift — starts once .hero.is-revealed lands,
+     one slow inward move, never repeats or bounces. */
+  transition: transform var(--camera-duration) var(--ease-luxury);
+}
+
+.hero.is-revealed .hero__visual {
+  transform: scale(1.045);
+}
+
+.hero__visual-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.hero__visual::after {
+  /* shares the feTurbulence grain rule declared in entrance.css */
+  opacity: 0.045;
+}
+
+.hero__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(37, 36, 34, 0.55) 0%, rgba(37, 36, 34, 0.12) 42%, transparent 68%);
+}
+
+.hero__content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding: 0 var(--space-5) var(--space-6);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  color: var(--color-ivory);
+}
+
+/* Text reveals with opacity + a small vertical lift only, staggered a
+   little after one another. JS adds .is-revealed once the curtain has
+   fully cleared the stage; each child's transition-delay does the rest. */
+.hero__content > * {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity var(--reveal-duration) var(--ease-settle),
+              transform var(--reveal-duration) var(--ease-settle);
+}
+
+.hero.is-revealed .hero__content > *:nth-child(1) { transition-delay: 0.05s; }
+.hero.is-revealed .hero__content > *:nth-child(2) { transition-delay: 0.18s; }
+.hero.is-revealed .hero__content > *:nth-child(3) { transition-delay: 0.30s; }
+.hero.is-revealed .hero__content > *:nth-child(4) { transition-delay: 0.44s; }
+.hero.is-revealed .hero__content > *:nth-child(5) { transition-delay: 0.56s; }
+
+.hero.is-revealed .hero__content > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hero__brand {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.1rem, 1.6vw, 1.35rem);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.hero__tagline {
+  font-family: var(--font-hebrew);
+  font-weight: 500;
+  font-size: clamp(2rem, 5.4vw, 4.4rem);
+  line-height: 1.12;
+  margin: 0;
+  max-width: 18ch;
+}
+
+.hero__subtext {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  line-height: 1.6;
+  color: var(--color-sand);
+  max-width: 42ch;
+  margin: 0;
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+.hero__cta {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-hebrew);
+  font-size: 1.05rem;
+  color: var(--color-charcoal);
+  background: var(--color-ivory);
+  padding: 0.95em 2em;
+  border-radius: 2px;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition: background var(--reveal-duration) var(--ease-soft),
+              transform 0.4s var(--ease-soft);
+}
+
+.hero__cta:hover,
+.hero__cta:focus-visible {
+  background: var(--color-white);
+  transform: translateY(-2px);
+}
+
+.hero__meta {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  color: var(--color-sand);
+  margin: 0;
+}
+
+@media (max-width: 760px) {
+  .hero__content { padding: 0 var(--space-3) var(--space-5); align-items: center; text-align: center; }
+  .hero__tagline { max-width: 14ch; }
+  .hero__subtext { max-width: 32ch; }
+  .hero__actions { flex-direction: column; }
+}
