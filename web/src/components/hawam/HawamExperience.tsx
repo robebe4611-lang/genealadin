@@ -85,8 +85,6 @@ function HawamHero({ revealed }: { revealed: boolean }) {
         </Button>
         <p className="hero-services">מדידה · התאמה אישית · תפירה · התקנה</p>
       </div>
-
-      <p className="hero-index" aria-hidden="true">01 — WINDOW / SPACE</p>
     </main>
   );
 }

@@ -223,17 +223,6 @@
    rather than one coherent right-anchored column. */
 .hero-lede { margin: 1.8rem 0 2.2rem; max-width: 31rem; color: color-mix(in oklab, var(--color-background) 88%, transparent); font-size: clamp(1rem, 1.25vw, 1.25rem); font-weight: 300; line-height: 1.8; }
 .hero-services { margin-top: 1.3rem; color: color-mix(in oklab, var(--color-background) 72%, transparent); font-size: .7rem; letter-spacing: .08em; }
-/* Left, not right: the main copy block is now right-anchored (see
-   .hero-content), so a right-anchored index mark collided with its
-   .hero-services line at the same bottom band. Left mirrors
-   .hero-brand-mark above it instead — two small corner marks on the same
-   side, copy block owns the right side on its own. */
-.hero-index {
-  position: absolute; left: 3rem; bottom: 2.3rem;
-  color: color-mix(in oklab, var(--color-background) 70%, transparent);
-  text-shadow: 0 .06rem .3rem color-mix(in oklab, var(--color-foreground) 60%, transparent);
-  font-family: var(--font-display); font-size: .65rem; letter-spacing: .2em;
-}
 
 .entrance-layer { position: absolute; z-index: 10; inset: 0; pointer-events: auto; }
 .entrance-layer--open { pointer-events: none; }
@@ -346,10 +335,13 @@
   .hero-brand-mark { top: 1.5rem; left: 1.35rem; font-size: .62rem; }
   .hero-content { top: auto; bottom: 2.2rem; left: 1.35rem; right: 1.35rem; width: auto; }
   .hero-kicker { margin-bottom: .8rem; font-size: .68rem; }
-  .hero-content h1 { max-width: 21rem; margin-inline-start: auto; font-size: clamp(3.1rem, 16vw, 4.8rem); line-height: .9; }
-  .hero-lede { max-width: 19rem; margin: 1.1rem 0 1.35rem auto; font-size: .96rem; line-height: 1.65; }
+  /* No auto margins here (there used to be one on each, in different
+     directions — margin-inline-start on the h1, a physical margin-left on
+     the lede): a block wider than its content already sits flush at the
+     RTL start (right) edge by default, so both just need max-width. */
+  .hero-content h1 { max-width: 21rem; font-size: clamp(3.1rem, 16vw, 4.8rem); line-height: .9; }
+  .hero-lede { max-width: 19rem; margin: 1.1rem 0 1.35rem; font-size: .96rem; line-height: 1.65; }
   .hero-services { margin-top: 1rem; font-size: .58rem; }
-  .hero-index { display: none; }
   .curtain-panel { width: 53.5%; transition-duration: 2.5s; }
   /* translateX only, matching the desktop fix — scaleX left over from
      the old procedural-gradient panel would stretch the real photo. */
