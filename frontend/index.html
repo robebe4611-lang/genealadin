@@ -46,23 +46,25 @@
         aria-label="פתחו את החלל — כניסה ל‑HAWAM DESIGN"
       >
         <span class="curtain-panel curtain-panel--left" aria-hidden="true">
-          <canvas class="curtain-panel__canvas"></canvas>
-          <span class="curtain-panel__ripple"></span>
-          <span class="curtain-panel__ripple"></span>
-          <span class="curtain-panel__ripple"></span>
-          <span class="curtain-panel__ripple"></span>
-          <span class="curtain-panel__ripple"></span>
-          <span class="curtain-panel__ripple"></span>
+          <span class="curtain-panel__slices">
+            <span class="curtain-panel__slice"></span>
+            <span class="curtain-panel__slice"></span>
+            <span class="curtain-panel__slice"></span>
+            <span class="curtain-panel__slice"></span>
+            <span class="curtain-panel__slice"></span>
+            <span class="curtain-panel__slice"></span>
+          </span>
           <span class="curtain-panel__hem"></span>
         </span>
         <span class="curtain-panel curtain-panel--right" aria-hidden="true">
-          <canvas class="curtain-panel__canvas"></canvas>
-          <span class="curtain-panel__ripple"></span>
-          <span class="curtain-panel__ripple"></span>
-          <span class="curtain-panel__ripple"></span>
-          <span class="curtain-panel__ripple"></span>
-          <span class="curtain-panel__ripple"></span>
-          <span class="curtain-panel__ripple"></span>
+          <span class="curtain-panel__slices">
+            <span class="curtain-panel__slice"></span>
+            <span class="curtain-panel__slice"></span>
+            <span class="curtain-panel__slice"></span>
+            <span class="curtain-panel__slice"></span>
+            <span class="curtain-panel__slice"></span>
+            <span class="curtain-panel__slice"></span>
+          </span>
           <span class="curtain-panel__hem"></span>
         </span>
 
@@ -77,10 +79,7 @@
   <!-- ============================ HERO =============================== -->
   <main id="hero" class="hero">
     <div class="hero__visual" aria-hidden="true">
-      <img class="hero__visual-img" src="assets/interior-hero.svg" alt="" fetchpriority="high" />
-      <div class="hero__drape">
-        <canvas class="curtain-panel__canvas hero__drape-canvas"></canvas>
-      </div>
+      <img class="hero__visual-img" src="assets/interior-hero.jpg" alt="" fetchpriority="high" />
     </div>
     <div class="hero__scrim" aria-hidden="true"></div>
 
@@ -95,7 +94,6 @@
     </div>
   </main>
 
-  <script src="js/curtain-fabric.js" defer></script>
   <script src="js/curtain.js" defer></script>
   <script src="js/hero.js" defer></script>
 </body>

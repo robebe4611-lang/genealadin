@@ -31,14 +31,23 @@ frontend/
 │   │                         `hawam:entranceComplete` on `document` when done
 │   └── hero.js                listens for that event, adds `.is-revealed`
 └── assets/
-    └── interior-hero.svg     abstract soft-focus interior placeholder —
-                               swap for real architectural photography later
-                               without touching any CSS/JS
+    ├── curtain-fabric.jpg    real photograph of the curtain fabric — split
+    │                         into 6 CSS background-position "slices" per
+    │                         panel (see entrance.css) so it can animate
+    │                         with a per-slice stagger instead of one rigid
+    │                         transform
+    └── interior-hero.jpg     real photograph for the hero background
 ```
 
 `curtain.js` and `hero.js` are intentionally decoupled — they only talk
 through the `hawam:entranceComplete` custom event, so either can be reworked
 without touching the other.
+
+An earlier build of this entrance used CSS gradients / a canvas-procedural
+fabric render / an SVG-gradient interior instead of real photography. That
+was replaced after review — procedural 2D shading on a flat rectangle has a
+ceiling it can't cross into "looks like a photograph," no matter how it's
+tuned. See the git history on this branch for that diagnosis if useful.
 
 ## Extending this later
 
@@ -47,8 +56,8 @@ without touching the other.
   below it.
 - All colors and motion timings live in `css/variables.css`. Don't
   hard-code a hex value or a duration anywhere else.
-- To use real photography: replace `assets/interior-hero.svg` with a
-  photo (same path, or update the one `<img>` reference in `index.html`
-  and the `--hero-art` fallback in `hero.css`).
+- To swap either photo: replace the file at the same path (same filename),
+  or update the reference in `index.html` (hero) / the `background-image`
+  url in `entrance.css` (curtain fabric — one rule feeds both panels).
 - Respects `prefers-reduced-motion` and ships a `<noscript>` fallback that
   shows the hero immediately with the overlay hidden.

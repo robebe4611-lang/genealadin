@@ -5,23 +5,27 @@
      .curtain-overlay        fixed, full-viewport stage
        .curtain-rail          the ceiling track the panels hang from
        .curtain-trigger       the single accessible hit target (click/tap/Enter)
-         .curtain-panel--l/r   the fabric itself (gradient folds + grain)
-           .curtain-panel__ripple × 6   thin strips that add a reactive sway
+         .curtain-panel--l/r   a static window onto the real fabric photo
+           .curtain-panel__slices    flex row of 6 slices
+             .curtain-panel__slice × 6   each shows its own vertical window
+                                          into ONE shared photo (see below)
+           .curtain-panel__hem   bottom contact-shadow strip
          .curtain-content      brand lockup + CTA sitting on the closed seam
      .skip-intro              subtle escape hatch, always reachable by tab
 
-   How the "real fabric" look is built (all pure CSS, no images):
-     1. A repeating-linear-gradient across each panel alternates deep
-        charcoal shadow / stone / ivory highlight bands at an angle —
-        this is what reads as cylindrical pleats instead of a flat rectangle.
-     2. A soft radial "window light" wash sits on top, brighter near the
-        rail, so the folds look lit rather than printed.
-     3. An SVG feTurbulence noise data-URI is blended over everything at
-        very low opacity to kill the "flat vector" look and add fabric grain.
-     4. A handful of thin ripple strips animate independently, staggered by
-        a few milliseconds each, so the fabric appears to catch the motion
-        unevenly — like real cloth with inertia — instead of moving as one
-        rigid slab.
+   The fabric is a real photograph (assets/curtain-fabric.jpg), not a CSS
+   gradient or canvas render — see the entrance diagnosis this replaced:
+   procedural shading on a flat rectangle has a ceiling it can't cross into
+   "looks like a photograph," no matter how it's tuned.
+
+   Why 6 slices instead of one <img>: a single element can only ever move as
+   one rigid body. Splitting the SAME photo into 6 vertical windows (via the
+   background-size/background-position-x trick below — no cropping, no
+   duplicate assets) lets each slice animate on its own delay, so the panel
+   doesn't slide as a flat slab. The slice nearest the tie-back edge moves
+   first; the one nearest the center seam follows — a real curtain gathers
+   from the pulled edge inward, it doesn't translate uniformly. Nothing here
+   scales or skews the photo itself, so it never looks stretched.
    ========================================================================== */
 
 .curtain-overlay {
@@ -114,66 +118,59 @@
   top: 0;
   bottom: 0;
   width: 51%;
-  overflow: hidden;
-  will-change: transform;
-  transform-origin: top center;
+  /* No overflow:hidden here (deliberately) — slices need to travel beyond
+     the panel's own box as they exit. .curtain-stage still clips at the
+     outer stage boundary, so nothing escapes onto the page. Also no
+     border-radius: a rounded-rectangle edge is exactly the "UI card" tell
+     the diagnosis flagged — real fabric has a straight-cut edge. */
   box-shadow: 0 25px 55px rgba(37, 36, 34, 0.22);
 }
 
-/* The fabric itself is rendered procedurally into this canvas by
-   js/curtain-fabric.js: irregular fold widths, an asymmetric rounded
-   light/shadow curve per fold (not a symmetric repeat), a slight organic
-   horizontal drift down the height of each fold, and per-pixel-row micro
-   variance — a fixed CSS repeating-gradient reads as a printed pattern
-   the moment you look for the repeat; this doesn't repeat. See that file
-   for the full algorithm. Sized/rendered in JS (needs real pixel
-   dimensions + devicePixelRatio), so no CSS width/height override here
-   beyond filling the panel. */
-.curtain-panel__canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-}
+.curtain-panel--left { left: 0; }
 
-.curtain-panel--left {
-  left: 0;
-  border-radius: 2px 18px 30px 6px;
-  transition: transform var(--curtain-duration) var(--ease-theater);
-}
-
+/* Mirrored, not just repositioned: this is a different section of the
+   same photo than the left panel would show un-mirrored, so the two
+   panels don't read as one image pasted twice. It also means each
+   slice's own translateX(-N%) — always toward its own local negative-X —
+   comes out moving visually *rightward* once the parent is flipped,
+   which is exactly the direction the right panel needs to exit. */
 .curtain-panel--right {
   right: 0;
-  border-radius: 18px 2px 6px 30px;
-  transform: scaleX(-1); /* mirror the same fold pattern for the right panel */
-  transition: transform var(--curtain-duration) var(--ease-theater);
-}
-
-/* Fabric grain — SVG feTurbulence rendered inline as a data URI, blended
-   softly over the canvas folds so they stop reading as smooth-shaded
-   vector art. Generated content (::after) always paints last/topmost
-   among same-stacking-level descendants, so this sits above the canvas
-   and the hem/ripple elements below without needing an explicit z-index. */
-.curtain-panel::after,
-.hero__visual::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-  mix-blend-mode: overlay;
-  opacity: 0.09;
-  pointer-events: none;
-}
-
-.curtain-panel--right::after {
   transform: scaleX(-1);
 }
 
+.curtain-panel__slices {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+/* Six windows onto ONE photo, reconstructed edge-to-edge with no seams
+   when idle: background-size is N×100% wide, and background-position-x
+   steps from 0% to 100% in N-1 equal increments — the standard CSS
+   sprite-sheet formula. No cropping, no duplicated image, no per-slice
+   asset. overflow:hidden here (not on .curtain-panel) is what makes each
+   slice show only its own strip of the shared background. */
+.curtain-panel__slice {
+  position: relative;
+  flex: 1 0 0;
+  height: 100%;
+  overflow: hidden;
+  background-image: url("../assets/curtain-fabric.jpg");
+  background-repeat: no-repeat;
+  background-size: 600% 100%;
+  will-change: transform;
+}
+
+.curtain-panel__slice:nth-child(1) { background-position-x: 0%; }
+.curtain-panel__slice:nth-child(2) { background-position-x: 20%; }
+.curtain-panel__slice:nth-child(3) { background-position-x: 40%; }
+.curtain-panel__slice:nth-child(4) { background-position-x: 60%; }
+.curtain-panel__slice:nth-child(5) { background-position-x: 80%; }
+.curtain-panel__slice:nth-child(6) { background-position-x: 100%; }
+
 /* Weighted hem — a soft gradient band suggesting fabric pooling and a
-   contact shadow where the curtain meets the floor. A real element (not
-   ::before) because ::before paints *under* the canvas in source order —
-   this needs to sit visibly above it. */
+   contact shadow where the curtain meets the floor. */
 .curtain-panel__hem {
   position: absolute;
   left: 0; right: 0; bottom: 0;
@@ -181,27 +178,6 @@
   background: linear-gradient(to bottom, transparent, rgba(37, 36, 34, 0.22));
   pointer-events: none;
 }
-
-/* Reactive ripple strips — thin vertical highlights that sway independently
-   once the curtain starts moving, staggered a few ms apart per strip so the
-   fabric appears to catch the motion rather than translate as one rigid
-   block. Idle (no .is-opening) they sit still. */
-.curtain-panel__ripple {
-  position: absolute;
-  top: 0;
-  bottom: 5%;
-  width: 5%;
-  background: linear-gradient(90deg, transparent, rgba(246, 243, 237, 0.35), transparent);
-  mix-blend-mode: soft-light;
-  transform-origin: top center;
-}
-
-.curtain-panel__ripple:nth-child(1) { left: 6%; }
-.curtain-panel__ripple:nth-child(2) { left: 20%; }
-.curtain-panel__ripple:nth-child(3) { left: 34%; }
-.curtain-panel__ripple:nth-child(4) { left: 48%; }
-.curtain-panel__ripple:nth-child(5) { left: 62%; }
-.curtain-panel__ripple:nth-child(6) { left: 76%; }
 
 /* Brand lockup sitting on the closed seam, above the fabric. */
 .curtain-content {
@@ -263,35 +239,35 @@
 
 /* ---- Opening state -------------------------------------------------- */
 /* JS adds .is-opening to .curtain-overlay the instant the trigger fires.
-   Each panel gathers toward its own rail edge: translate off-stage while
-   scaling down on X, which reads as the fabric bunching at the point it is
-   tied back — not a flat slide of a rectangle. */
-.curtain-overlay.is-opening .curtain-panel--left {
-  transform: translateX(-46%) scaleX(0.38);
+   Each of the 6 slices per panel animates independently: same keyframes,
+   same duration, but a different animation-delay per slice — the slice
+   nearest the tie-back edge (nth-child(1)) starts first, the one nearest
+   the center seam (nth-child(6)) starts last. That stagger is the whole
+   effect: fabric gathering progressively from the pulled edge, not a
+   rigid slab translating uniformly. translateX is expressed as a large
+   percentage of the SLICE's own (small) width — a slice is 1/6 of the
+   panel, so -820% of its own width clears the full panel plus stage with
+   margin, without ever scaling the photo itself (no stretch/distortion).
+   A small skewY partway through is the only added "billow," kept subtle
+   because it's warping a real photograph, not a flat gradient. */
+.curtain-overlay.is-opening .curtain-panel__slice {
+  animation: slice-exit var(--curtain-duration) var(--ease-theater) both;
+  /* Every slice shares this duration so the most-delayed slice (the one
+     nearest the seam) still finishes exactly at --curtain-duration. */
+  animation-duration: calc(var(--curtain-duration) - (5 * var(--curtain-stagger)));
 }
 
-.curtain-overlay.is-opening .curtain-panel--right {
-  transform: translateX(46%) scaleX(-0.38);
-}
+.curtain-panel__slice:nth-child(1) { animation-delay: calc(var(--curtain-stagger) * 0); }
+.curtain-panel__slice:nth-child(2) { animation-delay: calc(var(--curtain-stagger) * 1); }
+.curtain-panel__slice:nth-child(3) { animation-delay: calc(var(--curtain-stagger) * 2); }
+.curtain-panel__slice:nth-child(4) { animation-delay: calc(var(--curtain-stagger) * 3); }
+.curtain-panel__slice:nth-child(5) { animation-delay: calc(var(--curtain-stagger) * 4); }
+.curtain-panel__slice:nth-child(6) { animation-delay: calc(var(--curtain-stagger) * 5); }
 
-.curtain-overlay.is-opening .curtain-panel__ripple {
-  animation: fold-sway var(--curtain-duration) var(--ease-settle) both;
-}
-
-/* Stagger each ripple a fraction of a second so the sway travels across
-   the fabric instead of firing uniformly. */
-.curtain-panel__ripple:nth-child(1) { animation-delay: calc(var(--curtain-stagger) * 1); }
-.curtain-panel__ripple:nth-child(2) { animation-delay: calc(var(--curtain-stagger) * 2); }
-.curtain-panel__ripple:nth-child(3) { animation-delay: calc(var(--curtain-stagger) * 3); }
-.curtain-panel__ripple:nth-child(4) { animation-delay: calc(var(--curtain-stagger) * 4); }
-.curtain-panel__ripple:nth-child(5) { animation-delay: calc(var(--curtain-stagger) * 5); }
-.curtain-panel__ripple:nth-child(6) { animation-delay: calc(var(--curtain-stagger) * 6); }
-
-@keyframes fold-sway {
-  0%   { transform: rotateZ(0deg) translateX(0); }
-  35%  { transform: rotateZ(1.1deg) translateX(1.5%); }
-  60%  { transform: rotateZ(-0.6deg) translateX(-0.8%); }
-  100% { transform: rotateZ(0deg) translateX(0); }
+@keyframes slice-exit {
+  0%   { transform: translateX(0) skewY(0deg); }
+  55%  { transform: translateX(-420%) skewY(-0.8deg); }
+  100% { transform: translateX(-820%) skewY(0deg); }
 }
 
 .curtain-overlay.is-opening .curtain-content {
@@ -335,7 +311,4 @@ body.entrance-done .skip-intro {
   .curtain-rail { top: 5vh; }
   .curtain-trigger { inset: 5vh 0 0 0; height: calc(100% - 5vh); }
   .curtain-content { padding: var(--space-3) var(--space-2); gap: var(--space-2); }
-  .curtain-panel__ripple { width: 8%; }
-  .curtain-overlay.is-opening .curtain-panel--left { transform: translateX(-52%) scaleX(0.3); }
-  .curtain-overlay.is-opening .curtain-panel--right { transform: translateX(52%) scaleX(-0.3); }
 }
