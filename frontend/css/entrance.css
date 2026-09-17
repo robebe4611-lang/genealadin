@@ -118,44 +118,45 @@
   transform-origin: top center;
   /* The fold pattern, built as two stacked opaque repeating gradients so
      the fabric colour never mixes with whatever sits behind the panel
-     (that mixing is what made an earlier pass look grey instead of warm):
-       1. a wide, rounded-highlight repeat — the cylindrical pleat itself,
-          shadow-to-light-to-shadow, using only palette tones;
+     (that mixing is what made an earlier pass look grey instead of warm).
+     Off-white dominant: ivory/white carry each fold, stone only appears
+     as a soft crease shadow — no charcoal in the fabric itself, so it
+     reads as pale, heavy drapery rather than a patterned textile.
+       1. a wide, rounded-highlight repeat — the cylindrical pleat itself;
        2. a fine 6px repeat at very low opacity on top — a directional
           weave/fibre cue so the fold doesn't read as a flat gradient. */
   background-image:
     repeating-linear-gradient(
       98deg,
-      rgba(37, 36, 34, 0.05) 0 1px,
+      rgba(113, 107, 99, 0.05) 0 1px,
       transparent 1px 6px
     ),
-    radial-gradient(130% 55% at 50% -8%, rgba(246, 243, 237, 0.6), transparent 60%),
+    radial-gradient(130% 55% at 50% -8%, rgba(255, 255, 255, 0.7), transparent 60%),
     repeating-linear-gradient(
       98deg,
-      var(--color-charcoal) 0%,
-      var(--color-muted) 1.6%,
-      var(--color-stone) 4%,
-      var(--color-sand) 6.25%,
-      var(--color-ivory) 8%,
-      var(--color-sand) 9.75%,
-      var(--color-stone) 12%,
-      var(--color-muted) 14.4%,
-      var(--color-charcoal) 16%
+      var(--color-stone) 0%,
+      var(--color-sand) 2.5%,
+      var(--color-ivory) 5.5%,
+      var(--color-white) 7.5%,
+      var(--color-ivory) 9.5%,
+      var(--color-sand) 12.5%,
+      var(--color-stone) 15%,
+      var(--color-sand) 16.5%
     );
-  box-shadow: 0 25px 55px rgba(37, 36, 34, 0.4);
+  box-shadow: 0 25px 55px rgba(37, 36, 34, 0.22);
 }
 
 .curtain-panel--left {
   left: 0;
   border-radius: 2px 18px 30px 6px;
-  transition: transform var(--curtain-duration) var(--ease-luxury);
+  transition: transform var(--curtain-duration) var(--ease-theater);
 }
 
 .curtain-panel--right {
   right: 0;
   border-radius: 18px 2px 6px 30px;
   transform: scaleX(-1); /* mirror the same fold pattern for the right panel */
-  transition: transform var(--curtain-duration) var(--ease-luxury);
+  transition: transform var(--curtain-duration) var(--ease-theater);
 }
 
 /* Fabric grain — SVG feTurbulence rendered inline as a data URI, blended
@@ -182,7 +183,7 @@
   position: absolute;
   left: 0; right: 0; bottom: 0;
   height: 5%;
-  background: linear-gradient(to bottom, transparent, rgba(37, 36, 34, 0.4));
+  background: linear-gradient(to bottom, transparent, rgba(37, 36, 34, 0.22));
 }
 
 /* Reactive ripple strips — thin vertical highlights that sway independently
@@ -227,7 +228,7 @@
   position: absolute;
   inset: -40% -60%;
   z-index: -1;
-  background: radial-gradient(closest-side, rgba(37, 36, 34, 0.38), transparent 72%);
+  background: radial-gradient(closest-side, rgba(37, 36, 34, 0.5), transparent 72%);
 }
 
 .curtain-content__brand {

@@ -23,9 +23,12 @@
   --ease-luxury: cubic-bezier(0.16, 1, 0.3, 1);  /* slow, weighted deceleration */
   --ease-soft: cubic-bezier(0.45, 0, 0.2, 1);
   --ease-settle: cubic-bezier(0.22, 1, 0.36, 1);
+  /* A slow-in, slow-out sweep — the heavy, steady pull of a real theater
+     drape being drawn by hand, rather than a snappy UI deceleration. */
+  --ease-theater: cubic-bezier(0.76, 0, 0.24, 1);
 
-  --curtain-duration: 1.8s;
-  --curtain-stagger: 0.045s;
+  --curtain-duration: 3.4s;
+  --curtain-stagger: 0.07s;
   --reveal-duration: 1.2s;
   --camera-duration: 14s;
 
@@ -40,11 +43,12 @@
   --container-max: 1440px;
 }
 
-/* Mobile: entrance should feel fast and simplified per spec (~1–1.5s). */
+/* Mobile: still a slow theatrical draw, just trimmed a bit for a smaller,
+   faster-to-engage screen. */
 @media (max-width: 760px) {
   :root {
-    --curtain-duration: 1.25s;
-    --curtain-stagger: 0.03s;
+    --curtain-duration: 2.6s;
+    --curtain-stagger: 0.05s;
     --reveal-duration: 0.9s;
     --camera-duration: 9s;
   }
