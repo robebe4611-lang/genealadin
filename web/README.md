@@ -73,3 +73,45 @@ Known follow-up, not yet addressed: the inner curtain's fold style is the
 same bold/high-contrast pattern as the entrance curtain, while the
 photographed curtains in the shot are softer/sheerer — they read as two
 different fabrics where they overlap rather than one continuous curtain.
+Also (found while verifying the fixes below): on desktop, `translateX(-100%)`
+only moves each inner-curtain panel by its own width, which isn't enough to
+clear it from the glass area it starts in the middle of — it ends up
+resting just outside its start position rather than tucked away. Not yet
+fixed; doesn't affect mobile, where `.inner-curtain` is `display: none`.
+
+## Latest fixes (mobile "curtain doesn't fully open" + font + entrance motion)
+
+Reported via real phone screenshots: the curtain didn't clear the screen on
+mobile, the hero/inner Hebrew font didn't look luxurious, and the
+entrance/front text should animate in on load and stand out more.
+
+- **Curtain not fully clearing (mobile and desktop)**: `translateX` values
+  of `-84%`/`84%` (earlier retiming leftovers) never actually moved each
+  `.curtain-panel` fully off-screen. Panel width is 52.5% (desktop) /
+  53.5% (mobile) of viewport, starting at `left: -1%`, so its far edge
+  sits at roughly 51.5–52.5vw — moving it by only 84% of its *own* width
+  left several vw of fabric still overlapping the hero content, cutting
+  into the headline as seen in the screenshots. Fixed to `-108%`/`108%`
+  (100% is the exact clearing point; the extra 8% is a safety margin),
+  applied at both the desktop and the `@media (max-width: 767px)` rule.
+  Verified numerically via `getBoundingClientRect()` on both breakpoints,
+  not just visually.
+- **Hebrew font not luxurious**: `--font-display` named `"Noto Serif
+  Hebrew"` as its Hebrew fallback, but that family was never loaded via a
+  `<link>` in `index.html` — since Cormorant Garamond has zero Hebrew
+  glyph coverage, every Hebrew headline was silently falling back to the
+  browser's generic system serif the whole time. Added Frank Ruhl Libre
+  (an actual elegant Hebrew serif) to the Google Fonts `<link>` and
+  updated the CSS variable to reference it.
+- **Entrance text needs to animate in and stand out**: `.entrance-copy`
+  (the "HAWAM DESIGN" brand mark + CTA) now fades/slides in on load via a
+  keyframe animation (`entrance-copy-enter`, `.3s` delay, `1.1s` duration)
+  instead of just appearing statically, and the gold text's `text-shadow`
+  was strengthened (from a single soft shadow to a two-layer shadow) for
+  legibility over the bright curtain photo. One regression caught during
+  verification: the animation was first given `animation-fill-mode: both`,
+  which permanently pins an animation's end-state over any `transition` on
+  the same property — this blocked the existing open-state fade-out, so
+  the entrance text stayed visible on top of the hero after the curtain
+  opened. Fixed by using `backwards` instead (only affects the
+  pre-animation delay, not what happens after).

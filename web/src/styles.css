@@ -62,7 +62,10 @@
   --color-curtain-mid: var(--curtain-mid);
   --color-curtain-deep: var(--curtain-deep);
   --color-overlay: var(--overlay);
-  --font-display: "Cormorant Garamond", "Noto Serif Hebrew", serif;
+  /* "Noto Serif Hebrew" was never loaded (see index.html) — Hebrew text
+     using this stack was silently rendering in the browser's generic
+     system serif instead. Frank Ruhl Libre now actually is loaded. */
+  --font-display: "Cormorant Garamond", "Frank Ruhl Libre", serif;
   --font-sans: "Heebo", sans-serif;
 }
 
@@ -306,8 +309,14 @@
    procedural gradient to fake "gathering," but non-uniform scaling a
    real photograph visibly warps and stretches its pixels, which is
    exactly the distortion tell a photo-based curtain needs to avoid. */
-.entrance-layer--open .curtain-panel--left { transform: translateX(-84%); filter: brightness(.88); }
-.entrance-layer--open .curtain-panel--right { transform: translateX(84%); filter: brightness(.88); }
+/* -84% (and -80% on mobile, below) never actually cleared the viewport:
+   the panel is 52.5% wide starting at left:-1%, so its right edge sits
+   at 51.5vw — moving it left by only 84% of its OWN width (44.1vw)
+   leaves that edge at 7.4vw, still overlapping the hero content. -100%
+   is the exact clearing point (the panel's full own width); -108% adds
+   a safety margin. */
+.entrance-layer--open .curtain-panel--left { transform: translateX(-108%); filter: brightness(.88); }
+.entrance-layer--open .curtain-panel--right { transform: translateX(108%); filter: brightness(.88); }
 
 .curtain-track { position: absolute; z-index: 3; top: 0; left: 0; right: 0; height: .72rem; background: var(--color-foreground); box-shadow: 0 .35rem .9rem color-mix(in oklab, var(--color-foreground) 44%, transparent); transition: opacity .6s 1.3s; }
 .curtain-track span { display: block; width: 14%; height: 1px; margin: .36rem auto 0; background: var(--color-stone, var(--color-border)); opacity: .7; }
@@ -316,9 +325,46 @@
    the empty space around "HAWAM DESIGN" and the CTA's own padding sit on
    top of .curtain-trigger and swallow clicks — only the CTA's exact text
    opened the curtain, everywhere else in this centered block was dead. */
-.entrance-copy { position: absolute; z-index: 4; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--gold); text-align: center; transition: opacity .45s ease, transform .7s ease; pointer-events: none; }
-.entrance-brand { font-family: var(--font-display); font-size: clamp(1.55rem, 2.2vw, 2.45rem); font-weight: 500; letter-spacing: .22em; white-space: nowrap; }
-.entrance-cta { margin-top: 2rem; border: 0; background: transparent; color: var(--gold); cursor: pointer; font-family: var(--font-sans); font-size: .83rem; font-weight: 300; letter-spacing: .06em; pointer-events: auto; }
+/* Entrance-only fade + rise on first paint (the closed curtain's own
+   reveal) — before this, the text was simply present from frame one,
+   even though everything else in the piece (hero copy, the curtains
+   themselves) arrives with motion. animation, not transition: this needs
+   to run once on mount, independent of the later open-state fade-out
+   below (a separate `transition`, still driven by .entrance-layer--open). */
+@keyframes entrance-copy-enter {
+  from { opacity: 0; transform: translate(-50%, calc(-50% + 1.1rem)); }
+  to   { opacity: 1; transform: translate(-50%, -50%); }
+}
+.entrance-copy {
+  position: absolute; z-index: 4; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--gold);
+  text-align: center;
+  transition: opacity .45s ease, transform .7s ease;
+  /* backwards, not both/forwards: an animation's fill-mode outranks a
+     transition on the same property for as long as it's "pinning" the
+     end state, which silently broke the existing open-state fade-out
+     below (opacity stayed locked at 1 no matter what .entrance-layer--
+     open set). backwards only holds the *start* keyframe during the
+     delay; once the animation ends it stops pinning anything, and the
+     element's own opacity:1 default / static transform take back over —
+     identical values to the animation's end state, so there's no jump,
+     but the later transition can now actually run. */
+  animation: entrance-copy-enter 1.1s .3s cubic-bezier(.22,1,.36,1) backwards;
+  pointer-events: none;
+}
+.entrance-brand {
+  font-family: var(--font-display); font-size: clamp(1.55rem, 2.2vw, 2.45rem); font-weight: 500; letter-spacing: .22em; white-space: nowrap;
+  /* Gold on a real, busy damask photo needs a firm dark anchor behind it
+     to stay legible everywhere on the fabric, not just the plainer
+     stretches — same fix as the hero text needed earlier. */
+  text-shadow: 0 .08rem .5rem color-mix(in oklab, var(--color-foreground) 55%, transparent),
+               0 .02rem .12rem color-mix(in oklab, var(--color-foreground) 70%, transparent);
+}
+.entrance-cta {
+  margin-top: 2rem; border: 0; background: transparent; color: var(--gold); cursor: pointer; font-family: var(--font-sans); font-size: .83rem; font-weight: 300; letter-spacing: .06em; pointer-events: auto;
+  text-shadow: 0 .06rem .35rem color-mix(in oklab, var(--color-foreground) 60%, transparent);
+}
 .entrance-line { display: block; width: 2.9rem; height: 1px; margin: .8rem auto 0; background: currentColor; transition: width .3s ease; }
 .entrance-cta:hover .entrance-line { width: 4rem; }
 .entrance-layer--open .entrance-copy { opacity: 0; transform: translate(-50%, -47%); }
@@ -339,8 +385,8 @@
   .curtain-panel { width: 53.5%; transition-duration: 1.8s; }
   /* translateX only, matching the desktop fix — scaleX left over from
      the old procedural-gradient panel would stretch the real photo. */
-  .entrance-layer--open .curtain-panel--left { transform: translateX(-80%); }
-  .entrance-layer--open .curtain-panel--right { transform: translateX(80%); }
+  .entrance-layer--open .curtain-panel--left { transform: translateX(-108%); }
+  .entrance-layer--open .curtain-panel--right { transform: translateX(108%); }
   .entrance-brand { font-size: 1.45rem; letter-spacing: .15em; }
   .entrance-cta { margin-top: 1.4rem; }
   .skip-intro { display: block; }
