@@ -78,7 +78,7 @@ function HawamHero({ revealed }: { revealed: boolean }) {
 
       <div className="hero-content" dir="rtl">
         <p className="hero-kicker" dir="ltr">HAWAM DESIGN</p>
-        <h1>הווילון משנה את החלל.</h1>
+        <h1>הווילון שמשנה את החלל.</h1>
         <p className="hero-lede">וילונות בהתאמה אישית לעיצוב, לאור ולחיים שלכם.</p>
         <Button variant="hawam" size="hawam">
           לתיאום פגישת עיצוב
