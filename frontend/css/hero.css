@@ -42,12 +42,36 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
+  /* Biased down/right, toward the window + floor rather than the plain
+     upper wall — that upper band is the palest part of the art, and
+     centering on it was what made the revealed hero read as washed out. */
+  object-position: 65% 70%;
 }
 
 .hero__visual::after {
   /* shares the feTurbulence grain rule declared in entrance.css */
-  opacity: 0.045;
+  opacity: 0.07;
+}
+
+/* A sliver of real procedural fabric (same renderer/algorithm as the
+   entrance curtains, see js/curtain-fabric.js) framing the window in the
+   background art — sheer and partially transparent rather than a solid
+   panel, echoing the brand's curtain motif inside the hero photo itself
+   instead of leaving that motif to the entrance alone. */
+.hero__drape {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 58%;
+  width: 11%;
+  overflow: hidden;
+  opacity: 0.55;
+  mix-blend-mode: soft-light;
+  mask-image: linear-gradient(180deg, transparent, black 12%, black 88%, transparent);
+}
+
+@media (max-width: 760px) {
+  .hero__drape { left: 66%; width: 20%; }
 }
 
 .hero__scrim {
