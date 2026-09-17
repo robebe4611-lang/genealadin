@@ -59,25 +59,14 @@ web/
   it; hero text stays off-white (`--color-background`) with a stronger
   two-layer `text-shadow` so it doesn't wash out over the bright
   window/sky area of the photo.
-- **Inner window curtain**: the photographed room has its own curtains
-  framing the glass. A second small curtain (`.inner-curtain`, positioned
-  from pixel-sampling the actual photo: glass spans ~35.5%–80% of frame
-  width) covers that glass on load and opens after the entrance curtain
-  clears (delay = entrance duration + a small beat — keep these in sync
-  if you retime the entrance) — a second, smaller echo of the same
-  reveal, now inside the room. Desktop only (see the comment in
-  `styles.css` for why mobile's crop makes the measured positions
-  unreliable there).
-
-Known follow-up, not yet addressed: the inner curtain's fold style is the
-same bold/high-contrast pattern as the entrance curtain, while the
-photographed curtains in the shot are softer/sheerer — they read as two
-different fabrics where they overlap rather than one continuous curtain.
-Also (found while verifying the fixes below): on desktop, `translateX(-100%)`
-only moves each inner-curtain panel by its own width, which isn't enough to
-clear it from the glass area it starts in the middle of — it ends up
-resting just outside its start position rather than tucked away. Not yet
-fixed; doesn't affect mobile, where `.inner-curtain` is `display: none`.
+- **Inner window curtain — added, then removed**: a second small curtain
+  (`.inner-curtain`) briefly covered the photographed room's own glass and
+  opened after the entrance curtain cleared. It went through two rounds of
+  bug fixes (fold-style mismatch with the photo's real curtains; a
+  `translateX(-100%)` that only moved each panel by its own width instead
+  of clearing the glass) and was still inconsistent in practice, so it's
+  been removed entirely rather than continuing to chase it. The entrance
+  curtain is the only curtain layer now.
 
 ## Latest fixes (mobile "curtain doesn't fully open" + font + entrance motion)
 

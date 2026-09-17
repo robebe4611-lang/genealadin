@@ -57,21 +57,6 @@ function CurtainEntrance({ open, onOpen }: { open: boolean; onOpen: () => void }
   );
 }
 
-function InnerWindowCurtain({ side }: { side: CurtainSide }) {
-  const folds = Array.from({ length: 7 }, (_, index) => index);
-
-  return (
-    <div className={`inner-curtain inner-curtain--${side}`} aria-hidden="true">
-      <div className="inner-curtain-folds">
-        {folds.map((fold) => (
-          <span key={fold} className="inner-curtain-fold" />
-        ))}
-      </div>
-      <div className="inner-curtain-weave" />
-    </div>
-  );
-}
-
 function HawamHero({ revealed }: { revealed: boolean }) {
   return (
     <main className={`hawam-hero${revealed ? " hawam-hero--revealed" : ""}`}>
@@ -83,15 +68,6 @@ function HawamHero({ revealed }: { revealed: boolean }) {
         height={1280}
         fetchPriority="high"
       />
-
-      {/* The photographed room has its own curtains framing the window;
-          this pair covers the glass itself (measured from the actual
-          photo: ~35.5%–80% of the frame width) so it reads as closed
-          until the entrance curtain has cleared, then parts to tuck in
-          behind the curtains already visible in the shot — a second,
-          smaller echo of the same reveal, now inside the room. */}
-      <InnerWindowCurtain side="left" />
-      <InnerWindowCurtain side="right" />
 
       <div className="hero-shade" aria-hidden="true" />
 
