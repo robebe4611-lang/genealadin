@@ -59,6 +59,7 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-overlay: var(--overlay);
+  --color-chair: var(--chair);
   /* "Noto Serif Hebrew" was never loaded (see index.html) — Hebrew text
      using this stack was silently rendering in the browser's generic
      system serif instead. Frank Ruhl Libre now actually is loaded. */
@@ -88,6 +89,11 @@
   --input: oklch(0.79 0.026 72.1);
   --ring: oklch(0.517 0.012 70.4);
   --overlay: oklch(0.18 0.012 63 / 52%);
+  /* Sampled from the armchair in hawam-interior.jpg (mean of its fabric,
+     avoiding shadow/highlight extremes) — used for the "לתיאום פגישת
+     עיצוב" CTA background instead of near-black, so the button reads as
+     part of the room's own palette. */
+  --chair: oklch(0.367 0.031 68.5);
   /* Matte gold — a flat, solid text color (no gradient/shine). Used only
      for the entrance screen's brand/CTA text (closed-curtain state); the
      hero copy underneath stays off-white (var(--color-background)). */
@@ -193,7 +199,11 @@
   font-family: var(--font-display); font-size: .78rem; line-height: .9; letter-spacing: .16em;
 }
 .hero-content {
-  position: absolute; z-index: 2; top: 50%; left: clamp(2rem, 8vw, 9rem); width: min(38rem, 41vw);
+  /* Right-anchored (not left), matching the RTL text it holds — the box's
+     own edge and its text-align now agree, instead of a right-aligned
+     block floating at a left offset with a variable, disconnected-looking
+     gap to the right of it. */
+  position: absolute; z-index: 2; top: 50%; right: clamp(2rem, 8vw, 9rem); width: min(38rem, 41vw);
   color: var(--color-background);
   /* Two-layer shadow: a wide soft one plus a tight near one, so the text
      stays legible whether it's sitting over the dark furniture or the
@@ -206,10 +216,20 @@
 .hawam-hero--revealed .hero-content { animation: copy-enter 1s .9s cubic-bezier(.22,1,.36,1) forwards; }
 .hero-kicker { margin-bottom: 1.2rem; font-family: var(--font-display); font-size: clamp(.75rem, .8vw, .88rem); letter-spacing: .24em; text-align: right; }
 .hero-content h1 { font-family: var(--font-display); font-size: clamp(3.7rem, 6.4vw, 7.2rem); font-weight: 400; line-height: .86; letter-spacing: 0; text-wrap: balance; }
-.hero-lede { margin: 1.8rem 0 2.2rem; max-width: 31rem; margin-inline-start: auto; color: color-mix(in oklab, var(--color-background) 88%, transparent); font-size: clamp(1rem, 1.25vw, 1.25rem); font-weight: 300; line-height: 1.8; }
+/* No margin-inline-start:auto here (there used to be one): in this RTL
+   block that pushes the narrower lede box away from the inline-start
+   (right) edge instead of flush with it — its own right edge ended up
+   112px short of the headline's above it, reading as misaligned/scattered
+   rather than one coherent right-anchored column. */
+.hero-lede { margin: 1.8rem 0 2.2rem; max-width: 31rem; color: color-mix(in oklab, var(--color-background) 88%, transparent); font-size: clamp(1rem, 1.25vw, 1.25rem); font-weight: 300; line-height: 1.8; }
 .hero-services { margin-top: 1.3rem; color: color-mix(in oklab, var(--color-background) 72%, transparent); font-size: .7rem; letter-spacing: .08em; }
+/* Left, not right: the main copy block is now right-anchored (see
+   .hero-content), so a right-anchored index mark collided with its
+   .hero-services line at the same bottom band. Left mirrors
+   .hero-brand-mark above it instead — two small corner marks on the same
+   side, copy block owns the right side on its own. */
 .hero-index {
-  position: absolute; right: 3rem; bottom: 2.3rem;
+  position: absolute; left: 3rem; bottom: 2.3rem;
   color: color-mix(in oklab, var(--color-background) 70%, transparent);
   text-shadow: 0 .06rem .3rem color-mix(in oklab, var(--color-foreground) 60%, transparent);
   font-family: var(--font-display); font-size: .65rem; letter-spacing: .2em;

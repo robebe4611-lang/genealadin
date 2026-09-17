@@ -17,7 +17,7 @@ const buttonVariants = cva(
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
         hawam:
-          "border border-primary bg-primary text-primary-foreground shadow-none hover:bg-primary/90",
+          "border border-chair bg-chair text-primary-foreground shadow-none hover:bg-chair/90",
       },
       size: {
         default: "h-9 px-4 py-2",

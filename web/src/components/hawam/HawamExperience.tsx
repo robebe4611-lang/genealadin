@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import curtainFabricImage from "@/assets/curtain-panel.jpg";
 import interiorImage from "@/assets/hawam-interior.jpg";
@@ -93,12 +93,6 @@ function HawamHero({ revealed }: { revealed: boolean }) {
 
 export function HawamExperience() {
   const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setOpen(true);
-    }
-  }, []);
 
   return (
     <div className="hawam-experience">
