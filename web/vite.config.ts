@@ -8,6 +8,9 @@ import { defineConfig } from "vite";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
+  // Relative asset paths — this app can be hosted under an arbitrary
+  // sub-path (e.g. a preview artifact), not just a domain root.
+  base: "./",
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
