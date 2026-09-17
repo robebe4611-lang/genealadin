@@ -182,7 +182,6 @@
   &:focus-visible { outline: 1px solid var(--color-background); outline-offset: 5px; }
 }
 
-.hawam-hero,
 .entrance-layer {
   width: 100%;
   height: 100svh;
@@ -190,7 +189,16 @@
 }
 
 .hawam-experience { position: relative; background: var(--color-background); }
-.hawam-hero { position: relative; overflow: hidden; background: var(--color-foreground); }
+/* --topbar-h is measured and set by HawamExperience (the sticky
+   .site-topbar sits in normal flow above this, in-page, unlike the fixed
+   full-viewport curtain overlay) — without subtracting it, the hero
+   claimed a full 100svh on top of the topbar's own height, so the hero's
+   bottom edge (and the CTA/services line inside it) sat past the fold on
+   first load. The rem fallback is only for the instant before JS runs. */
+.hawam-hero {
+  width: 100%; height: calc(100svh - var(--topbar-h, 4.6rem)); min-height: 32rem;
+  position: relative; overflow: hidden; background: var(--color-foreground);
+}
 .hero-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
 .hawam-hero--revealed .hero-image { animation: hero-enter 9s cubic-bezier(.2,.7,.2,1) forwards; }
 .hero-shade { position: absolute; inset: 0; background: color-mix(in oklab, var(--color-foreground) 24%, transparent); }
@@ -465,9 +473,13 @@
 .about-copy p { max-width: 42rem; margin-inline-start: auto; color: var(--color-muted-foreground); font-size: .97rem; line-height: 1.85; }
 .about-copy p + p { margin-top: 1.1rem; }
 
-/* Gallery */
-.gallery { display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 14rem; gap: .6rem; }
-.gallery-main { grid-column: 1 / 3; grid-row: 1 / 3; width: 100%; height: 100%; object-fit: cover; }
+/* Gallery: one tall block (the main photo, spanning all 3 rows) beside a
+   stack of 3 narrower ones — not the earlier attempt where the last photo
+   got stretched into a short, wide strip (grid-column:1/-1 at a single
+   14rem row), which crushed its aspect ratio into an ugly crop. Each cell
+   here stays close to a normal photo aspect, main included. */
+.gallery { display: grid; grid-template-columns: 2fr 1fr; grid-auto-rows: 12rem; gap: .6rem; }
+.gallery-main { grid-column: 1; grid-row: 1 / 4; width: 100%; height: 100%; object-fit: cover; }
 .gallery img {
   width: 100%; height: 100%; object-fit: cover;
   /* A light, uniform warm grade so the 4 source photos (originally shot at
@@ -477,11 +489,6 @@
   transition: filter .4s ease;
 }
 .gallery img:hover { filter: saturate(1) sepia(.02) brightness(1.06); }
-/* Explicit placement for the 3 secondary photos, not auto-flow: with only
-   4 images total, auto-placement left the last one alone in row 3 next to
-   two empty cells (nothing to fill them) — a ragged, unfinished-looking
-   gap. Spanning it full-width instead fully occupies the row. */
-.gallery img:last-child { grid-column: 1 / -1; grid-row: 3; }
 
 /* Testimonials — an editorial pull-quote list (a thin top rule per card)
    instead of boxed cards, so a wall of 8 reviews reads as quiet and
@@ -601,8 +608,13 @@
   .about { flex-direction: column; padding: 3.75rem 1.1rem; gap: 2rem; }
   .about-number { border-inline-end: 0; padding-inline-end: 0; padding-bottom: 1.5rem; border-bottom: 1px solid var(--gold); width: 100%; }
   .about-copy p { margin-inline-start: 0; }
-  .gallery { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 9rem; }
-  .gallery-main { grid-column: 1 / 3; grid-row: 1 / 2; }
+  /* Single column, not a 2-col grid: with only 4 photos, a 2-col grid
+     either leaves one cell empty or forces an odd crop trying to fill it
+     (the same problem the desktop layout had). A simple stack always
+     tiles cleanly at this width, and aspect-ratio keeps each photo's
+     crop reasonable without hand-tuning row heights. */
+  .gallery { grid-template-columns: 1fr; grid-auto-rows: auto; }
+  .gallery-main, .gallery img { grid-column: 1; grid-row: auto; aspect-ratio: 4 / 3; height: auto; }
   .testimonials { padding: 3.75rem 1.1rem; }
   .testimonial-grid { grid-template-columns: 1fr; }
   .process { padding: 3.75rem 1.1rem; }

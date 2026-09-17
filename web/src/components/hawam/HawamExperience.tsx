@@ -111,6 +111,21 @@ export function HawamExperience() {
     return () => document.body.classList.remove("curtain-locked");
   }, [open]);
 
+  // The hero's height is 100svh minus the sticky topbar's real height (see
+  // .hawam-hero in styles.css) — measured here since it varies by
+  // breakpoint/content in a way a single CSS fallback can't track.
+  useEffect(() => {
+    const setTopbarHeight = () => {
+      const topbar = document.querySelector<HTMLElement>(".site-topbar");
+      if (topbar) {
+        document.documentElement.style.setProperty("--topbar-h", `${topbar.offsetHeight}px`);
+      }
+    };
+    setTopbarHeight();
+    window.addEventListener("resize", setTopbarHeight);
+    return () => window.removeEventListener("resize", setTopbarHeight);
+  }, []);
+
   return (
     <div className="hawam-experience">
       <SiteTopBar />
