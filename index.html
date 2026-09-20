@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>HAWAM | חלל התצוגה — וילונות יוקרה</title>
+<meta name="description" content="HAWAM Luxe Curtains — סיור אישי ראשון-גוף בחלל התצוגה הבוטיקי שלנו. קולקציות וילונות יוקרה, וילון רומאי מודרני ותריסי גלילה.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;500;700&family=Heebo:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ivory:#f6f1e9;
+    --ivory-deep:#efe7d8;
+    --travertine:#e9e1d1;
+    --travertine-dark:#d9cebb;
+    --greige:#c9bda8;
+    --champagne:#d8c3a0;
+    --charcoal:#33302a;
+    --charcoal-soft:#4a453c;
+    --brass:#a98a55;
+    --brass-light:#c9a769;
+    --white:#fffdf9;
+    --shadow-soft: 0 20px 60px -20px rgba(51,48,42,0.25);
+    --shadow-card: 0 12px 40px -12px rgba(51,48,42,0.18);
+    --ease: cubic-bezier(.65,0,.35,1);
+    --serif: 'Frank Ruhl Libre', serif;
+    --sans: 'Heebo', sans-serif;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family: var(--sans);
+    background: var(--ivory);
+    color: var(--charcoal);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+  }
+  img{max-width:100%; display:block;}
+  button{font-family:inherit; cursor:pointer; border:none; background:none;}
+
+  /* ---------- Ambient boutique atmosphere ---------- */
+  .ambient{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(ellipse 60% 40% at 20% 0%, rgba(255,250,240,0.9), transparent 60%),
+      radial-gradient(ellipse 50% 35% at 85% 10%, rgba(255,248,235,0.7), transparent 55%),
+      linear-gradient(180deg, var(--ivory) 0%, var(--ivory-deep) 55%, var(--travertine) 100%);
+  }
+  .ambient::before{
+    /* travertine floor plane */
+    content:"";
+    position:absolute; left:0; right:0; bottom:0; height:38%;
+    background:
+      repeating-linear-gradient(100deg, rgba(180,165,140,0.10) 0 2px, transparent 2px 90px),
+      repeating-linear-gradient(10deg, rgba(180,165,140,0.08) 0 1px, transparent 1px 140px),
+      linear-gradient(180deg, rgba(217,206,187,0.0), rgba(217,206,187,0.55) 40%, rgba(201,189,168,0.75));
+    transform: perspective(600px) rotateX(55deg);
+    transform-origin: bottom;
+    filter: blur(0.3px);
+  }
+  .ambient::after{
+    content:"";
+    position:absolute; inset:0;
+    box-shadow: inset 0 0 220px rgba(74,69,60,0.16);
+  }
+  .grain{
+    position:fixed; inset:0; z-index:1; pointer-events:none; opacity:0.035; mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ---------- Top bar ---------- */
+  .topbar{
+    position:fixed; top:0; left:0; right:0; z-index:40;
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 22px clamp(18px,4vw,56px) 0;
+    pointer-events:none;
+  }
+  .topbar > *{pointer-events:auto;}
+  .brand{
+    display:flex; align-items:baseline; gap:10px;
+    font-family: var(--serif);
+  }
+  .brand .mark{
+    font-size: clamp(20px,2.4vw,26px);
+    letter-spacing: 0.18em;
+    font-weight:500;
+    color: var(--charcoal);
+  }
+  .brand .sub{
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing:0.12em;
+    color: var(--charcoal-soft);
+    opacity:0.75;
+  }
+  .cta-book{
+    display:flex; align-items:center; gap:8px;
+    background: var(--charcoal);
+    color: var(--white);
+    padding: 12px 22px;
+    border-radius: 999px;
+    font-size: 13.5px;
+    letter-spacing:0.03em;
+    box-shadow: var(--shadow-card);
+    transition: transform .35s var(--ease), background .35s;
+  }
+  .cta-book:hover{ transform: translateY(-2px); background:#241f19; }
+  .cta-book svg{width:15px; height:15px;}
+
+  /* ---------- Progress rail ---------- */
+  .progress-rail{
+    position:fixed; top: 78px; left:50%; transform:translateX(-50%);
+    z-index:40;
+    display:flex; align-items:center; gap:9px;
+    background: rgba(255,253,249,0.6);
+    backdrop-filter: blur(10px);
+    padding:9px 16px;
+    border-radius:999px;
+    border:1px solid rgba(51,48,42,0.08);
+  }
+  .rail-dot{
+    width:7px; height:7px; border-radius:50%;
+    background: rgba(51,48,42,0.22);
+    transition: all .4s var(--ease);
+    position:relative;
+  }
+  .rail-dot.active{ background: var(--brass); width:22px; border-radius:4px; }
+  .rail-dot:hover{ background: rgba(51,48,42,0.4); cursor:pointer; }
+  .rail-label{
+    font-size:11px; letter-spacing:0.08em; color:var(--charcoal-soft);
+    padding-inline-start:4px; white-space:nowrap;
+  }
+
+  /* ---------- Hall track ---------- */
+  .hall{
+    position:relative; z-index:5;
+    height:100vh; width:100vw;
+    display:flex;
+    will-change: transform;
+  }
+  .hall.walking{ filter: saturate(1) blur(1.5px); }
+  .station{
+    flex: 0 0 100vw;
+    height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 0 clamp(20px, 6vw, 110px);
+    position:relative;
+  }
+
+  .footfall{
+    position:absolute; bottom:16%; left:50%; transform:translateX(-50%);
+    width:2px; height:2px;
+  }
+
+  /* ---------- Reusable: cube ---------- */
+  .cube-wrap{
+    position:relative;
+    width:100%;
+    max-width:1180px;
+    display:grid;
+    grid-template-columns: 1.02fr 0.98fr;
+    gap: clamp(28px,4vw,64px);
+    align-items:center;
+  }
+  .plinth{
+    position:absolute; left:50%; bottom:-46px; transform:translateX(-50%);
+    width:70%; height:26px;
+    background: radial-gradient(ellipse at center, rgba(51,48,42,0.16), transparent 72%);
+    filter: blur(2px);
+  }
+  .cube-media{
+    position:relative;
+    border-radius: 6px;
+    overflow:hidden;
+    background: var(--white);
+    box-shadow: var(--shadow-soft);
+    aspect-ratio: 4/5;
+    border: 1px solid rgba(255,255,255,0.6);
+  }
+  .cube-media img{
+    width:100%; height:100%; object-fit:cover;
+    transition: transform 1.4s var(--ease);
+  }
+  .cube-media:hover img{ transform: scale(1.045); }
+  .tint-overlay{
+    position:absolute; inset:0;
+    mix-blend-mode: multiply;
+    opacity:0.22;
+    transition: background-color .5s var(--ease), opacity .5s var(--ease);
+    pointer-events:none;
+  }
+  .height-badge{
+    position:absolute; top:18px; inset-inline-start:18px;
+    background: rgba(255,253,249,0.92);
+    backdrop-filter: blur(6px);
+    border-radius: 999px;
+    padding: 9px 16px 9px 14px;
+    display:flex; align-items:center; gap:8px;
+    font-size:12.5px; letter-spacing:0.02em; color:var(--charcoal);
+    box-shadow: 0 6px 20px -8px rgba(51,48,42,0.35);
+    border:1px solid rgba(51,48,42,0.06);
+  }
+  .height-badge .dot{width:6px; height:6px; border-radius:50%; background:var(--brass);}
+  .frame-corner{
+    position:absolute; width:26px; height:26px;
+    border-color: rgba(255,255,255,0.85);
+    pointer-events:none;
+  }
+  .fc-tl{ top:10px; inset-inline-start:10px; border-top:1.5px solid; border-inline-start:1.5px solid; }
+  .fc-br{ bottom:10px; inset-inline-end:10px; border-bottom:1.5px solid; border-inline-end:1.5px solid; }
+
+  .cube-info .eyebrow{
+    font-size:11.5px; letter-spacing:0.22em; text-transform:uppercase;
+    color: var(--brass); font-weight:600; margin-bottom:14px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .cube-info .eyebrow::before{ content:""; width:28px; height:1px; background:var(--brass); }
+  .cube-info h2{
+    font-family: var(--serif);
+    font-weight:500;
+    font-size: clamp(30px, 3.4vw, 46px);
+    line-height:1.12;
+    color: var(--charcoal);
+    margin-bottom:6px;
+  }
+  .cube-info .en-sub{
+    font-size:13px; letter-spacing:0.14em; color:var(--charcoal-soft); opacity:0.7;
+    text-transform:uppercase; margin-bottom:20px; font-family:var(--sans);
+  }
+  .cube-info p.desc{
+    font-size: 15.5px; line-height:1.85; color: var(--charcoal-soft);
+    max-width: 46ch; margin-bottom:28px;
+  }
+
+  .swatch-block{ margin-bottom: 30px; }
+  .swatch-block .label{
+    font-size:12px; letter-spacing:0.08em; color:var(--charcoal-soft);
+    margin-bottom:12px; display:flex; justify-content:space-between; align-items:baseline;
+  }
+  .swatch-block .label .current{ color:var(--charcoal); font-weight:600; }
+  .swatches{ display:flex; gap:12px; flex-wrap:wrap; }
+  .swatch{
+    width:38px; height:38px; border-radius:50%;
+    border: 2px solid transparent;
+    position:relative;
+    box-shadow: inset 0 0 0 1px rgba(51,48,42,0.12), 0 3px 8px rgba(51,48,42,0.15);
+    transition: transform .3s var(--ease), border-color .3s;
+  }
+  .swatch::after{
+    content:""; position:absolute; inset:-6px; border-radius:50%;
+    border:1px solid transparent; transition: border-color .3s;
+  }
+  .swatch:hover{ transform: translateY(-3px); }
+  .swatch.active::after{ border-color: var(--brass); }
+  .swatch.active{ transform: translateY(-3px); }
+
+  .fabric-preview{
+    height:64px; border-radius:8px; margin-top:16px;
+    background: repeating-linear-gradient(100deg, rgba(255,255,255,0.35) 0 8px, rgba(0,0,0,0.03) 8px 16px);
+    box-shadow: inset 0 2px 10px rgba(51,48,42,0.12), 0 4px 14px -6px rgba(51,48,42,0.2);
+    transition: background-color .5s var(--ease);
+    display:flex; align-items:center; padding-inline-start:16px;
+    font-size:11.5px; color:rgba(51,48,42,0.55); letter-spacing:0.04em;
+  }
+
+  .cube-cta{
+    display:inline-flex; align-items:center; gap:10px;
+    border-bottom: 1.5px solid var(--charcoal);
+    padding-bottom:6px; font-size:14px; letter-spacing:0.03em; font-weight:500;
+    transition: gap .3s var(--ease), opacity .3s;
+  }
+  .cube-cta:hover{ gap:16px; opacity:0.7; }
+  .cube-cta svg{width:16px; height:16px; transform:scaleX(-1);}
+
+  /* ---------- Entrance station ---------- */
+  .entrance{
+    display:grid; grid-template-columns: 1fr; place-items:center; text-align:center;
+    max-width: 900px; margin:0 auto;
+  }
+  .entrance .kicker{
+    font-size:12px; letter-spacing:0.32em; text-transform:uppercase; color:var(--brass);
+    margin-bottom:22px; font-weight:600;
+  }
+  .entrance h1{
+    font-family: var(--serif); font-weight:400;
+    font-size: clamp(40px, 6.6vw, 84px);
+    line-height:1.06; color:var(--charcoal); margin-bottom:22px;
+    letter-spacing:0.01em;
+  }
+  .entrance h1 em{ font-style:italic; color:var(--brass); font-weight:500; }
+  .entrance .lede{
+    font-size:17px; line-height:1.9; color:var(--charcoal-soft);
+    max-width:56ch; margin: 0 auto 40px;
+  }
+  .entrance-frame{
+    margin-top:36px; width:100%; max-width:760px;
+    border-radius:8px; overflow:hidden; box-shadow: var(--shadow-soft);
+    aspect-ratio: 16/8.2; position:relative;
+  }
+  .entrance-frame img{ width:100%; height:100%; object-fit:cover; }
+  .entrance-frame::after{
+    content:""; position:absolute; inset:0;
+    background: linear-gradient(180deg, rgba(51,48,42,0) 55%, rgba(35,32,26,0.5) 100%);
+  }
+  .entrance-caption{
+    position:absolute; bottom:18px; inset-inline-start:22px; z-index:2;
+    color:var(--white); font-size:13px; letter-spacing:0.08em; text-align:start;
+  }
+  .btn-row{ display:flex; gap:16px; justify-content:center; margin-top:38px; flex-wrap:wrap; }
+  .btn-primary{
+    background:var(--charcoal); color:var(--white);
+    padding:16px 34px; border-radius:999px; font-size:14.5px; letter-spacing:0.04em;
+    display:inline-flex; align-items:center; gap:10px;
+    box-shadow: var(--shadow-card);
+    transition: transform .35s var(--ease), background .3s;
+  }
+  .btn-primary:hover{ transform:translateY(-3px); background:#241f19; }
+  .btn-ghost{
+    border:1.3px solid rgba(51,48,42,0.28); color:var(--charcoal);
+    padding:16px 30px; border-radius:999px; font-size:14.5px; letter-spacing:0.04em;
+    transition: border-color .3s, background .3s;
+  }
+  .btn-ghost:hover{ border-color:var(--charcoal); background:rgba(51,48,42,0.04); }
+
+  /* ---------- Projects station ---------- */
+  .projects-wrap{ width:100%; max-width:1180px; }
+  .projects-head{ text-align:center; margin-bottom:40px; }
+  .projects-head .eyebrow{
+    font-size:11.5px; letter-spacing:0.28em; text-transform:uppercase; color:var(--brass);
+    font-weight:600; margin-bottom:14px;
+  }
+  .projects-head h2{
+    font-family:var(--serif); font-weight:500; font-size:clamp(30px,3.6vw,48px); color:var(--charcoal);
+  }
+  .projects-head p{ margin-top:12px; color:var(--charcoal-soft); font-size:15px; }
+  .wall-badge{
+    display:inline-flex; align-items:center; gap:8px; margin-bottom:18px;
+    font-size:11px; letter-spacing:0.12em; color:var(--charcoal-soft); text-transform:uppercase;
+  }
+  .wall-badge svg{width:13px;height:13px;}
+
+  .grid2x2{
+    display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr;
+    gap:18px; max-width:640px; margin:0 auto;
+    height: min(56vh, 520px);
+  }
+  .proj-tile{
+    position:relative; border-radius:6px; overflow:hidden; cursor:pointer;
+    box-shadow: var(--shadow-card);
+  }
+  .proj-tile img{
+    width:100%; height:100%; object-fit:cover;
+    transition: transform .7s var(--ease), filter .5s;
+  }
+  .proj-tile:hover img{ transform:scale(1.08); filter:brightness(0.85); }
+  .proj-tile .tile-label{
+    position:absolute; inset-inline-start:14px; bottom:12px; z-index:2;
+    color:var(--white); font-size:12.5px; letter-spacing:0.04em;
+    opacity:0; transform:translateY(8px);
+    transition: all .4s var(--ease);
+  }
+  .proj-tile::before{
+    content:""; position:absolute; inset:0;
+    background:linear-gradient(180deg, transparent 45%, rgba(20,18,14,0.65) 100%);
+    opacity:0; transition:opacity .4s;
+  }
+  .proj-tile:hover::before, .proj-tile:hover .tile-label{ opacity:1; transform:translateY(0); }
+  .proj-tile .zoom-ico{
+    position:absolute; top:12px; inset-inline-end:12px; z-index:2;
+    width:32px; height:32px; border-radius:50%;
+    background:rgba(255,253,249,0.85); display:flex; align-items:center; justify-content:center;
+    opacity:0; transform:scale(0.7); transition: all .35s var(--ease);
+  }
+  .proj-tile:hover .zoom-ico{ opacity:1; transform:scale(1); }
+  .zoom-ico svg{ width:14px; height:14px; color:var(--charcoal); }
+
+  /* ---------- Offer station ---------- */
+  .offer-wrap{
+    max-width:1000px; width:100%; position:relative;
+    display:grid; grid-template-columns: 0.9fr 1.1fr; gap:clamp(30px,5vw,70px);
+    align-items:center;
+    padding: clamp(30px,4vw,58px);
+    border-radius: 10px;
+    background: linear-gradient(160deg, rgba(255,253,249,0.9), rgba(238,228,208,0.55));
+    box-shadow: var(--shadow-soft);
+    border: 1px solid rgba(169,138,85,0.25);
+  }
+  .offer-wrap::before{
+    content:""; position:absolute; inset:0; border-radius:10px; z-index:-1;
+    background: radial-gradient(circle at 30% 20%, rgba(201,167,105,0.28), transparent 60%);
+    filter: blur(30px);
+  }
+  .offer-media{ position:relative; aspect-ratio:4/5; border-radius:6px; overflow:hidden; box-shadow:var(--shadow-card); }
+  .offer-media img{ width:100%; height:100%; object-fit:cover; }
+  .ribbon{
+    position:absolute; top:16px; inset-inline-start:-8px; z-index:3;
+    background: var(--charcoal); color:var(--white);
+    padding:9px 18px 9px 22px; font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase;
+    box-shadow: 0 8px 20px -6px rgba(0,0,0,0.4);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 10px 50%);
+  }
+  .offer-info .eyebrow{ color:var(--brass); font-size:12px; letter-spacing:0.22em; text-transform:uppercase; font-weight:700; margin-bottom:16px; }
+  .offer-info h2{ font-family:var(--serif); font-weight:500; font-size:clamp(30px,3.6vw,50px); color:var(--charcoal); line-height:1.1; margin-bottom:10px; }
+  .offer-info .en-sub{ font-size:13px; letter-spacing:0.14em; text-transform:uppercase; color:var(--charcoal-soft); opacity:0.75; margin-bottom:22px; }
+  .price-row{ display:flex; align-items:baseline; gap:14px; margin-bottom:22px; }
+  .price-row .price{ font-family:var(--serif); font-size:clamp(38px,4.4vw,58px); color:var(--charcoal); }
+  .price-row .unit{ font-size:15px; color:var(--charcoal-soft); }
+  .price-row .was{ font-size:15px; text-decoration:line-through; color:rgba(74,69,60,0.5); }
+  .offer-info p.desc{ font-size:15.5px; line-height:1.85; color:var(--charcoal-soft); max-width:44ch; margin-bottom:26px; }
+  .offer-perks{ display:flex; flex-direction:column; gap:10px; margin-bottom:28px; }
+  .offer-perks li{ list-style:none; display:flex; align-items:center; gap:10px; font-size:14px; color:var(--charcoal-soft); }
+  .offer-perks svg{ width:15px; height:15px; color:var(--brass); flex-shrink:0; }
+
+  /* ---------- Contact station ---------- */
+  .contact-wrap{ max-width:920px; width:100%; text-align:center; }
+  .contact-wrap .eyebrow{ font-size:11.5px; letter-spacing:0.28em; color:var(--brass); text-transform:uppercase; font-weight:600; margin-bottom:16px; }
+  .contact-wrap h2{ font-family:var(--serif); font-weight:500; font-size:clamp(32px,4.2vw,58px); color:var(--charcoal); margin-bottom:18px; }
+  .contact-wrap p.lede{ font-size:16px; line-height:1.85; color:var(--charcoal-soft); max-width:54ch; margin:0 auto 36px; }
+  .contact-cards{ display:flex; gap:18px; justify-content:center; flex-wrap:wrap; margin-bottom:34px; }
+  .contact-card{
+    background:var(--white); border-radius:8px; padding:22px 26px; min-width:200px;
+    box-shadow: var(--shadow-card); border:1px solid rgba(51,48,42,0.06);
+    text-align:start;
+  }
+  .contact-card .k{ font-size:11px; letter-spacing:0.1em; color:var(--brass); text-transform:uppercase; margin-bottom:8px; font-weight:600; }
+  .contact-card .v{ font-size:14.5px; color:var(--charcoal); }
+  .contact-card a{ color:var(--charcoal); text-decoration:none; border-bottom:1px solid rgba(51,48,42,0.25); }
+
+  /* ---------- Nav arrows ---------- */
+  .nav-arrow{
+    position:fixed; top:50%; transform:translateY(-50%);
+    z-index:35;
+    width:54px; height:54px; border-radius:50%;
+    background: rgba(255,253,249,0.75);
+    backdrop-filter: blur(8px);
+    border:1px solid rgba(51,48,42,0.1);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: var(--shadow-card);
+    transition: all .35s var(--ease);
+  }
+  .nav-arrow:hover{ background:var(--white); transform:translateY(-50%) scale(1.08); }
+  .nav-arrow:disabled{ opacity:0.25; pointer-events:none; }
+  .nav-arrow svg{ width:20px; height:20px; color:var(--charcoal); }
+  .nav-prev{ inset-inline-start:26px; }
+  .nav-next{ inset-inline-end:26px; }
+  .nav-prev svg{ transform:scaleX(-1); }
+
+  /* ---------- Bottom station bar ---------- */
+  .bottom-bar{
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+    z-index:35;
+    display:flex; align-items:center; gap:22px;
+    background: rgba(255,253,249,0.72);
+    backdrop-filter: blur(12px);
+    border:1px solid rgba(51,48,42,0.08);
+    border-radius:999px;
+    padding:12px 26px;
+    box-shadow: var(--shadow-card);
+    max-width: 92vw;
+  }
+  .step-btn{
+    display:flex; align-items:center; gap:8px;
+    font-size:13px; letter-spacing:0.03em; color:var(--charcoal);
+    padding:8px 4px;
+    transition: opacity .3s;
+  }
+  .step-btn:disabled{ opacity:0.3; pointer-events:none; }
+  .step-btn svg{ width:15px; height:15px; }
+  .step-btn.next svg{ transform:scaleX(-1); }
+  .station-count{ font-size:12px; color:var(--charcoal-soft); letter-spacing:0.05em; white-space:nowrap; }
+  .station-count b{ color:var(--charcoal); font-weight:600; }
+  .dots{ display:flex; gap:7px; }
+  .dot{
+    width:6px; height:6px; border-radius:50%; background:rgba(51,48,42,0.22);
+    transition: all .35s var(--ease); cursor:pointer;
+  }
+  .dot.active{ background:var(--brass); width:20px; border-radius:3px; }
+
+  /* ---------- Lightbox ---------- */
+  .lightbox{
+    position:fixed; inset:0; z-index:100;
+    background: rgba(24,22,18,0.92);
+    display:flex; align-items:center; justify-content:center;
+    opacity:0; pointer-events:none; transition: opacity .4s var(--ease);
+  }
+  .lightbox.open{ opacity:1; pointer-events:auto; }
+  .lightbox-inner{
+    max-width:min(88vw,920px); max-height:82vh; position:relative;
+    transform: scale(0.94); transition: transform .4s var(--ease);
+  }
+  .lightbox.open .lightbox-inner{ transform:scale(1); }
+  .lightbox-inner img{
+    width:100%; height:100%; max-height:82vh; object-fit:contain; border-radius:6px;
+    box-shadow: 0 30px 90px rgba(0,0,0,0.5);
+  }
+  .lightbox-cap{
+    text-align:center; color:rgba(255,253,249,0.85); margin-top:16px; font-size:13.5px; letter-spacing:0.06em;
+  }
+  .lightbox-close{
+    position:absolute; top:-46px; inset-inline-end:0;
+    width:38px; height:38px; border-radius:50%;
+    background:rgba(255,253,249,0.12); display:flex; align-items:center; justify-content:center;
+    transition: background .3s;
+  }
+  .lightbox-close:hover{ background:rgba(255,253,249,0.24); }
+  .lightbox-close svg{ width:16px; height:16px; color:var(--white); }
+  .lightbox-nav{
+    position:fixed; top:50%; transform:translateY(-50%);
+    width:48px; height:48px; border-radius:50%;
+    background:rgba(255,253,249,0.1); display:flex; align-items:center; justify-content:center;
+    transition: background .3s;
+  }
+  .lightbox-nav:hover{ background:rgba(255,253,249,0.22); }
+  .lightbox-nav svg{ width:18px; height:18px; color:var(--white); }
+  .lb-prev{ inset-inline-start:24px; }
+  .lb-next{ inset-inline-end:24px; }
+  .lb-next svg{ transform:scaleX(-1); }
+
+  /* ---------- Consultation modal ---------- */
+  .modal-veil{
+    position:fixed; inset:0; z-index:110;
+    background: rgba(24,22,18,0.55);
+    backdrop-filter: blur(4px);
+    display:flex; align-items:center; justify-content:center;
+    opacity:0; pointer-events:none; transition: opacity .35s var(--ease);
+    padding:20px;
+  }
+  .modal-veil.open{ opacity:1; pointer-events:auto; }
+  .modal-card{
+    width:100%; max-width:480px;
+    background:var(--white); border-radius:10px; padding:clamp(28px,4vw,44px);
+    box-shadow: 0 40px 100px rgba(20,18,14,0.35);
+    transform: translateY(16px) scale(0.97); transition: transform .4s var(--ease);
+    max-height:88vh; overflow-y:auto;
+  }
+  .modal-veil.open .modal-card{ transform:translateY(0) scale(1); }
+  .modal-head{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px; }
+  .modal-head h3{ font-family:var(--serif); font-weight:500; font-size:26px; color:var(--charcoal); }
+  .modal-close{ width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; transition:background .3s; }
+  .modal-close:hover{ background:rgba(51,48,42,0.08); }
+  .modal-close svg{ width:14px; height:14px; color:var(--charcoal); }
+  .modal-card p.sub{ font-size:13.5px; color:var(--charcoal-soft); margin-bottom:26px; line-height:1.7; }
+  .field{ margin-bottom:16px; }
+  .field label{ display:block; font-size:12px; letter-spacing:0.04em; color:var(--charcoal-soft); margin-bottom:7px; }
+  .field input, .field textarea, .field select{
+    width:100%; border:1.3px solid rgba(51,48,42,0.16); border-radius:6px;
+    padding:12px 14px; font-family:inherit; font-size:14px; color:var(--charcoal);
+    background: var(--ivory); transition: border-color .3s;
+  }
+  .field input:focus, .field textarea:focus, .field select:focus{ outline:none; border-color:var(--brass); }
+  .field textarea{ resize:vertical; min-height:76px; }
+  .modal-submit{
+    width:100%; background:var(--charcoal); color:var(--white);
+    padding:15px; border-radius:8px; font-size:14.5px; letter-spacing:0.04em;
+    margin-top:6px; transition: background .3s, transform .3s var(--ease);
+  }
+  .modal-submit:hover{ background:#241f19; transform:translateY(-2px); }
+  .modal-success{ text-align:center; padding: 20px 0 4px; }
+  .modal-success .ic{
+    width:58px; height:58px; border-radius:50%; background:var(--ivory-deep);
+    display:flex; align-items:center; justify-content:center; margin:0 auto 18px;
+  }
+  .modal-success .ic svg{ width:24px; height:24px; color:var(--brass); }
+  .modal-success h4{ font-family:var(--serif); font-size:22px; margin-bottom:10px; color:var(--charcoal); }
+  .modal-success p{ font-size:14px; color:var(--charcoal-soft); line-height:1.7; }
+  .hidden{ display:none !important; }
+
+  /* ---------- Motion / walking transitions ---------- */
+  .station-content{
+    animation: riseIn .8s var(--ease) both;
+  }
+  @keyframes riseIn{
+    from{ opacity:0; transform:translateY(22px) scale(0.985); }
+    to{ opacity:1; transform:translateY(0) scale(1); }
+  }
+  .walk-flash{
+    position:fixed; inset:0; z-index:30; pointer-events:none;
+    background: radial-gradient(ellipse at center, transparent 55%, rgba(51,48,42,0.14) 100%);
+    opacity:0;
+  }
+  .walk-flash.active{ animation: flashStep .62s var(--ease); }
+  @keyframes flashStep{
+    0%{ opacity:0; } 40%{ opacity:1; } 100%{ opacity:0; }
+  }
+
+  ::selection{ background: var(--champagne); color:var(--charcoal); }
+
+  @media (max-width: 900px){
+    body{ overflow-y:auto; height:auto; min-height:100vh; }
+    .hall{ height:auto; }
+    .station{ height:auto; min-height:100vh; padding: 130px 20px 150px; }
+    .cube-wrap{ grid-template-columns:1fr; }
+    .cube-media{ order:1; max-width:420px; margin:0 auto; }
+    .cube-info{ order:2; text-align:center; }
+    .cube-info .eyebrow{ justify-content:center; }
+    .cube-info p.desc{ margin-inline:auto; }
+    .swatches{ justify-content:center; }
+    .offer-wrap{ grid-template-columns:1fr; text-align:center; }
+    .offer-media{ max-width:340px; margin:0 auto; }
+    .offer-perks{ align-items:center; }
+    .price-row{ justify-content:center; }
+    .progress-rail{ display:none; }
+    .nav-arrow{ width:44px; height:44px; }
+    .nav-prev{ inset-inline-start:12px; }
+    .nav-next{ inset-inline-end:12px; }
+    .grid2x2{ height:min(80vw,420px); }
+    .bottom-bar{ gap:12px; padding:10px 16px; flex-wrap:wrap; justify-content:center; }
+    .station-count{ display:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="ambient"></div>
+<div class="grain"></div>
+<div class="walk-flash" id="walkFlash"></div>
+
+<!-- Top bar -->
+<header class="topbar">
+  <div class="brand">
+    <span class="mark">HAWAM</span>
+    <span class="sub">LUXE&nbsp;CURTAINS</span>
+  </div>
+  <button class="cta-book" id="openConsultTop">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 2v4M16 2v4M3.5 9h17M5 5h14a1.5 1.5 0 0 1 1.5 1.5V19A1.5 1.5 0 0 1 19 20.5H5A1.5 1.5 0 0 1 3.5 19V6.5A1.5 1.5 0 0 1 5 5z"/></svg>
+    תיאום פגישה
+  </button>
+</header>
+
+<!-- Progress rail -->
+<nav class="progress-rail" id="progressRail" aria-label="ניווט בין תחנות התצוגה"></nav>
+
+<!-- Nav arrows -->
+<button class="nav-arrow nav-prev" id="prevArrow" aria-label="חזרה אחורה">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5l7 7-7 7"/></svg>
+</button>
+<button class="nav-arrow nav-next" id="nextArrow" aria-label="המשך הלאה">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5l7 7-7 7"/></svg>
+</button>
+
+<!-- ================= HALL ================= -->
+<main class="hall" id="hall">
+
+  <!-- STATION 0 — ENTRANCE -->
+  <section class="station" data-title="הכניסה">
+    <div class="entrance station-content">
+      <div class="kicker">חלל התצוגה הבוטיקי · HAWAM DESIGN</div>
+      <h1>אמנות האור,<br><em>בעיצוב בד.</em></h1>
+      <p class="lede">
+        סיור אישי ראשון-גוף בין קולקציות הווילונות היוקרתיות שלנו — רצפות טרוורטין בהירות, קירות שנהב חמים ותאורה רכה,
+        בדיוק כמו בביקור אמיתי בשואו-רום שלנו. התקדמו תחנה אחר תחנה וגלו את הקולקציה.
+      </p>
+      <div class="entrance-frame">
+        <img src="assets/images/hero-entrance.png" alt="חלל תצוגה מרווח ומואר בסגנון בוטיק, HAWAM">
+        <div class="entrance-caption">חלל התצוגה הראשי — HAWAM Design House</div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-primary" id="startTour">
+          התחילו את הסיור
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="transform:scaleX(-1)"><path d="M9 5l7 7-7 7"/></svg>
+        </button>
+        <button class="btn-ghost" id="openConsultHero">תיאום פגישה אישית</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATION 1 — PROJECTS (right wall on entrance) -->
+  <section class="station" data-title="הפרויקטים שלנו">
+    <div class="projects-wrap station-content">
+      <div class="projects-head">
+        <div class="wall-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21V8l9-5 9 5v13M3 21h18M9 21v-6h6v6"/></svg>
+          קיר ימין · עמדת הכניסה
+        </div>
+        <div class="eyebrow">Our Installations</div>
+        <h2>הפרויקטים שלנו</h2>
+        <p>תמונות אמיתיות מהתקנות שביצענו בבתי לקוחותינו — לחצו על כל תמונה להגדלה</p>
+      </div>
+      <div class="grid2x2" id="projectsGrid">
+        <div class="proj-tile" data-lb="0">
+          <img src="assets/images/project-sfold-full.jpeg" alt="התקנת וילון S-Fold שקוף בגובה מלא, דירת מגורים">
+          <span class="zoom-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg></span>
+          <span class="tile-label">גלישה שקופה — דירת פרטית, תל אביב</span>
+        </div>
+        <div class="proj-tile" data-lb="1">
+          <img src="assets/images/project-wave-sheer.jpeg" alt="וילון גל שקוף מהתקרה עד הרצפה בסלון מואר">
+          <span class="zoom-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg></span>
+          <span class="tile-label">וילון גלישה שקוף — סלון פרטי</span>
+        </div>
+        <div class="proj-tile" data-lb="2">
+          <img src="assets/images/project-roman.jpeg" alt="וילון רומאי בגוון שנהב מותקן בחלון">
+          <span class="zoom-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg></span>
+          <span class="tile-label">וילון רומאי — חדר עבודה</span>
+        </div>
+        <div class="proj-tile" data-lb="3">
+          <img src="assets/images/project-roman-linen.jpeg" alt="וילון רומאי בבד פשתן טבעי מעל כיור מטבח">
+          <span class="zoom-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg></span>
+          <span class="tile-label">וילון רומאי בפשתן — פינת מטבח</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATION 2 — S-Fold Sheer & Drape -->
+  <section class="station" data-title="שילוב וילונות שכבות">
+    <div class="cube-wrap station-content">
+      <div class="cube-media" id="mediaA">
+        <img src="assets/images/interior-sheer-drape.jpg" alt="שילוב וילון שקוף ווילון כבד בסלון עם נוף לים">
+        <div class="tint-overlay" id="tintA"></div>
+        <span class="frame-corner fc-tl"></span>
+        <span class="frame-corner fc-br"></span>
+        <div class="height-badge"><span class="dot"></span> גובה סטנדרטי: 2 מטר</div>
+      </div>
+      <div class="cube-info">
+        <div class="eyebrow">עמדה 02 · קולקציית שכבות</div>
+        <h2>שילוב וילונות שכבות</h2>
+        <div class="en-sub">S-Fold Sheer &amp; Drape</div>
+        <p class="desc">
+          שילוב מנצח בין וילון שקוף עדין הנופל בקפלי S רכים, לבין וילון בד כבד היוצר עומק, פרטיות ואווירה חמה.
+          מושלם לסלונות וחללי מגורים המשלבים אור טבעי עם תחושת יוקרה.
+        </p>
+        <div class="swatch-block">
+          <div class="label"><span>בחרו גוון בד</span><span class="current" data-current-a>שנהב</span></div>
+          <div class="swatches" data-swatch-group="A">
+            <button class="swatch active" style="background:#f2ece0" data-name="שנהב" data-color="#efe6d2" data-tint="#efe6d2"></button>
+            <button class="swatch" style="background:#d8c3a0" data-name="שמפניה" data-color="#d8c3a0" data-tint="#d8c3a0"></button>
+            <button class="swatch" style="background:#c9bda8" data-name="גריז' חם" data-color="#c9bda8" data-tint="#c9bda8"></button>
+            <button class="swatch" style="background:#b8a488" data-name="חול" data-color="#b8a488" data-tint="#b8a488"></button>
+            <button class="swatch" style="background:#5c554a" data-name="פחם רך" data-color="#5c554a" data-tint="#5c554a"></button>
+          </div>
+          <div class="fabric-preview" data-preview-a>תצוגה מקדימה של הגוון — שנהב</div>
+        </div>
+        <a href="#" class="cube-cta" data-open-consult>
+          בקשו הצעת מחיר לקולקציה
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATION 3 — Full-Height S-Fold Sheer -->
+  <section class="station" data-title="וילונות גלישה שקופים">
+    <div class="cube-wrap station-content">
+      <div class="cube-media" id="mediaB">
+        <img src="assets/images/project-sfold-full.jpeg" alt="וילון S-Fold שקוף בגובה מלא מהתקרה ועד הרצפה">
+        <div class="tint-overlay" id="tintB"></div>
+        <span class="frame-corner fc-tl"></span>
+        <span class="frame-corner fc-br"></span>
+        <div class="height-badge"><span class="dot"></span> גובה סטנדרטי: 2 מטר</div>
+      </div>
+      <div class="cube-info">
+        <div class="eyebrow">עמדה 03 · גלישה מלאה</div>
+        <h2>וילונות גלישה שקופים</h2>
+        <div class="en-sub">Full-Height S-Fold Sheer</div>
+        <p class="desc">
+          גלישה רציפה ואחידה מהתקרה ועד הרצפה, בטכניקת קיפול S אירופאית המעניקה תנועה רכה ואור מפוזר לאורך כל שעות היום.
+          פתרון מינימליסטי שמדגיש גובה ומרחב.
+        </p>
+        <div class="swatch-block">
+          <div class="label"><span>בחרו גוון בד</span><span class="current" data-current-b>לבן חמים</span></div>
+          <div class="swatches" data-swatch-group="B">
+            <button class="swatch active" style="background:#f7f3ea" data-name="לבן חמים" data-color="#f7f3ea" data-tint="#f7f3ea"></button>
+            <button class="swatch" style="background:#ece1c8" data-name="שנהב עדין" data-color="#ece1c8" data-tint="#ece1c8"></button>
+            <button class="swatch" style="background:#d8c3a0" data-name="שמפניה" data-color="#d8c3a0" data-tint="#d8c3a0"></button>
+            <button class="swatch" style="background:#a98a55" data-name="ברונזה רכה" data-color="#a98a55" data-tint="#a98a55"></button>
+          </div>
+          <div class="fabric-preview" data-preview-b>תצוגה מקדימה של הגוון — לבן חמים</div>
+        </div>
+        <a href="#" class="cube-cta" data-open-consult>
+          בקשו הצעת מחיר לקולקציה
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATION 4 — CENTRAL SPECIAL OFFER -->
+  <section class="station" data-title="מבצע מיוחד">
+    <div class="offer-wrap station-content">
+      <div class="offer-media">
+        <span class="ribbon">מבצע מיוחד · לזמן מוגבל</span>
+        <img src="assets/images/texture-closeup.png" alt="תקריב על בד קרפ צרפתי יוקרתי בגוון שנהב">
+      </div>
+      <div class="offer-info">
+        <div class="eyebrow">עמדת מרכז · Spotlight</div>
+        <h2>וילונות קרפ צרפתי</h2>
+        <div class="en-sub">French Crepe Curtains</div>
+        <div class="price-row">
+          <span class="price">895 ₪</span>
+          <span class="unit">למ"ר, כולל תפירה</span>
+          <span class="was">1,190 ₪</span>
+        </div>
+        <p class="desc">
+          בד קרפ צרפתי בעל מרקם עשיר ונפילה מפוארת, הנתפר בעבודת יד ומותקן בטכניקת S-Fold. איכות בוטיקית במחיר מיוחד לזמן מוגבל.
+        </p>
+        <ul class="offer-perks">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> מדידה והתקנה כלולות במחיר</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> גובה סטנדרטי 2 מטר, התאמה לכל מידה</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> 5 גוונים נבחרים מהקולקציה הצרפתית</li>
+        </ul>
+        <button class="btn-primary" data-open-consult>
+          הזמינו עכשיו במחיר המבצע
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="transform:scaleX(-1)"><path d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATION 5 — Modern Roman Blinds -->
+  <section class="station" data-title="וילון רומאי מודרני">
+    <div class="cube-wrap station-content">
+      <div class="cube-media" id="mediaC">
+        <img src="assets/images/project-roman.jpeg" alt="וילון רומאי מודרני בגוון שנהב">
+        <div class="tint-overlay" id="tintC"></div>
+        <span class="frame-corner fc-tl"></span>
+        <span class="frame-corner fc-br"></span>
+        <div class="height-badge"><span class="dot"></span> גובה סטנדרטי: 2 מטר</div>
+      </div>
+      <div class="cube-info">
+        <div class="eyebrow">עמדה 05 · וילונות מבד מתקפל</div>
+        <h2>וילון רומאי מודרני</h2>
+        <div class="en-sub">Modern Roman Blinds</div>
+        <p class="desc">
+          קווים נקיים וקיפולים אחידים היוצרים מראה אדריכלי ומסודר. פתרון אלגנטי לחדרי עבודה, מטבחים וחדרי שינה,
+          עם מנגנון הרמה שקט וחלק.
+        </p>
+        <div class="swatch-block">
+          <div class="label"><span>בחרו גוון בד</span><span class="current" data-current-c>שנהב קלאסי</span></div>
+          <div class="swatches" data-swatch-group="C">
+            <button class="swatch active" style="background:#efe6d2" data-name="שנהב קלאסי" data-color="#efe6d2" data-tint="#efe6d2"></button>
+            <button class="swatch" style="background:#e3d5b8" data-name="לינן טבעי" data-color="#e3d5b8" data-tint="#e3d5b8"></button>
+            <button class="swatch" style="background:#c9bda8" data-name="גריז'" data-color="#c9bda8" data-tint="#c9bda8"></button>
+            <button class="swatch" style="background:#33302a" data-name="פחם" data-color="#33302a" data-tint="#33302a"></button>
+          </div>
+          <div class="fabric-preview" data-preview-c>תצוגה מקדימה של הגוון — שנהב קלאסי</div>
+        </div>
+        <a href="#" class="cube-cta" data-open-consult>
+          בקשו הצעת מחיר לקולקציה
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATION 6 — Minimalist & Textured Roller Blinds -->
+  <section class="station" data-title="תריסי גלילה">
+    <div class="cube-wrap station-content">
+      <div class="cube-media" id="mediaD">
+        <img src="assets/images/project-roman-linen.jpeg" alt="תריס גלילה מינימליסטי בגוון פשתן טבעי">
+        <div class="tint-overlay" id="tintD"></div>
+        <span class="frame-corner fc-tl"></span>
+        <span class="frame-corner fc-br"></span>
+        <div class="height-badge"><span class="dot"></span> גובה סטנדרטי: 2 מטר</div>
+      </div>
+      <div class="cube-info">
+        <div class="eyebrow">עמדה 06 · מרקמים מינימליסטיים</div>
+        <h2>תריסי גלילה</h2>
+        <div class="en-sub">Minimalist &amp; Textured Roller Blinds</div>
+        <p class="desc">
+          עיצוב מינימליסטי ונקי עם מרקמי בד עשירים למגע. גלילה חלקה ושקטה, אידיאלית לחללים מודרניים המבקשים
+          שליטה מדויקת באור מבלי להתפשר על אסתטיקה.
+        </p>
+        <div class="swatch-block">
+          <div class="label"><span>בחרו גוון בד</span><span class="current" data-current-d>פשתן טבעי</span></div>
+          <div class="swatches" data-swatch-group="D">
+            <button class="swatch active" style="background:#e6dcc4" data-name="פשתן טבעי" data-color="#e6dcc4" data-tint="#e6dcc4"></button>
+            <button class="swatch" style="background:#d8c3a0" data-name="שמפניה" data-color="#d8c3a0" data-tint="#d8c3a0"></button>
+            <button class="swatch" style="background:#a8a196" data-name="אבן רכה" data-color="#a8a196" data-tint="#a8a196"></button>
+            <button class="swatch" style="background:#4a453c" data-name="גרפיט" data-color="#4a453c" data-tint="#4a453c"></button>
+          </div>
+          <div class="fabric-preview" data-preview-d>תצוגה מקדימה של הגוון — פשתן טבעי</div>
+        </div>
+        <a href="#" class="cube-cta" data-open-consult>
+          בקשו הצעת מחיר לקולקציה
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATION 7 — CONTACT / END OF HALL -->
+  <section class="station" data-title="תיאום פגישה">
+    <div class="contact-wrap station-content">
+      <div class="eyebrow">סוף הסיור · דלפק הקבלה</div>
+      <h2>נשמח לתכנן איתכם<br>את החלל שלכם</h2>
+      <p class="lede">
+        תיאום פגישת ייעוץ אישית בשואו-רום או בביתכם — נבחר יחד את הבד, הטכניקה והגוון המושלמים לחלל שלכם.
+      </p>
+      <div class="contact-cards">
+        <div class="contact-card">
+          <div class="k">אימייל</div>
+          <div class="v"><a href="mailto:info@hawamdesign.com">info@hawamdesign.com</a></div>
+        </div>
+        <div class="contact-card">
+          <div class="k">אתר</div>
+          <div class="v"><a href="https://hawamdesign.com" target="_blank" rel="noopener">hawamdesign.com</a></div>
+        </div>
+        <div class="contact-card">
+          <div class="k">שעות פעילות</div>
+          <div class="v">א׳–ה׳ 09:00–18:00</div>
+        </div>
+      </div>
+      <button class="btn-primary" id="openConsultEnd">
+        תיאום פגישה עכשיו
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="transform:scaleX(-1)"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </section>
+
+</main>
+
+<!-- Bottom station bar -->
+<div class="bottom-bar">
+  <button class="step-btn prev" id="prevBtn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg>
+    חזרה אחורה
+  </button>
+  <div class="dots" id="dots"></div>
+  <span class="station-count">תחנה <b id="stationIdx">1</b> מתוך <span id="stationTotal">8</span> — <span id="stationName"></span></span>
+  <button class="step-btn next" id="nextBtn">
+    המשך הלאה
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg>
+  </button>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-nav lb-prev" id="lbPrev" aria-label="תמונה קודמת">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5l7 7-7 7"/></svg>
+  </button>
+  <div class="lightbox-inner">
+    <button class="lightbox-close" id="lbClose" aria-label="סגירה">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <img id="lbImg" src="" alt="">
+    <div class="lightbox-cap" id="lbCap"></div>
+  </div>
+  <button class="lightbox-nav lb-next" id="lbNext" aria-label="תמונה הבאה">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5l7 7-7 7"/></svg>
+  </button>
+</div>
+
+<!-- Consultation modal -->
+<div class="modal-veil" id="modalVeil">
+  <div class="modal-card">
+    <div id="modalForm">
+      <div class="modal-head">
+        <h3>תיאום פגישה</h3>
+        <button class="modal-close" id="modalClose">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <p class="sub">השאירו פרטים ונחזור אליכם לתיאום פגישת ייעוץ אישית — ללא עלות וללא התחייבות.</p>
+      <form id="consultForm">
+        <div class="field">
+          <label for="cName">שם מלא</label>
+          <input type="text" id="cName" required placeholder="ישראל ישראלי">
+        </div>
+        <div class="field">
+          <label for="cPhone">טלפון</label>
+          <input type="tel" id="cPhone" required placeholder="050-0000000">
+        </div>
+        <div class="field">
+          <label for="cInterest">תחום עניין</label>
+          <select id="cInterest">
+            <option>שילוב וילונות שכבות</option>
+            <option>וילונות גלישה שקופים</option>
+            <option>מבצע קרפ צרפתי — 895 ₪</option>
+            <option>וילון רומאי מודרני</option>
+            <option>תריסי גלילה</option>
+            <option>אחר / ייעוץ כללי</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="cMsg">הודעה (לא חובה)</label>
+          <textarea id="cMsg" placeholder="ספרו לנו קצת על החלל שלכם..."></textarea>
+        </div>
+        <button type="submit" class="modal-submit">שליחת בקשה לתיאום</button>
+      </form>
+    </div>
+    <div id="modalSuccess" class="modal-success hidden">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></div>
+      <h4>הבקשה נשלחה בהצלחה</h4>
+      <p>תודה שפניתם ל-HAWAM. נציג יחזור אליכם בהקדם לתיאום פגישת הייעוץ.</p>
+      <button class="modal-submit" style="margin-top:22px;" id="modalDone">סגירה</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var hall = document.getElementById('hall');
+  var stations = Array.prototype.slice.call(document.querySelectorAll('.station'));
+  var total = stations.length;
+  var current = 0;
+  var isAnimating = false;
+
+  var stationNames = stations.map(function(s){ return s.getAttribute('data-title'); });
+
+  // Build dots + progress rail
+  var dotsWrap = document.getElementById('dots');
+  var railWrap = document.getElementById('progressRail');
+  stations.forEach(function(s, i){
+    var d = document.createElement('span');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.addEventListener('click', function(){ goTo(i); });
+    dotsWrap.appendChild(d);
+
+    var rd = document.createElement('span');
+    rd.className = 'rail-dot' + (i === 0 ? ' active' : '');
+    rd.title = stationNames[i];
+    rd.addEventListener('click', function(){ goTo(i); });
+    railWrap.appendChild(rd);
+  });
+
+  document.getElementById('stationTotal').textContent = total;
+
+  function updateChrome(){
+    var dots = dotsWrap.querySelectorAll('.dot');
+    var railDots = railWrap.querySelectorAll('.rail-dot');
+    dots.forEach(function(d, i){ d.classList.toggle('active', i === current); });
+    railDots.forEach(function(d, i){ d.classList.toggle('active', i === current); });
+    document.getElementById('stationIdx').textContent = current + 1;
+    document.getElementById('stationName').textContent = stationNames[current];
+    document.getElementById('prevBtn').disabled = current === 0;
+    document.getElementById('nextBtn').disabled = current === total - 1;
+    document.getElementById('prevArrow').disabled = current === 0;
+    document.getElementById('nextArrow').disabled = current === total - 1;
+  }
+
+  function flashStep(){
+    var f = document.getElementById('walkFlash');
+    f.classList.remove('active');
+    void f.offsetWidth;
+    f.classList.add('active');
+  }
+
+  function goTo(index){
+    if (index < 0 || index >= total || index === current || isAnimating) return;
+    isAnimating = true;
+    current = index;
+    var isRTL = true; // hall built for RTL walkthrough (entrance -> forward = leftwards visually, but track uses logical direction)
+    hall.style.transition = 'transform .85s var(--ease)';
+    hall.style.transform = 'translateX(' + (current * 100) + 'vw)';
+    flashStep();
+    updateChrome();
+
+    var activeStation = stations[current];
+    var content = activeStation.querySelector('.station-content');
+    if (content){
+      content.style.animation = 'none';
+      void content.offsetWidth;
+      content.style.animation = '';
+    }
+
+    setTimeout(function(){ isAnimating = false; }, 860);
+  }
+
+  function next(){ goTo(current + 1); }
+  function prev(){ goTo(current - 1); }
+
+  document.getElementById('nextBtn').addEventListener('click', next);
+  document.getElementById('prevBtn').addEventListener('click', prev);
+  document.getElementById('nextArrow').addEventListener('click', next);
+  document.getElementById('prevArrow').addEventListener('click', prev);
+  document.getElementById('startTour').addEventListener('click', function(){ goTo(1); });
+
+  window.addEventListener('keydown', function(e){
+    if (document.getElementById('lightbox').classList.contains('open')) return;
+    if (document.getElementById('modalVeil').classList.contains('open')) return;
+    if (e.key === 'ArrowRight') prev();   // RTL: right arrow = go back
+    if (e.key === 'ArrowLeft') next();    // RTL: left arrow = go forward
+  });
+
+  // Touch swipe
+  var touchStartX = null;
+  hall.addEventListener('touchstart', function(e){ touchStartX = e.touches[0].clientX; }, {passive:true});
+  hall.addEventListener('touchend', function(e){
+    if (touchStartX === null) return;
+    var dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 60){ dx < 0 ? next() : prev(); }
+    touchStartX = null;
+  }, {passive:true});
+
+  // Correct initial transform base (translateX positive moves content to the right in RTL visually left->right doesn't matter, consistent because both directions use same var)
+  hall.style.transform = 'translateX(0vw)';
+  updateChrome();
+
+  // ---------- Swatch interactivity ----------
+  function setupSwatchGroup(letter){
+    var group = document.querySelector('[data-swatch-group="' + letter + '"]');
+    if (!group) return;
+    var tint = document.getElementById('tint' + letter);
+    var preview = document.querySelector('[data-preview-' + letter.toLowerCase() + ']');
+    var currentLabel = document.querySelector('[data-current-' + letter.toLowerCase() + ']');
+    var swatches = group.querySelectorAll('.swatch');
+
+    swatches.forEach(function(sw){
+      sw.addEventListener('click', function(){
+        swatches.forEach(function(s){ s.classList.remove('active'); });
+        sw.classList.add('active');
+        var color = sw.getAttribute('data-tint');
+        var name = sw.getAttribute('data-name');
+        if (tint) tint.style.backgroundColor = color;
+        if (preview){
+          preview.style.backgroundColor = color;
+          preview.textContent = 'תצוגה מקדימה של הגוון — ' + name;
+        }
+        if (currentLabel) currentLabel.textContent = name;
+      });
+    });
+
+    // init
+    var active = group.querySelector('.swatch.active');
+    if (active){
+      var c = active.getAttribute('data-tint');
+      if (tint) tint.style.backgroundColor = c;
+      if (preview) preview.style.backgroundColor = c;
+    }
+  }
+  ['A','B','C','D'].forEach(setupSwatchGroup);
+
+  // ---------- Lightbox ----------
+  var projectImages = [
+    { src: 'assets/images/project-sfold-full.jpeg', cap: 'גלישה שקופה — דירת פרטית, תל אביב' },
+    { src: 'assets/images/project-wave-sheer.jpeg', cap: 'וילון גלישה שקוף — סלון פרטי' },
+    { src: 'assets/images/project-roman.jpeg', cap: 'וילון רומאי — חדר עבודה' },
+    { src: 'assets/images/project-roman-linen.jpeg', cap: 'וילון רומאי בפשתן — פינת מטבח' }
+  ];
+  var lbIndex = 0;
+  var lightbox = document.getElementById('lightbox');
+  var lbImg = document.getElementById('lbImg');
+  var lbCap = document.getElementById('lbCap');
+
+  function openLightbox(i){
+    lbIndex = i;
+    lbImg.src = projectImages[i].src;
+    lbImg.alt = projectImages[i].cap;
+    lbCap.textContent = projectImages[i].cap;
+    lightbox.classList.add('open');
+  }
+  function closeLightbox(){ lightbox.classList.remove('open'); }
+  function lbStep(dir){
+    lbIndex = (lbIndex + dir + projectImages.length) % projectImages.length;
+    lbImg.src = projectImages[lbIndex].src;
+    lbImg.alt = projectImages[lbIndex].cap;
+    lbCap.textContent = projectImages[lbIndex].cap;
+  }
+
+  document.querySelectorAll('.proj-tile').forEach(function(tile){
+    tile.addEventListener('click', function(){
+      openLightbox(parseInt(tile.getAttribute('data-lb'), 10));
+    });
+  });
+  document.getElementById('lbClose').addEventListener('click', closeLightbox);
+  document.getElementById('lbNext').addEventListener('click', function(){ lbStep(1); });
+  document.getElementById('lbPrev').addEventListener('click', function(){ lbStep(-1); });
+  lightbox.addEventListener('click', function(e){ if (e.target === lightbox) closeLightbox(); });
+  window.addEventListener('keydown', function(e){
+    if (!lightbox.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') lbStep(1);
+    if (e.key === 'ArrowRight') lbStep(-1);
+  });
+
+  // ---------- Consultation modal ----------
+  var modalVeil = document.getElementById('modalVeil');
+  var modalForm = document.getElementById('modalForm');
+  var modalSuccess = document.getElementById('modalSuccess');
+  var consultForm = document.getElementById('consultForm');
+
+  function openModal(interest){
+    modalForm.classList.remove('hidden');
+    modalSuccess.classList.add('hidden');
+    consultForm.reset();
+    if (interest){ document.getElementById('cInterest').value = interest; }
+    modalVeil.classList.add('open');
+  }
+  function closeModal(){ modalVeil.classList.remove('open'); }
+
+  document.getElementById('openConsultTop').addEventListener('click', function(){ openModal(); });
+  document.getElementById('openConsultHero').addEventListener('click', function(){ openModal(); });
+  document.getElementById('openConsultEnd').addEventListener('click', function(){ openModal(); });
+  document.getElementById('modalClose').addEventListener('click', closeModal);
+  document.getElementById('modalDone').addEventListener('click', closeModal);
+  modalVeil.addEventListener('click', function(e){ if (e.target === modalVeil) closeModal(); });
+  window.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && modalVeil.classList.contains('open')) closeModal();
+  });
+
+  document.querySelectorAll('[data-open-consult]').forEach(function(el){
+    el.addEventListener('click', function(e){
+      e.preventDefault();
+      var stationEl = el.closest('.station');
+      var title = stationEl ? stationEl.getAttribute('data-title') : null;
+      var map = {
+        'שילוב וילונות שכבות': 'שילוב וילונות שכבות',
+        'וילונות גלישה שקופים': 'וילונות גלישה שקופים',
+        'מבצע מיוחד': 'מבצע קרפ צרפתי — 895 ₪',
+        'וילון רומאי מודרני': 'וילון רומאי מודרני',
+        'תריסי גלילה': 'תריסי גלילה'
+      };
+      openModal(map[title] || null);
+    });
+  });
+
+  consultForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    // Front-end demo: no backend is connected yet. Simulate a brief send delay.
+    var submitBtn = consultForm.querySelector('.modal-submit');
+    submitBtn.textContent = 'שולח...';
+    setTimeout(function(){
+      modalForm.classList.add('hidden');
+      modalSuccess.classList.remove('hidden');
+      submitBtn.textContent = 'שליחת בקשה לתיאום';
+    }, 700);
+  });
+
+})();
+</script>
+
+</body>
+</html>
