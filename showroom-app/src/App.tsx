@@ -1,14 +1,8 @@
-"use client";
+import ScrollScrubVideo, {
+  type ScrollScrubHotspot,
+} from "./components/ScrollScrubVideo";
+import "./App.css";
 
-import ScrollScrubVideo, { type ScrollScrubHotspot } from "./ScrollScrubVideo";
-
-/**
- * Example wiring for the main hall. Each additional wing (e.g. a Roman
- * blinds corridor, a roller-blind alcove) is just another
- * <ScrollScrubVideo src="..." hotspots={...} /> stacked below this one,
- * each with its own 300vh scroll track — that's what makes the component
- * reusable across the showroom rather than a one-off.
- */
 const mainHallHotspots: ScrollScrubHotspot[] = [
   {
     id: "sfold-drape",
@@ -51,12 +45,25 @@ const mainHallHotspots: ScrollScrubHotspot[] = [
   },
 ];
 
-export default function ShowroomMainHall() {
+function App() {
   return (
-    <ScrollScrubVideo
-      src="/assets/video/showroom-walkthrough.mp4"
-      poster="/assets/images/hall/entrance.jpg"
-      hotspots={mainHallHotspots}
-    />
+    <main>
+      <section className="intro">
+        <h1>HAWAM — סיור גלילה באולם התצוגה</h1>
+        <p>גללו למטה כדי להתקדם לאורך האולם</p>
+      </section>
+
+      <ScrollScrubVideo
+        src="/assets/video/showroom-walkthrough.mp4"
+        poster="/assets/images/hall/entrance.jpg"
+        hotspots={mainHallHotspots}
+      />
+
+      <section className="outro">
+        <h2>סוף הסיור</h2>
+      </section>
+    </main>
   );
 }
+
+export default App;
