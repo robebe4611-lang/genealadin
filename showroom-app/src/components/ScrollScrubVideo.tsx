@@ -62,6 +62,8 @@ export default function ScrollScrubVideo({
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [metadataReady, setMetadataReady] = useState(false);
+  const pendingTimeRef = useRef<number | null>(null);
+  const rafIdRef = useRef<number | null>(null);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -96,19 +98,38 @@ export default function ScrollScrubVideo({
     }
   }, [src]);
 
+  // Scroll can report far more often than the video can usefully be seeked.
+  // Rather than writing currentTime on every change event, stash the latest
+  // target and let a single rAF per frame apply it — this coalesces bursts
+  // of scroll updates into one seek instead of queueing several.
   useMotionValueEvent(scrollYProgress, "change", (progress) => {
     const video = videoRef.current;
     if (!video || !metadataReady) return;
     const duration = video.duration;
     if (!duration || Number.isNaN(duration)) return;
 
-    const target = Math.min(Math.max(progress, 0), 1) * duration;
-    // Skip near-identical seeks — constant sub-frame currentTime writes are
-    // what makes scroll-scrubbing stutter on lower-end mobile devices.
-    if (Math.abs(video.currentTime - target) > 0.02) {
-      video.currentTime = target;
+    pendingTimeRef.current = Math.min(Math.max(progress, 0), 1) * duration;
+
+    if (rafIdRef.current === null) {
+      rafIdRef.current = requestAnimationFrame(() => {
+        rafIdRef.current = null;
+        const currentVideo = videoRef.current;
+        const target = pendingTimeRef.current;
+        if (!currentVideo || target === null) return;
+        // Skip near-identical seeks — constant sub-frame currentTime writes
+        // are what makes scroll-scrubbing stutter on lower-end devices.
+        if (Math.abs(currentVideo.currentTime - target) > 0.02) {
+          currentVideo.currentTime = target;
+        }
+      });
     }
   });
+
+  useEffect(() => {
+    return () => {
+      if (rafIdRef.current !== null) cancelAnimationFrame(rafIdRef.current);
+    };
+  }, []);
 
   return (
     <div
