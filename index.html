@@ -22,7 +22,6 @@
     --ease: cubic-bezier(.65,0,.35,1);
     --serif: 'Frank Ruhl Libre', serif;
     --sans: 'Heebo', sans-serif;
-    --depth: 1;
   }
 
   *{box-sizing:border-box; margin:0; padding:0;}
@@ -40,25 +39,8 @@
   button{font-family:inherit; cursor:pointer; border:none; background:none;}
   a{ color:inherit; text-decoration:none; }
 
-  /* ---------- Persistent full-screen hall (the customer never leaves it) ---------- */
-  .hall-bg{
-    position:fixed; inset:0; z-index:0; pointer-events:none;
-    background-image:
-      linear-gradient(180deg, rgba(18,16,12,0.22) 0%, rgba(18,16,12,0.02) 26%, rgba(18,16,12,0.18) 62%, rgba(18,16,12,0.55) 100%),
-      url('assets/images/hero-hall.jpg');
-    background-size: cover;
-    background-position: center 42%;
-    transform: scale(var(--depth));
-    transition: transform 1.15s var(--ease), filter 1.15s var(--ease);
-    will-change: transform;
-  }
-  .hall-bg::after{
-    content:"";
-    position:absolute; inset:0;
-    background: radial-gradient(ellipse 66% 56% at 50% 38%, transparent 45%, rgba(15,13,10,0.35) 100%);
-  }
   .grain{
-    position:fixed; inset:0; z-index:1; pointer-events:none; opacity:0.035; mix-blend-mode:overlay;
+    position:fixed; inset:0; z-index:20; pointer-events:none; opacity:0.035; mix-blend-mode:overlay;
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
@@ -107,7 +89,7 @@
     position:fixed; top: 78px; left:50%; transform:translateX(-50%);
     z-index:40;
     display:flex; align-items:center; gap:9px;
-    background: rgba(20,18,14,0.38);
+    background: rgba(20,18,14,0.4);
     backdrop-filter: blur(10px);
     padding:9px 16px;
     border-radius:999px;
@@ -122,7 +104,7 @@
   .rail-dot.active{ background: var(--brass-light); width:22px; border-radius:4px; }
   .rail-dot:hover{ background: rgba(255,253,249,0.6); cursor:pointer; }
 
-  /* ---------- Hall track (foreground content) ---------- */
+  /* ---------- Hall track ---------- */
   .hall-track{
     position:relative; z-index:5;
     height:100vh; width:100vw;
@@ -132,37 +114,44 @@
   .station{
     flex: 0 0 100vw;
     height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding: 124px clamp(20px, 6vw, 110px) 120px;
     position:relative;
-    overflow-y:auto;
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    padding: 0 clamp(18px, 5vw, 90px) 128px;
+    background-size:cover;
+    background-position:center 42%;
+    overflow:hidden;
   }
-  .vitrine-stage{ max-height:100%; }
-  .vitrine-inner{ max-height:calc(100vh - 300px); overflow-y:auto; }
+  .station.entrance-station{ align-items:center; padding-bottom:0; }
+  .station::before{
+    content:"";
+    position:absolute; inset:0; z-index:0;
+    background: linear-gradient(180deg, rgba(10,9,7,0.38) 0%, rgba(10,9,7,0.02) 24%, rgba(10,9,7,0.04) 52%, rgba(10,9,7,0.78) 100%);
+  }
 
-  /* ---------- Entrance: text floats directly on the hall photo ---------- */
+  /* ---------- Entrance ---------- */
   .entrance{
+    position:relative; z-index:2;
     display:grid; grid-template-columns: 1fr; place-items:center; text-align:center;
     max-width: 820px; margin:0 auto;
   }
   .entrance .kicker{
     font-size:12px; letter-spacing:0.32em; text-transform:uppercase; color:var(--brass-light);
-    margin-bottom:22px; font-weight:600; text-shadow: 0 2px 12px rgba(0,0,0,0.45);
+    margin-bottom:22px; font-weight:600; text-shadow: 0 2px 12px rgba(0,0,0,0.5);
   }
   .entrance h1{
     font-family: var(--serif); font-weight:400;
     font-size: clamp(40px, 6.6vw, 84px);
     line-height:1.06; color:var(--white); margin-bottom:22px;
     letter-spacing:0.01em;
-    text-shadow: 0 6px 30px rgba(0,0,0,0.45);
+    text-shadow: 0 6px 30px rgba(0,0,0,0.55);
   }
   .entrance h1 em{ font-style:italic; color:var(--brass-light); font-weight:500; }
   .entrance .lede{
-    font-size:16.5px; line-height:1.9; color:rgba(255,253,249,0.92);
+    font-size:16.5px; line-height:1.9; color:rgba(255,253,249,0.94);
     max-width:54ch; margin: 0 auto 40px;
-    text-shadow: 0 3px 18px rgba(0,0,0,0.4);
+    text-shadow: 0 3px 18px rgba(0,0,0,0.5);
   }
   .btn-row{ display:flex; gap:16px; justify-content:center; margin-top:12px; flex-wrap:wrap; }
   .btn-primary{
@@ -181,218 +170,161 @@
   }
   .btn-ghost:hover{ border-color:var(--white); background:rgba(255,253,249,0.12); }
 
-  /* ---------- Vitrine: the standing rectangular display cube ---------- */
-  .vitrine-stage{ width:100%; display:flex; flex-direction:column; align-items:center; }
-  .stage-locator{
-    display:inline-flex; align-items:center; gap:8px; margin-bottom:16px;
-    font-size:11px; letter-spacing:0.16em; text-transform:uppercase;
-    color:rgba(255,253,249,0.85); text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  /* ---------- Placard: the small museum-label panel, curtain stays fully visible ---------- */
+  .placard{
+    position:relative; z-index:2;
+    width:100%; max-width:380px;
+    background: rgba(255,253,249,0.97);
+    border-radius: 2px;
+    box-shadow: 0 24px 60px -18px rgba(0,0,0,0.55), 0 0 0 1px rgba(20,18,14,0.05);
+    padding: 20px 24px 22px;
   }
-  .stage-locator svg{ width:13px; height:13px; }
-
-  .vitrine{
-    position:relative;
-    width:100%; max-width:420px;
-    background: var(--white);
-    border-radius: 4px;
-    overflow:visible;
-    box-shadow: var(--shadow-soft);
-    border: 1px solid rgba(255,255,255,0.5);
+  .placard-tag{
+    display:inline-flex; align-items:center; gap:8px; margin-bottom:10px;
+    font-size:10.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--brass);
+    font-weight:700;
   }
-  .vitrine.wide{ max-width:600px; }
-  .vitrine::before{
-    /* standing plinth shadow anchoring the cube to the hall floor */
-    content:"";
-    position:absolute; left:50%; bottom:-30px; transform:translateX(-50%);
-    width:72%; height:24px;
-    background: radial-gradient(ellipse at center, rgba(10,9,7,0.5), transparent 72%);
-    filter: blur(3px);
-    z-index:-1;
+  .placard-tag .num{
+    width:18px; height:18px; border:1px solid var(--brass); border-radius:50%;
+    display:flex; align-items:center; justify-content:center; font-size:10px; color:var(--brass);
   }
-  .vitrine-inner{ overflow:hidden; border-radius:4px; }
-  .vitrine-media{ position:relative; aspect-ratio: 5/4; overflow:hidden; }
-  .vitrine-media img{
-    width:100%; height:100%; object-fit:cover;
-    transition: transform 1.4s var(--ease);
-  }
-  .vitrine:hover .vitrine-media img{ transform: scale(1.045); }
-  .tint-overlay{
-    position:absolute; inset:0;
-    mix-blend-mode: multiply;
-    opacity:0.22;
-    transition: background-color .5s var(--ease);
-    pointer-events:none;
-  }
-  .height-badge{
-    position:absolute; top:14px; inset-inline-start:14px;
-    background: rgba(255,253,249,0.94);
-    border-radius: 999px;
-    padding: 8px 14px 8px 12px;
-    display:flex; align-items:center; gap:7px;
-    font-size:11.5px; letter-spacing:0.02em; color:var(--charcoal);
-    box-shadow: 0 6px 18px -8px rgba(0,0,0,0.4);
-  }
-  .height-badge .dot{width:6px; height:6px; border-radius:50%; background:var(--brass);}
-
-  .vitrine-body{ padding: 24px 26px 28px; text-align:center; }
-  .vitrine-body .eyebrow{
-    font-size:11px; letter-spacing:0.18em; text-transform:uppercase;
-    color: var(--brass); font-weight:600; margin-bottom:10px;
-  }
-  .vitrine-body h2{
+  .placard h2{
     font-family: var(--serif); font-weight:500;
-    font-size: clamp(22px, 2.4vw, 28px);
-    line-height:1.15; color: var(--charcoal); margin-bottom:12px;
+    font-size: clamp(20px, 2.1vw, 25px);
+    line-height:1.16; color: var(--charcoal); margin-bottom:8px;
   }
-  .vitrine-body p.desc{
-    font-size: 13.8px; line-height:1.75; color: var(--charcoal-soft);
-    margin: 0 auto 20px; max-width:38ch;
+  .placard .en-sub{
+    font-size:10.5px; letter-spacing:0.13em; text-transform:uppercase; color:var(--charcoal-soft);
+    opacity:0.75; margin-bottom:12px;
   }
+  .placard p.desc{
+    font-size: 13px; line-height:1.7; color: var(--charcoal-soft);
+    margin-bottom:16px;
+  }
+  .height-tag{
+    display:inline-flex; align-items:center; gap:6px;
+    background: var(--ivory); border-radius:3px; padding:5px 10px;
+    font-size:11px; color:var(--charcoal); margin-bottom:14px;
+  }
+  .height-tag .dot{ width:5px; height:5px; border-radius:50%; background:var(--brass); }
 
-  .swatch-block{ margin-bottom: 20px; }
+  .swatch-block{ margin-bottom: 16px; }
   .swatch-block .label{
-    font-size:11.5px; letter-spacing:0.05em; color:var(--charcoal-soft);
-    margin-bottom:11px; display:flex; justify-content:center; gap:6px;
+    font-size:11px; letter-spacing:0.04em; color:var(--charcoal-soft);
+    margin-bottom:9px; display:flex; gap:6px;
   }
   .swatch-block .label .current{ color:var(--charcoal); font-weight:600; }
-  .swatches{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+  /* fanned fabric-swatch strip, echoing the physical swatch fans on the pedestals */
+  .swatches{ display:flex; }
   .swatch{
-    width:32px; height:32px; border-radius:50%;
+    width:26px; height:38px;
+    margin-inline-end:-8px;
+    border:1px solid rgba(255,253,249,0.85);
+    box-shadow: 1px 0 3px rgba(0,0,0,0.18);
     position:relative;
-    box-shadow: inset 0 0 0 1px rgba(51,48,42,0.12), 0 3px 8px rgba(51,48,42,0.15);
-    transition: transform .3s var(--ease);
+    transition: transform .25s var(--ease), margin .25s var(--ease), z-index 0s;
+    cursor:pointer;
   }
-  .swatch::after{
-    content:""; position:absolute; inset:-5px; border-radius:50%;
-    border:1px solid transparent; transition: border-color .3s;
-  }
-  .swatch:hover{ transform: translateY(-3px); }
-  .swatch.active::after{ border-color: var(--brass); }
-  .swatch.active{ transform: translateY(-3px); }
-
-  .fabric-preview{
-    height:44px; border-radius:6px; margin-top:14px;
-    background: repeating-linear-gradient(100deg, rgba(255,255,255,0.35) 0 8px, rgba(0,0,0,0.03) 8px 16px);
-    box-shadow: inset 0 2px 8px rgba(51,48,42,0.12);
-    transition: background-color .5s var(--ease);
-    display:flex; align-items:center; justify-content:center;
-    font-size:11px; color:rgba(51,48,42,0.6); letter-spacing:0.03em;
-  }
+  .swatch:nth-child(1){ transform: rotate(-6deg); }
+  .swatch:nth-child(2){ transform: rotate(-3deg); }
+  .swatch:nth-child(3){ transform: rotate(0deg); }
+  .swatch:nth-child(4){ transform: rotate(3deg); }
+  .swatch:nth-child(5){ transform: rotate(6deg); }
+  .swatch:hover, .swatch.active{ transform: translateY(-6px) rotate(0deg) !important; margin-inline-end:2px; z-index:2; }
+  .swatch.active{ box-shadow: 0 3px 8px rgba(0,0,0,0.28), 0 0 0 1.5px var(--brass); }
 
   .cube-cta{
     display:inline-flex; align-items:center; gap:8px;
     border-bottom: 1.5px solid var(--charcoal);
-    padding-bottom:5px; font-size:13.5px; letter-spacing:0.02em; font-weight:500;
+    padding-bottom:4px; font-size:13px; letter-spacing:0.02em; font-weight:500;
     transition: gap .3s var(--ease), opacity .3s;
   }
   .cube-cta:hover{ gap:14px; opacity:0.7; }
-  .cube-cta svg{width:15px; height:15px; transform:scaleX(-1);}
+  .cube-cta svg{width:14px; height:14px; transform:scaleX(-1);}
 
-  /* ---------- Projects vitrine (2x2 grid inside) ---------- */
-  .grid2x2{
-    display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr;
-    gap:3px; aspect-ratio: 5/4;
+  /* ---------- Projects placard (small contact-sheet cluster) ---------- */
+  .proj-cluster{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:3px;
+    margin-bottom:14px; border-radius:2px; overflow:hidden;
   }
-  .proj-tile{ position:relative; overflow:hidden; cursor:pointer; }
-  .proj-tile img{
-    width:100%; height:100%; object-fit:cover;
-    transition: transform .7s var(--ease), filter .5s;
-  }
-  .proj-tile:hover img{ transform:scale(1.08); filter:brightness(0.85); }
-  .proj-tile .tile-label{
-    position:absolute; inset-inline-start:8px; bottom:7px; z-index:2;
-    color:var(--white); font-size:10px; letter-spacing:0.02em;
-    opacity:0; transform:translateY(6px);
-    transition: all .4s var(--ease);
-  }
-  .proj-tile::before{
-    content:""; position:absolute; inset:0;
-    background:linear-gradient(180deg, transparent 45%, rgba(20,18,14,0.7) 100%);
-    opacity:0; transition:opacity .4s;
-  }
-  .proj-tile:hover::before, .proj-tile:hover .tile-label{ opacity:1; transform:translateY(0); }
+  .proj-tile{ position:relative; aspect-ratio:1; overflow:hidden; cursor:pointer; }
+  .proj-tile img{ width:100%; height:100%; object-fit:cover; transition: transform .6s var(--ease), filter .4s; }
+  .proj-tile:hover img{ transform:scale(1.1); filter:brightness(0.85); }
   .proj-tile .zoom-ico{
-    position:absolute; top:8px; inset-inline-end:8px; z-index:2;
-    width:26px; height:26px; border-radius:50%;
-    background:rgba(255,253,249,0.9); display:flex; align-items:center; justify-content:center;
-    opacity:0; transform:scale(0.7); transition: all .35s var(--ease);
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    opacity:0; transition:opacity .3s; background:rgba(20,18,14,0.28);
   }
-  .proj-tile:hover .zoom-ico{ opacity:1; transform:scale(1); }
-  .zoom-ico svg{ width:12px; height:12px; color:var(--charcoal); }
+  .proj-tile:hover .zoom-ico{ opacity:1; }
+  .zoom-ico svg{ width:14px; height:14px; color:var(--white); }
 
-  /* ---------- Offer vitrine (same family, accented) ---------- */
-  .vitrine.offer{ border: 1px solid rgba(169,138,85,0.55); }
-  .vitrine.offer .vitrine-media{ aspect-ratio: 5/3; }
-  .vitrine.offer .vitrine-body{ padding: 18px 26px 22px; }
-  .ribbon{
-    position:absolute; top:14px; inset-inline-start:-7px; z-index:3;
-    background: var(--charcoal); color:var(--white);
-    padding:8px 16px 8px 20px; font-size:10.5px; letter-spacing:0.12em; text-transform:uppercase;
-    box-shadow: 0 8px 20px -6px rgba(0,0,0,0.4);
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 9px 50%);
+  /* ---------- Offer placard accent ---------- */
+  .placard.offer{ border-top:2px solid var(--brass); }
+  .offer-eyebrow-row{ display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+  .offer-flag{
+    background:var(--charcoal); color:var(--white); font-size:9.5px; letter-spacing:0.1em; text-transform:uppercase;
+    padding:4px 9px; border-radius:2px;
   }
-  .price-row{ display:flex; align-items:baseline; gap:10px; justify-content:center; margin-bottom:12px; }
-  .price-row .price{ font-family:var(--serif); font-size:clamp(28px,3.2vw,38px); color:var(--charcoal); }
-  .price-row .unit{ font-size:12.5px; color:var(--charcoal-soft); }
-  .price-row .was{ font-size:13px; text-decoration:line-through; color:rgba(74,69,60,0.5); }
-  .vitrine.offer .desc{ margin-bottom:12px; }
-  .offer-perks{ display:flex; flex-direction:column; gap:5px; margin-bottom:16px; align-items:center; }
-  .offer-perks li{ list-style:none; display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--charcoal-soft); }
-  .offer-perks svg{ width:14px; height:14px; color:var(--brass); flex-shrink:0; }
+  .price-row{ display:flex; align-items:baseline; gap:9px; margin-bottom:12px; }
+  .price-row .price{ font-family:var(--serif); font-size:clamp(26px,2.8vw,32px); color:var(--charcoal); }
+  .price-row .unit{ font-size:11.5px; color:var(--charcoal-soft); }
+  .price-row .was{ font-size:12px; text-decoration:line-through; color:rgba(74,69,60,0.5); }
+  .offer-perks{ display:flex; flex-direction:column; gap:4px; margin-bottom:16px; }
+  .offer-perks li{ list-style:none; display:flex; align-items:center; gap:7px; font-size:11.5px; color:var(--charcoal-soft); }
+  .offer-perks svg{ width:13px; height:13px; color:var(--brass); flex-shrink:0; }
 
-  /* ---------- Contact vitrine (closing panel) ---------- */
-  .vitrine.contact{ max-width:520px; }
-  .contact-cards{ display:flex; flex-direction:column; gap:7px; margin: 4px 0 16px; text-align:start; }
+  /* ---------- Contact placard ---------- */
+  .placard.contact{ max-width:400px; }
+  .contact-cards{ display:flex; flex-direction:column; gap:6px; margin: 2px 0 14px; }
   .contact-card{
-    background:var(--ivory); border-radius:6px; padding:9px 16px;
-    display:flex; align-items:baseline; justify-content:space-between; gap:12px;
+    background:var(--ivory); border-radius:4px; padding:8px 14px;
+    display:flex; align-items:baseline; justify-content:space-between; gap:10px;
   }
-  .contact-card .k{ font-size:11px; letter-spacing:0.06em; color:var(--brass); text-transform:uppercase; font-weight:600; white-space:nowrap; }
-  .contact-card .v{ font-size:13.5px; color:var(--charcoal); text-align:end; }
+  .contact-card .k{ font-size:10.5px; letter-spacing:0.05em; color:var(--brass); text-transform:uppercase; font-weight:600; white-space:nowrap; }
+  .contact-card .v{ font-size:12.5px; color:var(--charcoal); text-align:end; }
   .contact-card a{ color:var(--charcoal); text-decoration:none; border-bottom:1px solid rgba(51,48,42,0.25); }
 
   /* ---------- Nav arrows ---------- */
   .nav-arrow{
     position:fixed; top:50%; transform:translateY(-50%);
     z-index:35;
-    width:54px; height:54px; border-radius:50%;
-    background: rgba(20,18,14,0.32);
+    width:52px; height:52px; border-radius:50%;
+    background: rgba(20,18,14,0.34);
     backdrop-filter: blur(8px);
     border:1px solid rgba(255,255,255,0.2);
     display:flex; align-items:center; justify-content:center;
     box-shadow: var(--shadow-card);
     transition: all .35s var(--ease);
   }
-  .nav-arrow:hover{ background:rgba(20,18,14,0.5); transform:translateY(-50%) scale(1.08); }
+  .nav-arrow:hover{ background:rgba(20,18,14,0.55); transform:translateY(-50%) scale(1.08); }
   .nav-arrow:disabled{ opacity:0.2; pointer-events:none; }
-  .nav-arrow svg{ width:20px; height:20px; color:var(--white); }
-  .nav-prev{ inset-inline-start:26px; }
-  .nav-next{ inset-inline-end:26px; }
+  .nav-arrow svg{ width:19px; height:19px; color:var(--white); }
+  .nav-prev{ inset-inline-start:24px; }
+  .nav-next{ inset-inline-end:24px; }
   .nav-prev svg{ transform:scaleX(-1); }
 
   /* ---------- Bottom station bar ---------- */
   .bottom-bar{
-    position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+    position:fixed; bottom:22px; left:50%; transform:translateX(-50%);
     z-index:35;
-    display:flex; align-items:center; gap:22px;
-    background: rgba(20,18,14,0.4);
+    display:flex; align-items:center; gap:20px;
+    background: rgba(20,18,14,0.42);
     backdrop-filter: blur(12px);
     border:1px solid rgba(255,255,255,0.16);
     border-radius:999px;
-    padding:12px 26px;
+    padding:11px 24px;
     box-shadow: var(--shadow-card);
     max-width: 92vw;
   }
   .step-btn{
     display:flex; align-items:center; gap:8px;
-    font-size:13px; letter-spacing:0.03em; color:var(--white);
-    padding:8px 4px;
+    font-size:12.5px; letter-spacing:0.03em; color:var(--white);
+    padding:6px 4px;
     transition: opacity .3s;
   }
   .step-btn:disabled{ opacity:0.3; pointer-events:none; }
-  .step-btn svg{ width:15px; height:15px; }
+  .step-btn svg{ width:14px; height:14px; }
   .step-btn.next svg{ transform:scaleX(-1); }
-  .station-count{ font-size:12px; color:rgba(255,253,249,0.8); letter-spacing:0.05em; white-space:nowrap; }
+  .station-count{ font-size:11.5px; color:rgba(255,253,249,0.8); letter-spacing:0.05em; white-space:nowrap; }
   .station-count b{ color:var(--white); font-weight:600; }
   .dots{ display:flex; gap:7px; }
   .dot{
@@ -495,8 +427,8 @@
     animation: stepIn .8s var(--ease) both;
   }
   @keyframes stepIn{
-    from{ opacity:0; transform:translateY(26px) scale(0.96); }
-    to{ opacity:1; transform:translateY(0) scale(1); }
+    from{ opacity:0; transform:translateY(20px); }
+    to{ opacity:1; transform:translateY(0); }
   }
   .walk-flash{
     position:fixed; inset:0; z-index:30; pointer-events:none;
@@ -512,16 +444,14 @@
 
   @media (max-width: 900px){
     body{ overflow-y:auto; height:auto; min-height:100vh; }
-    .hall-bg{ position:fixed; }
     .hall-track{ height:auto; }
-    .station{ height:auto; min-height:100vh; padding: 130px 20px 150px; }
-    .vitrine{ max-width:360px; }
-    .vitrine.wide{ max-width:360px; }
-    .vitrine.contact{ max-width:360px; }
+    .station{ height:auto; min-height:100vh; padding: 130px 16px 150px; align-items:flex-end; }
+    .station.entrance-station{ align-items:center; padding-top:130px; padding-bottom:40px; }
+    .placard{ max-width:360px; }
     .progress-rail{ display:none; }
     .nav-arrow{ width:44px; height:44px; }
-    .nav-prev{ inset-inline-start:12px; }
-    .nav-next{ inset-inline-end:12px; }
+    .nav-prev{ inset-inline-start:10px; }
+    .nav-next{ inset-inline-end:10px; }
     .bottom-bar{ gap:12px; padding:10px 16px; flex-wrap:wrap; justify-content:center; }
     .station-count{ display:none; }
     .contact-card{ flex-direction:column; align-items:flex-start; gap:3px; }
@@ -531,7 +461,6 @@
 </head>
 <body>
 
-<div class="hall-bg" id="hallBg"></div>
 <div class="grain"></div>
 <div class="walk-flash" id="walkFlash"></div>
 
@@ -558,16 +487,16 @@
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5l7 7-7 7"/></svg>
 </button>
 
-<!-- ================= HALL (one continuous space, walked station by station) ================= -->
+<!-- ================= HALL ================= -->
 <main class="hall-track" id="hall">
 
-  <!-- STATION 0 — ENTRANCE: the hall photo fills the entire screen -->
-  <section class="station" data-title="הכניסה" data-depth="1">
+  <!-- STATION 0 — ENTRANCE -->
+  <section class="station entrance-station" data-title="הכניסה" style="background-image:url('assets/images/hall/entrance.jpg')">
     <div class="entrance station-content">
       <div class="kicker">חלל התצוגה הבוטיקי · HAWAM DESIGN</div>
       <h1>אמנות האור,<br><em>בעיצוב בד.</em></h1>
       <p class="lede">
-        אתם עומדים בפתח האולם. רצפת טרוורטין, קירות שנהב חמים ווילונות גלישה משני צדי המסדרון —
+        אתם עומדים בפתח האולם. רצפת טרוורטין, קירות שנהב חמים וקוביות תצוגה עומדות משני צדי המסדרון —
         התקדמו לאורך האולם, תחנה אחר תחנה, וכל קובייה שתפגשו תציג קולקציית וילונות אחרת.
       </p>
       <div class="btn-row">
@@ -580,281 +509,182 @@
     </div>
   </section>
 
-  <!-- STATION 1 — PROJECTS (first cube, right wall on entrance) -->
-  <section class="station" data-title="הפרויקטים שלנו" data-depth="1.08">
-    <div class="vitrine-stage station-content">
-      <div class="stage-locator">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21V8l9-5 9 5v13M3 21h18M9 21v-6h6v6"/></svg>
-        קובייה 1 · קיר ימין
-      </div>
-      <div class="vitrine wide">
-        <div class="vitrine-inner">
-          <div class="vitrine-media">
-            <div class="grid2x2" id="projectsGrid">
-              <div class="proj-tile" data-lb="0">
-                <img src="assets/images/project-sfold-full.jpeg" alt="התקנת וילון S-Fold שקוף בגובה מלא, דירת מגורים">
-                <span class="zoom-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg></span>
-                <span class="tile-label">גלישה שקופה — דירה פרטית</span>
-              </div>
-              <div class="proj-tile" data-lb="1">
-                <img src="assets/images/project-wave-sheer.jpeg" alt="וילון גל שקוף מהתקרה עד הרצפה בסלון מואר">
-                <span class="zoom-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg></span>
-                <span class="tile-label">וילון גלישה — סלון פרטי</span>
-              </div>
-              <div class="proj-tile" data-lb="2">
-                <img src="assets/images/project-roman.jpeg" alt="וילון רומאי בגוון שנהב מותקן בחלון">
-                <span class="zoom-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg></span>
-                <span class="tile-label">וילון רומאי — חדר עבודה</span>
-              </div>
-              <div class="proj-tile" data-lb="3">
-                <img src="assets/images/project-roman-linen.jpeg" alt="וילון רומאי בבד פשתן טבעי מעל כיור מטבח">
-                <span class="zoom-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg></span>
-                <span class="tile-label">וילון רומאי בפשתן — מטבח</span>
-              </div>
-            </div>
-          </div>
-          <div class="vitrine-body">
-            <div class="eyebrow">Our Installations</div>
-            <h2>הפרויקטים שלנו</h2>
-            <p class="desc">תמונות אמיתיות מהתקנות שביצענו בבתי לקוחותינו — לחצו על כל תמונה להגדלה</p>
-          </div>
+  <!-- STATION 1 — PROJECTS -->
+  <section class="station" data-title="הפרויקטים שלנו" style="background-image:url('assets/images/hall/projects.jpg')">
+    <div class="placard station-content">
+      <div class="placard-tag"><span class="num">1</span> קיר ימין · הפרויקטים שלנו</div>
+      <h2>הפרויקטים שלנו</h2>
+      <div class="en-sub">Our Installations</div>
+      <div class="proj-cluster" id="projectsGrid">
+        <div class="proj-tile" data-lb="0">
+          <img src="assets/images/project-sfold-full.jpeg" alt="התקנת וילון S-Fold שקוף בגובה מלא, דירת מגורים">
+          <span class="zoom-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg></span>
+        </div>
+        <div class="proj-tile" data-lb="1">
+          <img src="assets/images/project-wave-sheer.jpeg" alt="וילון גל שקוף מהתקרה עד הרצפה בסלון מואר">
+          <span class="zoom-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg></span>
+        </div>
+        <div class="proj-tile" data-lb="2">
+          <img src="assets/images/project-roman.jpeg" alt="וילון רומאי בגוון שנהב מותקן בחלון">
+          <span class="zoom-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg></span>
+        </div>
+        <div class="proj-tile" data-lb="3">
+          <img src="assets/images/project-roman-linen.jpeg" alt="וילון רומאי בבד פשתן טבעי מעל כיור מטבח">
+          <span class="zoom-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg></span>
         </div>
       </div>
+      <p class="desc" style="margin-bottom:0;">תמונות אמיתיות מהתקנות שביצענו בבתי לקוחותינו — לחצו על כל תמונה להגדלה</p>
     </div>
   </section>
 
   <!-- STATION 2 — S-Fold Sheer & Drape -->
-  <section class="station" data-title="שילוב וילונות שכבות" data-depth="1.16">
-    <div class="vitrine-stage station-content">
-      <div class="stage-locator">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21V8l9-5 9 5v13M3 21h18M9 21v-6h6v6"/></svg>
-        קובייה 2 · קיר שמאל
-      </div>
-      <div class="vitrine">
-        <div class="vitrine-inner">
-          <div class="vitrine-media" id="mediaA">
-            <img src="assets/images/interior-sheer-drape.jpg" alt="שילוב וילון שקוף ווילון כבד בסלון עם נוף לים">
-            <div class="tint-overlay" id="tintA"></div>
-            <div class="height-badge"><span class="dot"></span> 2 מטר</div>
-          </div>
-          <div class="vitrine-body">
-            <div class="eyebrow">S-Fold Sheer &amp; Drape</div>
-            <h2>שילוב וילונות שכבות</h2>
-            <p class="desc">
-              שילוב מנצח בין וילון שקוף עדין הנופל בקפלי S רכים, לבין וילון בד כבד היוצר עומק ופרטיות.
-            </p>
-            <div class="swatch-block">
-              <div class="label"><span>גוון:</span><span class="current" data-current-a>שנהב</span></div>
-              <div class="swatches" data-swatch-group="A">
-                <button class="swatch active" style="background:#f2ece0" data-name="שנהב" data-tint="#efe6d2"></button>
-                <button class="swatch" style="background:#d8c3a0" data-name="שמפניה" data-tint="#d8c3a0"></button>
-                <button class="swatch" style="background:#c9bda8" data-name="גריז' חם" data-tint="#c9bda8"></button>
-                <button class="swatch" style="background:#b8a488" data-name="חול" data-tint="#b8a488"></button>
-                <button class="swatch" style="background:#5c554a" data-name="פחם רך" data-tint="#5c554a"></button>
-              </div>
-              <div class="fabric-preview" data-preview-a>תצוגה מקדימה — שנהב</div>
-            </div>
-            <a href="#" class="cube-cta" data-open-consult>
-              בקשו הצעת מחיר
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5l7 7-7 7"/></svg>
-            </a>
-          </div>
+  <section class="station" data-title="שילוב וילונות שכבות" style="background-image:url('assets/images/hall/sfold-drape.jpg')">
+    <div class="placard station-content">
+      <div class="placard-tag"><span class="num">2</span> קיר שמאל · שכבות</div>
+      <div class="height-tag"><span class="dot"></span> גובה סטנדרטי: 2 מטר</div>
+      <h2>שילוב וילונות שכבות</h2>
+      <div class="en-sub">S-Fold Sheer &amp; Drape</div>
+      <p class="desc">שילוב מנצח בין וילון שקוף עדין הנופל בקפלי S רכים, לבין וילון בד כבד היוצר עומק ופרטיות.</p>
+      <div class="swatch-block">
+        <div class="label"><span>גוון:</span><span class="current" data-current-a>שנהב</span></div>
+        <div class="swatches" data-swatch-group="A">
+          <button class="swatch active" style="background:#efe6d2" data-name="שנהב" data-tint="#efe6d2"></button>
+          <button class="swatch" style="background:#d8c3a0" data-name="שמפניה" data-tint="#d8c3a0"></button>
+          <button class="swatch" style="background:#c9bda8" data-name="גריז' חם" data-tint="#c9bda8"></button>
+          <button class="swatch" style="background:#b8a488" data-name="חול" data-tint="#b8a488"></button>
+          <button class="swatch" style="background:#5c554a" data-name="פחם רך" data-tint="#5c554a"></button>
         </div>
       </div>
+      <a href="#" class="cube-cta" data-open-consult>
+        בקשו הצעת מחיר
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5l7 7-7 7"/></svg>
+      </a>
     </div>
   </section>
 
   <!-- STATION 3 — Full-Height S-Fold Sheer -->
-  <section class="station" data-title="וילונות גלישה שקופים" data-depth="1.24">
-    <div class="vitrine-stage station-content">
-      <div class="stage-locator">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21V8l9-5 9 5v13M3 21h18M9 21v-6h6v6"/></svg>
-        קובייה 3 · קיר ימין
-      </div>
-      <div class="vitrine">
-        <div class="vitrine-inner">
-          <div class="vitrine-media" id="mediaB">
-            <img src="assets/images/project-sfold-full.jpeg" alt="וילון S-Fold שקוף בגובה מלא מהתקרה ועד הרצפה">
-            <div class="tint-overlay" id="tintB"></div>
-            <div class="height-badge"><span class="dot"></span> 2 מטר</div>
-          </div>
-          <div class="vitrine-body">
-            <div class="eyebrow">Full-Height S-Fold Sheer</div>
-            <h2>וילונות גלישה שקופים</h2>
-            <p class="desc">
-              גלישה רציפה ואחידה מהתקרה ועד הרצפה, בטכניקת קיפול S אירופאית המעניקה תנועה רכה ואור מפוזר.
-            </p>
-            <div class="swatch-block">
-              <div class="label"><span>גוון:</span><span class="current" data-current-b>לבן חמים</span></div>
-              <div class="swatches" data-swatch-group="B">
-                <button class="swatch active" style="background:#f7f3ea" data-name="לבן חמים" data-tint="#f7f3ea"></button>
-                <button class="swatch" style="background:#ece1c8" data-name="שנהב עדין" data-tint="#ece1c8"></button>
-                <button class="swatch" style="background:#d8c3a0" data-name="שמפניה" data-tint="#d8c3a0"></button>
-                <button class="swatch" style="background:#a98a55" data-name="ברונזה רכה" data-tint="#a98a55"></button>
-              </div>
-              <div class="fabric-preview" data-preview-b>תצוגה מקדימה — לבן חמים</div>
-            </div>
-            <a href="#" class="cube-cta" data-open-consult>
-              בקשו הצעת מחיר
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5l7 7-7 7"/></svg>
-            </a>
-          </div>
+  <section class="station" data-title="וילונות גלישה שקופים" style="background-image:url('assets/images/hall/fullheight-sheer.jpg')">
+    <div class="placard station-content">
+      <div class="placard-tag"><span class="num">3</span> קיר ימין · גלישה מלאה</div>
+      <div class="height-tag"><span class="dot"></span> גובה סטנדרטי: 2 מטר</div>
+      <h2>וילונות גלישה שקופים</h2>
+      <div class="en-sub">Full-Height S-Fold Sheer</div>
+      <p class="desc">גלישה רציפה ואחידה מהתקרה ועד הרצפה, בטכניקת קיפול S אירופאית המעניקה תנועה רכה ואור מפוזר.</p>
+      <div class="swatch-block">
+        <div class="label"><span>גוון:</span><span class="current" data-current-b>לבן חמים</span></div>
+        <div class="swatches" data-swatch-group="B">
+          <button class="swatch active" style="background:#f7f3ea" data-name="לבן חמים" data-tint="#f7f3ea"></button>
+          <button class="swatch" style="background:#ece1c8" data-name="שנהב עדין" data-tint="#ece1c8"></button>
+          <button class="swatch" style="background:#d8c3a0" data-name="שמפניה" data-tint="#d8c3a0"></button>
+          <button class="swatch" style="background:#a98a55" data-name="ברונזה רכה" data-tint="#a98a55"></button>
         </div>
       </div>
+      <a href="#" class="cube-cta" data-open-consult>
+        בקשו הצעת מחיר
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5l7 7-7 7"/></svg>
+      </a>
     </div>
   </section>
 
   <!-- STATION 4 — CENTRAL SPECIAL OFFER -->
-  <section class="station" data-title="מבצע מיוחד" data-depth="1.32">
-    <div class="vitrine-stage station-content">
-      <div class="stage-locator">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4z"/></svg>
-        קובייה 4 · מרכז האולם
+  <section class="station" data-title="מבצע מיוחד" style="background-image:url('assets/images/hall/offer.jpg')">
+    <div class="placard offer station-content">
+      <div class="offer-eyebrow-row">
+        <div class="placard-tag" style="margin-bottom:0;"><span class="num">4</span> מרכז האולם</div>
+        <span class="offer-flag">מבצע מיוחד</span>
       </div>
-      <div class="vitrine offer">
-        <div class="vitrine-inner">
-          <div class="vitrine-media">
-            <span class="ribbon">מבצע מיוחד</span>
-            <img src="assets/images/texture-closeup.png" alt="תקריב על בד קרפ צרפתי יוקרתי בגוון שנהב">
-          </div>
-          <div class="vitrine-body">
-            <div class="eyebrow">French Crepe Curtains</div>
-            <h2>וילונות קרפ צרפתי</h2>
-            <div class="price-row">
-              <span class="price">895 ₪</span>
-              <span class="unit">למ"ר</span>
-              <span class="was">1,190 ₪</span>
-            </div>
-            <p class="desc">בד קרפ צרפתי עשיר, נתפר בעבודת יד ומותקן בטכניקת S-Fold. לזמן מוגבל.</p>
-            <ul class="offer-perks">
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> מדידה והתקנה כלולות</li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> גובה סטנדרטי 2 מטר</li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> 5 גוונים נבחרים</li>
-            </ul>
-            <button class="btn-primary" data-open-consult style="background:var(--charcoal); color:var(--white);">
-              הזמינו במחיר המבצע
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="transform:scaleX(-1)"><path d="M9 5l7 7-7 7"/></svg>
-            </button>
-          </div>
-        </div>
+      <h2>וילונות קרפ צרפתי</h2>
+      <div class="en-sub">French Crepe Curtains</div>
+      <div class="price-row">
+        <span class="price">895 ₪</span>
+        <span class="unit">למ"ר</span>
+        <span class="was">1,190 ₪</span>
       </div>
+      <p class="desc">בד קרפ צרפתי עשיר, נתפר בעבודת יד ומותקן בטכניקת S-Fold. לזמן מוגבל.</p>
+      <ul class="offer-perks">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> מדידה והתקנה כלולות</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> גובה סטנדרטי 2 מטר</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> 5 גוונים נבחרים</li>
+      </ul>
+      <button class="btn-primary" data-open-consult style="background:var(--charcoal); color:var(--white); width:100%; justify-content:center;">
+        הזמינו במחיר המבצע
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="transform:scaleX(-1)"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
     </div>
   </section>
 
   <!-- STATION 5 — Modern Roman Blinds -->
-  <section class="station" data-title="וילון רומאי מודרני" data-depth="1.4">
-    <div class="vitrine-stage station-content">
-      <div class="stage-locator">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21V8l9-5 9 5v13M3 21h18M9 21v-6h6v6"/></svg>
-        קובייה 5 · קיר שמאל
-      </div>
-      <div class="vitrine">
-        <div class="vitrine-inner">
-          <div class="vitrine-media" id="mediaC">
-            <img src="assets/images/project-roman.jpeg" alt="וילון רומאי מודרני בגוון שנהב">
-            <div class="tint-overlay" id="tintC"></div>
-            <div class="height-badge"><span class="dot"></span> 2 מטר</div>
-          </div>
-          <div class="vitrine-body">
-            <div class="eyebrow">Modern Roman Blinds</div>
-            <h2>וילון רומאי מודרני</h2>
-            <p class="desc">
-              קווים נקיים וקיפולים אחידים היוצרים מראה אדריכלי. פתרון אלגנטי לחדרי עבודה ומטבחים.
-            </p>
-            <div class="swatch-block">
-              <div class="label"><span>גוון:</span><span class="current" data-current-c>שנהב קלאסי</span></div>
-              <div class="swatches" data-swatch-group="C">
-                <button class="swatch active" style="background:#efe6d2" data-name="שנהב קלאסי" data-tint="#efe6d2"></button>
-                <button class="swatch" style="background:#e3d5b8" data-name="לינן טבעי" data-tint="#e3d5b8"></button>
-                <button class="swatch" style="background:#c9bda8" data-name="גריז'" data-tint="#c9bda8"></button>
-                <button class="swatch" style="background:#33302a" data-name="פחם" data-tint="#33302a"></button>
-              </div>
-              <div class="fabric-preview" data-preview-c>תצוגה מקדימה — שנהב קלאסי</div>
-            </div>
-            <a href="#" class="cube-cta" data-open-consult>
-              בקשו הצעת מחיר
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5l7 7-7 7"/></svg>
-            </a>
-          </div>
+  <section class="station" data-title="וילון רומאי מודרני" style="background-image:url('assets/images/hall/roman.jpg')">
+    <div class="placard station-content">
+      <div class="placard-tag"><span class="num">5</span> קיר שמאל · מבד מתקפל</div>
+      <div class="height-tag"><span class="dot"></span> גובה סטנדרטי: 2 מטר</div>
+      <h2>וילון רומאי מודרני</h2>
+      <div class="en-sub">Modern Roman Blinds</div>
+      <p class="desc">קווים נקיים וקיפולים אחידים היוצרים מראה אדריכלי. פתרון אלגנטי לחדרי עבודה ומטבחים.</p>
+      <div class="swatch-block">
+        <div class="label"><span>גוון:</span><span class="current" data-current-c>שנהב קלאסי</span></div>
+        <div class="swatches" data-swatch-group="C">
+          <button class="swatch active" style="background:#efe6d2" data-name="שנהב קלאסי" data-tint="#efe6d2"></button>
+          <button class="swatch" style="background:#e3d5b8" data-name="לינן טבעי" data-tint="#e3d5b8"></button>
+          <button class="swatch" style="background:#c9bda8" data-name="גריז'" data-tint="#c9bda8"></button>
+          <button class="swatch" style="background:#33302a" data-name="פחם" data-tint="#33302a"></button>
         </div>
       </div>
+      <a href="#" class="cube-cta" data-open-consult>
+        בקשו הצעת מחיר
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5l7 7-7 7"/></svg>
+      </a>
     </div>
   </section>
 
   <!-- STATION 6 — Minimalist & Textured Roller Blinds -->
-  <section class="station" data-title="תריסי גלילה" data-depth="1.48">
-    <div class="vitrine-stage station-content">
-      <div class="stage-locator">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21V8l9-5 9 5v13M3 21h18M9 21v-6h6v6"/></svg>
-        קובייה 6 · קיר ימין
-      </div>
-      <div class="vitrine">
-        <div class="vitrine-inner">
-          <div class="vitrine-media" id="mediaD">
-            <img src="assets/images/project-roman-linen.jpeg" alt="תריס גלילה מינימליסטי בגוון פשתן טבעי">
-            <div class="tint-overlay" id="tintD"></div>
-            <div class="height-badge"><span class="dot"></span> 2 מטר</div>
-          </div>
-          <div class="vitrine-body">
-            <div class="eyebrow">Minimalist &amp; Textured Roller Blinds</div>
-            <h2>תריסי גלילה</h2>
-            <p class="desc">
-              עיצוב מינימליסטי עם מרקמי בד עשירים למגע. גלילה חלקה ושקטה, שליטה מדויקת באור.
-            </p>
-            <div class="swatch-block">
-              <div class="label"><span>גוון:</span><span class="current" data-current-d>פשתן טבעי</span></div>
-              <div class="swatches" data-swatch-group="D">
-                <button class="swatch active" style="background:#e6dcc4" data-name="פשתן טבעי" data-tint="#e6dcc4"></button>
-                <button class="swatch" style="background:#d8c3a0" data-name="שמפניה" data-tint="#d8c3a0"></button>
-                <button class="swatch" style="background:#a8a196" data-name="אבן רכה" data-tint="#a8a196"></button>
-                <button class="swatch" style="background:#4a453c" data-name="גרפיט" data-tint="#4a453c"></button>
-              </div>
-              <div class="fabric-preview" data-preview-d>תצוגה מקדימה — פשתן טבעי</div>
-            </div>
-            <a href="#" class="cube-cta" data-open-consult>
-              בקשו הצעת מחיר
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5l7 7-7 7"/></svg>
-            </a>
-          </div>
+  <section class="station" data-title="תריסי גלילה" style="background-image:url('assets/images/hall/roller.jpg')">
+    <div class="placard station-content">
+      <div class="placard-tag"><span class="num">6</span> קיר ימין · טקסטורות</div>
+      <div class="height-tag"><span class="dot"></span> גובה סטנדרטי: 2 מטר</div>
+      <h2>תריסי גלילה</h2>
+      <div class="en-sub">Minimalist &amp; Textured Roller Blinds</div>
+      <p class="desc">עיצוב מינימליסטי עם מרקמי בד עשירים למגע. גלילה חלקה ושקטה, שליטה מדויקת באור.</p>
+      <div class="swatch-block">
+        <div class="label"><span>גוון:</span><span class="current" data-current-d>פשתן טבעי</span></div>
+        <div class="swatches" data-swatch-group="D">
+          <button class="swatch active" style="background:#e6dcc4" data-name="פשתן טבעי" data-tint="#e6dcc4"></button>
+          <button class="swatch" style="background:#d8c3a0" data-name="שמפניה" data-tint="#d8c3a0"></button>
+          <button class="swatch" style="background:#a8a196" data-name="אבן רכה" data-tint="#a8a196"></button>
+          <button class="swatch" style="background:#4a453c" data-name="גרפיט" data-tint="#4a453c"></button>
         </div>
       </div>
+      <a href="#" class="cube-cta" data-open-consult>
+        בקשו הצעת מחיר
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5l7 7-7 7"/></svg>
+      </a>
     </div>
   </section>
 
   <!-- STATION 7 — CONTACT / END OF HALL -->
-  <section class="station" data-title="תיאום פגישה" data-depth="1.56">
-    <div class="vitrine-stage station-content">
-      <div class="stage-locator">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 2v4M16 2v4M3.5 9h17M5 5h14a1.5 1.5 0 0 1 1.5 1.5V19A1.5 1.5 0 0 1 19 20.5H5A1.5 1.5 0 0 1 3.5 19V6.5A1.5 1.5 0 0 1 5 5z"/></svg>
-        סוף האולם · דלפק הקבלה
-      </div>
-      <div class="vitrine contact">
-        <div class="vitrine-body" style="padding: 22px 28px 22px;">
-          <div class="eyebrow">תיאום פגישה</div>
-          <h2>נשמח לתכנן איתכם<br>את החלל שלכם</h2>
-          <p class="desc" style="max-width:none; margin-bottom:14px;">
-            פגישת ייעוץ אישית בשואו-רום או בביתכם — נבחר יחד את הבד, הטכניקה והגוון המושלמים.
-          </p>
-          <div class="contact-cards">
-            <div class="contact-card">
-              <div class="k">אימייל</div>
-              <div class="v"><a href="mailto:info@hawamdesign.com">info@hawamdesign.com</a></div>
-            </div>
-            <div class="contact-card">
-              <div class="k">אתר</div>
-              <div class="v"><a href="https://hawamdesign.com" target="_blank" rel="noopener">hawamdesign.com</a></div>
-            </div>
-            <div class="contact-card">
-              <div class="k">שעות פעילות</div>
-              <div class="v">א׳–ה׳ 09:00–18:00</div>
-            </div>
-          </div>
-          <button class="btn-primary" id="openConsultEnd" style="background:var(--charcoal); color:var(--white); width:100%; justify-content:center;">
-            תיאום פגישה עכשיו
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="transform:scaleX(-1)"><path d="M9 5l7 7-7 7"/></svg>
-          </button>
+  <section class="station" data-title="תיאום פגישה" style="background-image:url('assets/images/hall/contact.jpg')">
+    <div class="placard contact station-content">
+      <div class="placard-tag"><span class="num">7</span> סוף האולם · דלפק הקבלה</div>
+      <h2>נשמח לתכנן איתכם<br>את החלל שלכם</h2>
+      <p class="desc">פגישת ייעוץ אישית בשואו-רום או בביתכם — נבחר יחד את הבד, הטכניקה והגוון המושלמים.</p>
+      <div class="contact-cards">
+        <div class="contact-card">
+          <div class="k">אימייל</div>
+          <div class="v"><a href="mailto:info@hawamdesign.com">info@hawamdesign.com</a></div>
+        </div>
+        <div class="contact-card">
+          <div class="k">אתר</div>
+          <div class="v"><a href="https://hawamdesign.com" target="_blank" rel="noopener">hawamdesign.com</a></div>
+        </div>
+        <div class="contact-card">
+          <div class="k">שעות פעילות</div>
+          <div class="v">א׳–ה׳ 09:00–18:00</div>
         </div>
       </div>
+      <button class="btn-primary" id="openConsultEnd" style="background:var(--charcoal); color:var(--white); width:100%; justify-content:center;">
+        תיאום פגישה עכשיו
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="transform:scaleX(-1)"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
     </div>
   </section>
 
@@ -943,14 +773,12 @@
   "use strict";
 
   var hall = document.getElementById('hall');
-  var hallBg = document.getElementById('hallBg');
   var stations = Array.prototype.slice.call(document.querySelectorAll('.station'));
   var total = stations.length;
   var current = 0;
   var isAnimating = false;
 
   var stationNames = stations.map(function(s){ return s.getAttribute('data-title'); });
-  var stationDepths = stations.map(function(s){ return parseFloat(s.getAttribute('data-depth')) || 1; });
 
   // Build dots + progress rail
   var dotsWrap = document.getElementById('dots');
@@ -996,9 +824,10 @@
     current = index;
     hall.style.transition = 'transform .85s var(--ease)';
     hall.style.transform = 'translateX(' + (current * 100) + 'vw)';
-    document.documentElement.style.setProperty('--depth', stationDepths[current]);
     flashStep();
     updateChrome();
+
+    stations.forEach(function(s, i){ s.classList.toggle('is-active', i === current); });
 
     var activeStation = stations[current];
     var content = activeStation.querySelector('.station-content');
@@ -1038,15 +867,13 @@
   }, {passive:true});
 
   hall.style.transform = 'translateX(0vw)';
-  document.documentElement.style.setProperty('--depth', stationDepths[0]);
+  stations[0].classList.add('is-active');
   updateChrome();
 
   // ---------- Swatch interactivity ----------
   function setupSwatchGroup(letter){
     var group = document.querySelector('[data-swatch-group="' + letter + '"]');
     if (!group) return;
-    var tint = document.getElementById('tint' + letter);
-    var preview = document.querySelector('[data-preview-' + letter.toLowerCase() + ']');
     var currentLabel = document.querySelector('[data-current-' + letter.toLowerCase() + ']');
     var swatches = group.querySelectorAll('.swatch');
 
@@ -1054,23 +881,10 @@
       sw.addEventListener('click', function(){
         swatches.forEach(function(s){ s.classList.remove('active'); });
         sw.classList.add('active');
-        var color = sw.getAttribute('data-tint');
         var name = sw.getAttribute('data-name');
-        if (tint) tint.style.backgroundColor = color;
-        if (preview){
-          preview.style.backgroundColor = color;
-          preview.textContent = 'תצוגה מקדימה — ' + name;
-        }
         if (currentLabel) currentLabel.textContent = name;
       });
     });
-
-    var active = group.querySelector('.swatch.active');
-    if (active){
-      var c = active.getAttribute('data-tint');
-      if (tint) tint.style.backgroundColor = c;
-      if (preview) preview.style.backgroundColor = c;
-    }
   }
   ['A','B','C','D'].forEach(setupSwatchGroup);
 
