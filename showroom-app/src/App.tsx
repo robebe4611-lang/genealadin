@@ -60,20 +60,11 @@ const mainHallHotspots: ScrollScrubHotspot[] = [
 function App() {
   return (
     <main>
-      <section className="intro">
-        <h1>HAWAM — סיור גלילה באולם התצוגה</h1>
-        <p>גללו למטה כדי להתקדם לאורך האולם</p>
-      </section>
-
       <ScrollScrubVideo
         src="/assets/video/showroom-walkthrough.mp4"
         poster="/assets/images/hall/entrance.jpg"
         hotspots={mainHallHotspots}
       />
-
-      <section className="outro">
-        <h2>סוף הסיור</h2>
-      </section>
     </main>
   );
 }
