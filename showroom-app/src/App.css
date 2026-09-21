@@ -10,6 +10,8 @@
 }
 
 .scrub-card {
+  box-sizing: border-box;
+  width: 100%;
   background: rgba(255, 253, 249, 0.95);
   color: #141413;
   border-radius: 8px;

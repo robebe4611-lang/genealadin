@@ -55,7 +55,7 @@ export default function ScrollScrubVideo({
   src,
   poster,
   hotspots = [],
-  scrollHeight = "300vh",
+  scrollHeight = "300dvh",
   className,
   videoClassName,
 }: ScrollScrubVideoProps) {
@@ -114,8 +114,21 @@ export default function ScrollScrubVideo({
       rafIdRef.current = requestAnimationFrame(() => {
         rafIdRef.current = null;
         const currentVideo = videoRef.current;
-        const target = pendingTimeRef.current;
+        let target = pendingTimeRef.current;
         if (!currentVideo || target === null) return;
+
+        // On slower mobile connections the file may not be fully downloaded
+        // yet. Seeking past the buffered edge forces the browser to stall
+        // and wait on the network — which is exactly what reads as the
+        // scroll "freezing". Clamp to what's actually been downloaded so
+        // the walkthrough holds at the buffered edge instead of hanging,
+        // then catches up on its own as more of the file arrives.
+        const buffered = currentVideo.buffered;
+        if (buffered.length > 0) {
+          const bufferedEnd = buffered.end(buffered.length - 1);
+          if (target > bufferedEnd) target = bufferedEnd;
+        }
+
         // Skip near-identical seeks — constant sub-frame currentTime writes
         // are what makes scroll-scrubbing stutter on lower-end devices.
         if (Math.abs(currentVideo.currentTime - target) > 0.02) {
@@ -141,7 +154,12 @@ export default function ScrollScrubVideo({
         style={{
           position: "sticky",
           top: 0,
-          height: "100vh",
+          // 100dvh (dynamic viewport height) tracks the visible area as
+          // mobile browser chrome (address bar) collapses/expands; 100vh
+          // is fixed to the largest possible viewport and causes the
+          // sticky video to visibly jump/misalign on phones. Supported by
+          // all browsers this app targets (Safari 15.4+, Chrome 108+).
+          height: "100dvh",
           overflow: "hidden",
         }}
       >

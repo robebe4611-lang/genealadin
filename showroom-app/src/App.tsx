@@ -8,7 +8,11 @@ const mainHallHotspots: ScrollScrubHotspot[] = [
     id: "sfold-drape",
     start: 0.1,
     end: 0.28,
-    style: { insetInlineStart: "6%", bottom: "12%", maxWidth: 320 },
+    style: {
+      insetInlineStart: "5%",
+      bottom: "12%",
+      width: "min(320px, calc(100vw - 40px))",
+    },
     content: (
       <div dir="rtl" className="scrub-card">
         <h3>שילוב וילונות שכבות</h3>
@@ -20,7 +24,11 @@ const mainHallHotspots: ScrollScrubHotspot[] = [
     id: "special-offer",
     start: 0.6,
     end: 0.75,
-    style: { insetInlineEnd: "6%", bottom: "14%", maxWidth: 320 },
+    style: {
+      insetInlineEnd: "5%",
+      bottom: "14%",
+      width: "min(320px, calc(100vw - 40px))",
+    },
     content: (
       <div dir="rtl" className="scrub-card scrub-card--offer">
         <span className="scrub-card__flag">מבצע מיוחד</span>
@@ -35,7 +43,11 @@ const mainHallHotspots: ScrollScrubHotspot[] = [
     id: "roman-blinds",
     start: 0.82,
     end: 0.96,
-    style: { insetInlineStart: "6%", bottom: "12%", maxWidth: 320 },
+    style: {
+      insetInlineStart: "5%",
+      bottom: "12%",
+      width: "min(320px, calc(100vw - 40px))",
+    },
     content: (
       <div dir="rtl" className="scrub-card">
         <h3>וילון רומאי מודרני</h3>
