@@ -6,7 +6,7 @@ import "./App.css";
 const mainHallHotspots: ScrollScrubHotspot[] = [
   {
     id: "sfold-drape",
-    start: 0.1,
+    start: 0.08,
     end: 0.28,
     style: {
       insetInlineStart: "5%",
@@ -22,8 +22,8 @@ const mainHallHotspots: ScrollScrubHotspot[] = [
   },
   {
     id: "special-offer",
-    start: 0.6,
-    end: 0.75,
+    start: 0.38,
+    end: 0.52,
     style: {
       insetInlineEnd: "5%",
       bottom: "14%",
@@ -40,9 +40,9 @@ const mainHallHotspots: ScrollScrubHotspot[] = [
     ),
   },
   {
-    id: "roman-blinds",
-    start: 0.82,
-    end: 0.96,
+    id: "fabric-library",
+    start: 0.68,
+    end: 0.85,
     style: {
       insetInlineStart: "5%",
       bottom: "12%",
@@ -50,8 +50,8 @@ const mainHallHotspots: ScrollScrubHotspot[] = [
     },
     content: (
       <div dir="rtl" className="scrub-card">
-        <h3>וילון רומאי מודרני</h3>
-        <p>Modern Roman Blinds · גובה 2 מטר</p>
+        <h3>ספריית הבדים</h3>
+        <p>Fabric Library · מאות גוונים ומרקמים לבחירה</p>
       </div>
     ),
   },
