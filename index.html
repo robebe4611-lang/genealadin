@@ -104,17 +104,6 @@
   .rail-dot.active{ background: var(--brass-light); width:22px; border-radius:4px; }
   .rail-dot:hover{ background: rgba(255,253,249,0.6); cursor:pointer; }
 
-  /* ---------- Living hall background: the client's own walkthrough video, looped in place per station ---------- */
-  .hall-video{
-    position:fixed; inset:0; z-index:0;
-    width:100%; height:100%; object-fit:cover; object-position:center 42%;
-    background:#171410;
-  }
-  .hall-overlay{
-    position:fixed; inset:0; z-index:1; pointer-events:none;
-    background: linear-gradient(180deg, rgba(10,9,7,0.38) 0%, rgba(10,9,7,0.02) 24%, rgba(10,9,7,0.04) 52%, rgba(10,9,7,0.78) 100%);
-  }
-
   /* ---------- Hall track ---------- */
   .hall-track{
     position:relative; z-index:5;
@@ -133,13 +122,38 @@
     overflow:hidden;
   }
   .station.entrance-station{ align-items:center; padding-bottom:0; }
-  /* Graceful degradation: if the video can't play on a device/browser, each station
-     shows its own still photo instead — never a blank or broken screen. */
-  body.video-fallback .station{ background-size:cover; background-position:center 42%; }
-  body.video-fallback .station::before{
+
+  /* ---------- Look-around panorama: drag/swipe to look around each station ---------- */
+  .pan-wrap{
+    position:absolute; inset:0;
+    overflow:hidden; cursor:grab; touch-action:pan-y;
+    background:#171410;
+  }
+  .pan-wrap.grabbing{ cursor:grabbing; }
+  .pan-wrap img{
+    position:absolute; top:0; left:50%; height:100%; width:168%; max-width:none;
+    object-fit:cover; object-position:center 42%;
+    transform: translateX(calc(-50% + var(--pan-x, 0px)));
+    user-select:none; -webkit-user-drag:none; pointer-events:none;
+  }
+  .pan-wrap::after{
     content:"";
-    position:absolute; inset:0; z-index:0;
+    position:absolute; inset:0;
     background: linear-gradient(180deg, rgba(10,9,7,0.38) 0%, rgba(10,9,7,0.02) 24%, rgba(10,9,7,0.04) 52%, rgba(10,9,7,0.78) 100%);
+    pointer-events:none;
+  }
+  .pan-hint{
+    position:fixed; top:118px; left:50%; transform:translateX(-50%); z-index:32;
+    display:flex; align-items:center; gap:8px;
+    background:rgba(20,18,14,0.4); backdrop-filter:blur(8px);
+    border:1px solid rgba(255,255,255,0.18); border-radius:999px;
+    padding:8px 16px; font-size:11.5px; letter-spacing:0.04em; color:var(--white);
+    opacity:1; transition: opacity .5s var(--ease); pointer-events:none;
+  }
+  .pan-hint.hidden-hint{ opacity:0; }
+  .pan-hint svg{ width:14px; height:14px; }
+  @media (max-width: 900px){
+    .pan-wrap img{ width:220%; }
   }
 
   /* ---------- Entrance ---------- */
@@ -473,10 +487,12 @@
 </head>
 <body>
 
-<video class="hall-video" id="hallVideo" src="assets/video/hall-walkthrough.mp4" poster="assets/images/hall/entrance.jpg" muted playsinline preload="auto"></video>
-<div class="hall-overlay"></div>
 <div class="grain"></div>
 <div class="walk-flash" id="walkFlash"></div>
+<div class="pan-hint" id="panHint">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 9l-4 3 4 3M16 9l4 3-4 3M4 12h16"/></svg>
+  גררו כדי להביט מסביב
+</div>
 
 <!-- Top bar -->
 <header class="topbar">
@@ -505,7 +521,8 @@
 <main class="hall-track" id="hall">
 
   <!-- STATION 0 — ENTRANCE -->
-  <section class="station entrance-station" data-title="הכניסה" data-vstart="1.3" data-vend="2.0" data-fallback="assets/images/hall/entrance.jpg">
+  <section class="station entrance-station" data-title="הכניסה">
+    <div class="pan-wrap" data-pan><img src="assets/images/hall/entrance.jpg" alt="מסדרון הכניסה לאולם התצוגה" draggable="false"></div>
     <div class="entrance station-content">
       <div class="kicker">חלל התצוגה הבוטיקי · HAWAM DESIGN</div>
       <h1>אמנות האור,<br><em>בעיצוב בד.</em></h1>
@@ -524,7 +541,8 @@
   </section>
 
   <!-- STATION 1 — PROJECTS -->
-  <section class="station" data-title="הפרויקטים שלנו" data-vstart="0.3" data-vend="1.0" data-fallback="assets/images/hall/projects.jpg">
+  <section class="station" data-title="הפרויקטים שלנו">
+    <div class="pan-wrap" data-pan><img src="assets/images/hall/projects.jpg" alt="קיר הפרויקטים באולם התצוגה" draggable="false"></div>
     <div class="placard station-content">
       <div class="placard-tag"><span class="num">1</span> קיר ימין · הפרויקטים שלנו</div>
       <h2>הפרויקטים שלנו</h2>
@@ -552,7 +570,8 @@
   </section>
 
   <!-- STATION 2 — S-Fold Sheer & Drape -->
-  <section class="station" data-title="שילוב וילונות שכבות" data-vstart="2.3" data-vend="3.0" data-fallback="assets/images/hall/sfold-drape.jpg">
+  <section class="station" data-title="שילוב וילונות שכבות">
+    <div class="pan-wrap" data-pan><img src="assets/images/hall/sfold-drape.jpg" alt="קובייה עם שילוב וילון שקוף ווילון כבד" draggable="false"></div>
     <div class="placard station-content">
       <div class="placard-tag"><span class="num">2</span> קיר שמאל · שכבות</div>
       <div class="height-tag"><span class="dot"></span> גובה סטנדרטי: 2 מטר</div>
@@ -577,7 +596,8 @@
   </section>
 
   <!-- STATION 3 — Full-Height S-Fold Sheer -->
-  <section class="station" data-title="וילונות גלישה שקופים" data-vstart="3.3" data-vend="4.0" data-fallback="assets/images/hall/fullheight-sheer.jpg">
+  <section class="station" data-title="וילונות גלישה שקופים">
+    <div class="pan-wrap" data-pan><img src="assets/images/hall/fullheight-sheer.jpg" alt="קובייה עם וילון גלישה שקוף בגובה מלא" draggable="false"></div>
     <div class="placard station-content">
       <div class="placard-tag"><span class="num">3</span> קיר ימין · גלישה מלאה</div>
       <div class="height-tag"><span class="dot"></span> גובה סטנדרטי: 2 מטר</div>
@@ -601,7 +621,8 @@
   </section>
 
   <!-- STATION 4 — CENTRAL SPECIAL OFFER -->
-  <section class="station" data-title="מבצע מיוחד" data-vstart="8.2" data-vend="8.9" data-fallback="assets/images/hall/offer.jpg">
+  <section class="station" data-title="מבצע מיוחד">
+    <div class="pan-wrap" data-pan><img src="assets/images/hall/offer.jpg" alt="קובייה מרכזית עם וילון קרפ צרפתי במבצע" draggable="false"></div>
     <div class="placard offer station-content">
       <div class="offer-eyebrow-row">
         <div class="placard-tag" style="margin-bottom:0;"><span class="num">4</span> מרכז האולם</div>
@@ -628,7 +649,8 @@
   </section>
 
   <!-- STATION 5 — Modern Roman Blinds -->
-  <section class="station" data-title="וילון רומאי מודרני" data-vstart="6.2" data-vend="6.9" data-fallback="assets/images/hall/roman.jpg">
+  <section class="station" data-title="וילון רומאי מודרני">
+    <div class="pan-wrap" data-pan><img src="assets/images/hall/roman.jpg" alt="קובייה עם וילון רומאי מודרני" draggable="false"></div>
     <div class="placard station-content">
       <div class="placard-tag"><span class="num">5</span> קיר שמאל · מבד מתקפל</div>
       <div class="height-tag"><span class="dot"></span> גובה סטנדרטי: 2 מטר</div>
@@ -652,7 +674,8 @@
   </section>
 
   <!-- STATION 6 — Minimalist & Textured Roller Blinds -->
-  <section class="station" data-title="תריסי גלילה" data-vstart="7.2" data-vend="7.9" data-fallback="assets/images/hall/roller.jpg">
+  <section class="station" data-title="תריסי גלילה">
+    <div class="pan-wrap" data-pan><img src="assets/images/hall/roller.jpg" alt="קובייה עם תריס גלילה מינימליסטי" draggable="false"></div>
     <div class="placard station-content">
       <div class="placard-tag"><span class="num">6</span> קיר ימין · טקסטורות</div>
       <div class="height-tag"><span class="dot"></span> גובה סטנדרטי: 2 מטר</div>
@@ -676,7 +699,8 @@
   </section>
 
   <!-- STATION 7 — CONTACT / END OF HALL -->
-  <section class="station" data-title="תיאום פגישה" data-vstart="9.2" data-vend="9.9" data-fallback="assets/images/hall/contact.jpg">
+  <section class="station" data-title="תיאום פגישה">
+    <div class="pan-wrap" data-pan><img src="assets/images/hall/contact.jpg" alt="פינת הקבלה בסוף האולם" draggable="false"></div>
     <div class="placard contact station-content">
       <div class="placard-tag"><span class="num">7</span> סוף האולם · דלפק הקבלה</div>
       <h2>נשמח לתכנן איתכם<br>את החלל שלכם</h2>
@@ -787,48 +811,63 @@
   "use strict";
 
   var hall = document.getElementById('hall');
-  var hallVideo = document.getElementById('hallVideo');
   var stations = Array.prototype.slice.call(document.querySelectorAll('.station'));
   var total = stations.length;
   var current = 0;
   var isAnimating = false;
 
   var stationNames = stations.map(function(s){ return s.getAttribute('data-title'); });
-  var videoWindows = stations.map(function(s){
-    return { start: parseFloat(s.getAttribute('data-vstart')), end: parseFloat(s.getAttribute('data-vend')) };
-  });
 
-  // ---------- Living background: the walk plays only when the customer navigates, never on its own ----------
-  // A direct seek (not a manual per-frame scrub) is used deliberately: frame-by-frame
-  // seeking is unreliable and janky on mobile browsers. A clean instant seek, paired
-  // with the walk-flash step effect, is what actually works everywhere.
-  var videoReady = false;
-  var stationFallbacks = stations.map(function(s){ return s.getAttribute('data-fallback'); });
-  var fallbackActive = false;
-
-  function activateFallback(){
-    if (fallbackActive) return;
-    fallbackActive = true;
-    hallVideo.style.display = 'none';
-    document.body.classList.add('video-fallback');
-    stations.forEach(function(s, i){
-      if (stationFallbacks[i]) s.style.backgroundImage = "url('" + stationFallbacks[i] + "')";
-    });
+  // ---------- Look-around panorama: drag/swipe to look around each station ----------
+  var panHint = document.getElementById('panHint');
+  var hintHidden = false;
+  function hideHint(){
+    if (hintHidden) return;
+    hintHidden = true;
+    panHint.classList.add('hidden-hint');
   }
 
-  function seekToStation(index){
-    var w = videoWindows[index];
-    if (!w) return;
-    if (stationFallbacks[index]) hallVideo.poster = stationFallbacks[index];
-    if (fallbackActive) return;
-    try{ hallVideo.currentTime = w.start; }catch(e){}
+  function setupPan(wrap){
+    var img = wrap.querySelector('img');
+    var panX = 0, startX = 0, startPanX = 0, dragging = false;
+
+    function maxOffset(){
+      var overW = img.offsetWidth - wrap.clientWidth;
+      return Math.max(0, overW / 2);
+    }
+    function clamp(v){
+      var m = maxOffset();
+      return Math.max(-m, Math.min(m, v));
+    }
+    function render(){ img.style.setProperty('--pan-x', panX + 'px'); }
+
+    function onDown(x){
+      dragging = true;
+      startX = x;
+      startPanX = panX;
+      wrap.classList.add('grabbing');
+      hideHint();
+    }
+    function onMove(x){
+      if (!dragging) return;
+      panX = clamp(startPanX + (x - startX));
+      render();
+    }
+    function onUp(){
+      dragging = false;
+      wrap.classList.remove('grabbing');
+    }
+
+    wrap.addEventListener('mousedown', function(e){ onDown(e.clientX); });
+    window.addEventListener('mousemove', function(e){ onMove(e.clientX); });
+    window.addEventListener('mouseup', onUp);
+
+    wrap.addEventListener('touchstart', function(e){ onDown(e.touches[0].clientX); }, {passive:true});
+    wrap.addEventListener('touchmove', function(e){ onMove(e.touches[0].clientX); }, {passive:true});
+    wrap.addEventListener('touchend', onUp);
   }
-  hallVideo.addEventListener('loadedmetadata', function(){
-    videoReady = true;
-    seekToStation(current);
-  });
-  hallVideo.addEventListener('error', activateFallback);
-  setTimeout(function(){ if (!videoReady) activateFallback(); }, 2500);
+
+  Array.prototype.slice.call(document.querySelectorAll('[data-pan]')).forEach(setupPan);
 
   // Build dots + progress rail
   var dotsWrap = document.getElementById('dots');
@@ -878,7 +917,6 @@
     updateChrome();
 
     stations.forEach(function(s, i){ s.classList.toggle('is-active', i === current); });
-    seekToStation(current);
 
     var activeStation = stations[current];
     var content = activeStation.querySelector('.station-content');
