@@ -465,7 +465,7 @@
 </head>
 <body>
 
-<video class="hall-video" id="hallVideo" src="assets/video/hall-walkthrough.mp4" poster="assets/images/hall/entrance.jpg" autoplay muted loop playsinline preload="auto"></video>
+<video class="hall-video" id="hallVideo" src="assets/video/hall-walkthrough.mp4" poster="assets/images/hall/entrance.jpg" muted playsinline preload="auto"></video>
 <div class="hall-overlay"></div>
 <div class="grain"></div>
 <div class="walk-flash" id="walkFlash"></div>
@@ -790,27 +790,35 @@
     return { start: parseFloat(s.getAttribute('data-vstart')), end: parseFloat(s.getAttribute('data-vend')) };
   });
 
-  // ---------- Living background: loop the client's own walkthrough video in place at each station ----------
+  // ---------- Living background: the walk plays only when the customer navigates, never on its own ----------
   var videoReady = false;
-  function seekToStation(index){
+  var scrubToken = 0;
+  function scrubTo(targetTime, durationMs){
+    hallVideo.pause();
+    var myToken = ++scrubToken;
+    var startTime = hallVideo.currentTime;
+    var startTs = null;
+    function step(now){
+      if (myToken !== scrubToken) return; // superseded by a newer navigation
+      if (startTs === null) startTs = now;
+      var t = Math.min(1, (now - startTs) / durationMs);
+      hallVideo.currentTime = startTime + (targetTime - startTime) * t;
+      if (t < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  function seekToStation(index, animate){
     var w = videoWindows[index];
     if (!w) return;
-    try{
-      hallVideo.currentTime = w.start;
-      var p = hallVideo.play();
-      if (p && p.catch) p.catch(function(){});
-    }catch(e){}
+    if (animate){
+      scrubTo(w.start, 820);
+    }else{
+      try{ hallVideo.currentTime = w.start; }catch(e){}
+    }
   }
   hallVideo.addEventListener('loadedmetadata', function(){
     videoReady = true;
-    seekToStation(current);
-  });
-  hallVideo.addEventListener('timeupdate', function(){
-    var w = videoWindows[current];
-    if (!w) return;
-    if (hallVideo.currentTime >= w.end){
-      hallVideo.currentTime = w.start;
-    }
+    seekToStation(current, false);
   });
 
   // Build dots + progress rail
@@ -861,7 +869,7 @@
     updateChrome();
 
     stations.forEach(function(s, i){ s.classList.toggle('is-active', i === current); });
-    if (videoReady) seekToStation(current);
+    if (videoReady) seekToStation(current, true);
 
     var activeStation = stations[current];
     var content = activeStation.querySelector('.station-content');
