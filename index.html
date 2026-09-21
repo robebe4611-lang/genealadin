@@ -104,6 +104,17 @@
   .rail-dot.active{ background: var(--brass-light); width:22px; border-radius:4px; }
   .rail-dot:hover{ background: rgba(255,253,249,0.6); cursor:pointer; }
 
+  /* ---------- Living hall background: the client's own walkthrough video, looped in place per station ---------- */
+  .hall-video{
+    position:fixed; inset:0; z-index:0;
+    width:100%; height:100%; object-fit:cover; object-position:center 42%;
+    background:#171410;
+  }
+  .hall-overlay{
+    position:fixed; inset:0; z-index:1; pointer-events:none;
+    background: linear-gradient(180deg, rgba(10,9,7,0.38) 0%, rgba(10,9,7,0.02) 24%, rgba(10,9,7,0.04) 52%, rgba(10,9,7,0.78) 100%);
+  }
+
   /* ---------- Hall track ---------- */
   .hall-track{
     position:relative; z-index:5;
@@ -119,16 +130,9 @@
     align-items:flex-end;
     justify-content:center;
     padding: 0 clamp(18px, 5vw, 90px) 128px;
-    background-size:cover;
-    background-position:center 42%;
     overflow:hidden;
   }
   .station.entrance-station{ align-items:center; padding-bottom:0; }
-  .station::before{
-    content:"";
-    position:absolute; inset:0; z-index:0;
-    background: linear-gradient(180deg, rgba(10,9,7,0.38) 0%, rgba(10,9,7,0.02) 24%, rgba(10,9,7,0.04) 52%, rgba(10,9,7,0.78) 100%);
-  }
 
   /* ---------- Entrance ---------- */
   .entrance{
@@ -461,6 +465,8 @@
 </head>
 <body>
 
+<video class="hall-video" id="hallVideo" src="assets/video/hall-walkthrough.mp4" poster="assets/images/hall/entrance.jpg" autoplay muted loop playsinline preload="auto"></video>
+<div class="hall-overlay"></div>
 <div class="grain"></div>
 <div class="walk-flash" id="walkFlash"></div>
 
@@ -491,7 +497,7 @@
 <main class="hall-track" id="hall">
 
   <!-- STATION 0 — ENTRANCE -->
-  <section class="station entrance-station" data-title="הכניסה" style="background-image:url('assets/images/hall/entrance.jpg')">
+  <section class="station entrance-station" data-title="הכניסה" data-vstart="1.3" data-vend="2.0">
     <div class="entrance station-content">
       <div class="kicker">חלל התצוגה הבוטיקי · HAWAM DESIGN</div>
       <h1>אמנות האור,<br><em>בעיצוב בד.</em></h1>
@@ -510,7 +516,7 @@
   </section>
 
   <!-- STATION 1 — PROJECTS -->
-  <section class="station" data-title="הפרויקטים שלנו" style="background-image:url('assets/images/hall/projects.jpg')">
+  <section class="station" data-title="הפרויקטים שלנו" data-vstart="0.3" data-vend="1.0">
     <div class="placard station-content">
       <div class="placard-tag"><span class="num">1</span> קיר ימין · הפרויקטים שלנו</div>
       <h2>הפרויקטים שלנו</h2>
@@ -538,7 +544,7 @@
   </section>
 
   <!-- STATION 2 — S-Fold Sheer & Drape -->
-  <section class="station" data-title="שילוב וילונות שכבות" style="background-image:url('assets/images/hall/sfold-drape.jpg')">
+  <section class="station" data-title="שילוב וילונות שכבות" data-vstart="2.3" data-vend="3.0">
     <div class="placard station-content">
       <div class="placard-tag"><span class="num">2</span> קיר שמאל · שכבות</div>
       <div class="height-tag"><span class="dot"></span> גובה סטנדרטי: 2 מטר</div>
@@ -563,7 +569,7 @@
   </section>
 
   <!-- STATION 3 — Full-Height S-Fold Sheer -->
-  <section class="station" data-title="וילונות גלישה שקופים" style="background-image:url('assets/images/hall/fullheight-sheer.jpg')">
+  <section class="station" data-title="וילונות גלישה שקופים" data-vstart="3.3" data-vend="4.0">
     <div class="placard station-content">
       <div class="placard-tag"><span class="num">3</span> קיר ימין · גלישה מלאה</div>
       <div class="height-tag"><span class="dot"></span> גובה סטנדרטי: 2 מטר</div>
@@ -587,7 +593,7 @@
   </section>
 
   <!-- STATION 4 — CENTRAL SPECIAL OFFER -->
-  <section class="station" data-title="מבצע מיוחד" style="background-image:url('assets/images/hall/offer.jpg')">
+  <section class="station" data-title="מבצע מיוחד" data-vstart="8.2" data-vend="8.9">
     <div class="placard offer station-content">
       <div class="offer-eyebrow-row">
         <div class="placard-tag" style="margin-bottom:0;"><span class="num">4</span> מרכז האולם</div>
@@ -614,7 +620,7 @@
   </section>
 
   <!-- STATION 5 — Modern Roman Blinds -->
-  <section class="station" data-title="וילון רומאי מודרני" style="background-image:url('assets/images/hall/roman.jpg')">
+  <section class="station" data-title="וילון רומאי מודרני" data-vstart="6.2" data-vend="6.9">
     <div class="placard station-content">
       <div class="placard-tag"><span class="num">5</span> קיר שמאל · מבד מתקפל</div>
       <div class="height-tag"><span class="dot"></span> גובה סטנדרטי: 2 מטר</div>
@@ -638,7 +644,7 @@
   </section>
 
   <!-- STATION 6 — Minimalist & Textured Roller Blinds -->
-  <section class="station" data-title="תריסי גלילה" style="background-image:url('assets/images/hall/roller.jpg')">
+  <section class="station" data-title="תריסי גלילה" data-vstart="7.2" data-vend="7.9">
     <div class="placard station-content">
       <div class="placard-tag"><span class="num">6</span> קיר ימין · טקסטורות</div>
       <div class="height-tag"><span class="dot"></span> גובה סטנדרטי: 2 מטר</div>
@@ -662,7 +668,7 @@
   </section>
 
   <!-- STATION 7 — CONTACT / END OF HALL -->
-  <section class="station" data-title="תיאום פגישה" style="background-image:url('assets/images/hall/contact.jpg')">
+  <section class="station" data-title="תיאום פגישה" data-vstart="9.2" data-vend="9.9">
     <div class="placard contact station-content">
       <div class="placard-tag"><span class="num">7</span> סוף האולם · דלפק הקבלה</div>
       <h2>נשמח לתכנן איתכם<br>את החלל שלכם</h2>
@@ -773,12 +779,39 @@
   "use strict";
 
   var hall = document.getElementById('hall');
+  var hallVideo = document.getElementById('hallVideo');
   var stations = Array.prototype.slice.call(document.querySelectorAll('.station'));
   var total = stations.length;
   var current = 0;
   var isAnimating = false;
 
   var stationNames = stations.map(function(s){ return s.getAttribute('data-title'); });
+  var videoWindows = stations.map(function(s){
+    return { start: parseFloat(s.getAttribute('data-vstart')), end: parseFloat(s.getAttribute('data-vend')) };
+  });
+
+  // ---------- Living background: loop the client's own walkthrough video in place at each station ----------
+  var videoReady = false;
+  function seekToStation(index){
+    var w = videoWindows[index];
+    if (!w) return;
+    try{
+      hallVideo.currentTime = w.start;
+      var p = hallVideo.play();
+      if (p && p.catch) p.catch(function(){});
+    }catch(e){}
+  }
+  hallVideo.addEventListener('loadedmetadata', function(){
+    videoReady = true;
+    seekToStation(current);
+  });
+  hallVideo.addEventListener('timeupdate', function(){
+    var w = videoWindows[current];
+    if (!w) return;
+    if (hallVideo.currentTime >= w.end){
+      hallVideo.currentTime = w.start;
+    }
+  });
 
   // Build dots + progress rail
   var dotsWrap = document.getElementById('dots');
@@ -828,6 +861,7 @@
     updateChrome();
 
     stations.forEach(function(s, i){ s.classList.toggle('is-active', i === current); });
+    if (videoReady) seekToStation(current);
 
     var activeStation = stations[current];
     var content = activeStation.querySelector('.station-content');
