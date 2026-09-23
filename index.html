@@ -122,12 +122,34 @@ svg { display: block; }
 /* A tall fabric-swatch tag that hangs right on the product itself, filled
    with the shade currently selected below — so clicking a color updates
    the marker instantly — instead of an empty outline off to the side. */
-.hotspot { position: absolute; z-index: 15; width: 58px; height: 150px; margin: -75px 0 0 -29px; border: none; padding: 0; overflow: hidden; border-radius: 3px 3px 9px 9px; box-shadow: 0 12px 28px color-mix(in oklab, var(--foreground) 55%, transparent), inset 0 0 0 1px color-mix(in oklab, var(--primary-foreground) 60%, transparent); animation: swatch-breathe 3.2s ease-in-out infinite; transition: transform .25s ease, box-shadow .25s ease; }
-.hotspot-fill { position: absolute; inset: 0; }
-.hotspot-fill::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(255,255,255,.32), transparent 42%, rgba(0,0,0,.34)); }
+.hotspot { position: absolute; z-index: 15; width: 58px; height: 150px; margin: -75px 0 0 -29px; border: none; padding: 0; overflow: hidden; border-radius: 3px 3px 9px 9px; background:
+    linear-gradient(180deg, transparent 0%, rgba(0,0,0,.06) 100%),
+    repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,.02) 2px, rgba(0,0,0,.02) 4px),
+    repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,.01) 3px, rgba(0,0,0,.01) 6px);
+  box-shadow:
+    0 2px 4px rgba(0,0,0,.12),
+    0 8px 20px color-mix(in oklab, var(--foreground) 45%, transparent),
+    0 16px 40px color-mix(in oklab, var(--foreground) 25%, transparent),
+    inset 0 1px 0 rgba(255,255,255,.2),
+    inset 0 -2px 4px rgba(0,0,0,.08);
+  animation: hotspot-dwell 3.8s ease-in-out infinite;
+  transition: transform .32s cubic-bezier(.34,.1,.64,.94), box-shadow .32s ease;
+}
+.hotspot-fill { position: absolute; inset: 0; background-size: 100% 100%; }
+.hotspot-fill::after { content: ""; position: absolute; inset: 0; background:
+    linear-gradient(135deg, rgba(255,255,255,.18) 0%, transparent 35%, transparent 65%, rgba(0,0,0,.22) 100%),
+    linear-gradient(180deg, rgba(255,255,255,.08), transparent 50%, rgba(0,0,0,.12));
+  backdrop-filter: brightness(1.02);
+}
 .fabric-default { background: linear-gradient(180deg, var(--secondary), var(--accent)); }
-.hotspot:hover, .hotspot.hotspot-open { transform: scale(1.05); box-shadow: 0 16px 34px color-mix(in oklab, var(--foreground) 60%, transparent), inset 0 0 0 1.5px var(--accent); }
-@keyframes swatch-breathe { 0%, 100% { box-shadow: 0 12px 28px color-mix(in oklab, var(--foreground) 55%, transparent), inset 0 0 0 1px color-mix(in oklab, var(--primary-foreground) 60%, transparent); } 50% { box-shadow: 0 16px 32px color-mix(in oklab, var(--foreground) 55%, transparent), inset 0 0 0 1px var(--accent); } }
+.hotspot:hover, .hotspot.hotspot-open { transform: scale(1.12) translateY(-4px); box-shadow:
+    0 3px 6px rgba(0,0,0,.15),
+    0 12px 28px color-mix(in oklab, var(--foreground) 52%, transparent),
+    0 20px 50px color-mix(in oklab, var(--foreground) 32%, transparent),
+    inset 0 1px 0 rgba(255,255,255,.25),
+    inset 0 -2px 6px rgba(0,0,0,.12);
+}
+@keyframes hotspot-dwell { 0%, 100% { box-shadow: 0 2px 4px rgba(0,0,0,.12), 0 8px 20px color-mix(in oklab, var(--foreground) 45%, transparent), 0 16px 40px color-mix(in oklab, var(--foreground) 25%, transparent), inset 0 1px 0 rgba(255,255,255,.2), inset 0 -2px 4px rgba(0,0,0,.08); } 50% { box-shadow: 0 3px 6px rgba(0,0,0,.14), 0 10px 26px color-mix(in oklab, var(--foreground) 48%, transparent), 0 18px 46px color-mix(in oklab, var(--foreground) 28%, transparent), inset 0 1px 0 rgba(255,255,255,.22), inset 0 -2px 5px rgba(0,0,0,.1); } }
 .hotspot-hint { position: absolute; z-index: 15; top: 100%; margin-top: 10px; left: 50%; transform: translateX(-50%); white-space: nowrap; font-size: 11px; letter-spacing: .04em; color: var(--primary-foreground); background: color-mix(in oklab, var(--foreground) 55%, transparent); backdrop-filter: blur(6px); padding: 5px 11px; pointer-events: none; opacity: .82; transition: opacity .3s ease; }
 .hotspot-wrap:hover .hotspot-hint, .hotspot-wrap.hotspot-hint-show .hotspot-hint { opacity: 1; }
 .wall-display.card-hidden { animation: none !important; opacity: 0; pointer-events: none; transform: translateY(-50%) scale(.96); }
