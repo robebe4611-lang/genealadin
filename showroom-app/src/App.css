@@ -1,0 +1,35 @@
+.scrub-card {
+  box-sizing: border-box;
+  width: 100%;
+  background: rgba(255, 253, 249, 0.95);
+  color: #141413;
+  border-radius: 8px;
+  padding: 16px 20px;
+  box-shadow: 0 20px 50px -16px rgba(0, 0, 0, 0.5);
+}
+
+.scrub-card h3 {
+  margin: 0 0 6px;
+  font-size: 18px;
+}
+
+.scrub-card p {
+  margin: 0;
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.scrub-card--offer {
+  border-top: 2px solid #a98a55;
+}
+
+.scrub-card__flag {
+  display: inline-block;
+  background: #141413;
+  color: #fff;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  padding: 3px 8px;
+  border-radius: 3px;
+  margin-bottom: 8px;
+}

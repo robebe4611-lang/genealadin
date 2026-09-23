@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>סיור וירטואלי באולם HAWAM | וילונות בהתאמה אישית</title>
+<meta name="description" content="סיור אינטראקטיבי בתוך אולם HAWAM בין עמדות בדים, גוונים, פרויקטים ומבצעי האולם.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Assistant:wght@300;400;500;600;700&family=Noto+Serif+Hebrew:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --background: oklch(0.975 0.009 82);
+  --foreground: oklch(0.235 0.018 68);
+  --muted: oklch(0.925 0.014 78);
+  --muted-foreground: oklch(0.47 0.019 68);
+  --primary: oklch(0.255 0.017 62);
+  --primary-foreground: oklch(0.975 0.009 82);
+  --secondary: oklch(0.895 0.024 73);
+  --secondary-foreground: oklch(0.27 0.02 65);
+  --accent: oklch(0.69 0.092 67);
+  --accent-foreground: oklch(0.25 0.02 65);
+  --border: oklch(0.77 0.022 73);
+  --destructive: oklch(0.58 0.18 25);
+  --shadow-luxe: 0 30px 90px color-mix(in oklab, var(--foreground) 35%, transparent);
+  --font-sans: "Assistant", sans-serif;
+  --font-display: "Cormorant Garamond", "Noto Serif Hebrew", serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; min-width: 320px; overflow: hidden; background: var(--foreground); color: var(--foreground); font-family: var(--font-sans); height: 100%; }
+button, a { cursor: pointer; font-family: inherit; }
+button { border: 1px solid var(--border); background: transparent; color: inherit; }
+button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+svg { display: block; }
+
+.immersive-tour { position: relative; width: 100vw; height: 100dvh; overflow: hidden; background: var(--foreground); user-select: none; touch-action: none; cursor: grab; }
+.immersive-tour.tour-dragging { cursor: grabbing; }
+.tour-film { position: absolute; inset: -2%; width: 104%; height: 104%; object-fit: cover; transform: scale(1.01); }
+.tour-film-grade { position: absolute; inset: 0; background: linear-gradient(180deg, color-mix(in oklab, var(--foreground) 35%, transparent), transparent 28%, transparent 66%, color-mix(in oklab, var(--foreground) 62%, transparent)); pointer-events: none; }
+.motion-vignette { position: absolute; inset: 0; background: color-mix(in oklab, var(--foreground) 0%, transparent); pointer-events: none; transition: background .3s ease; }
+.motion-vignette-active { background: color-mix(in oklab, var(--foreground) 18%, transparent); backdrop-filter: blur(1px); }
+.immersive-header { position: absolute; z-index: 30; top: 0; right: 0; left: 0; display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; gap: 16px; padding: 22px 30px; color: var(--primary-foreground); }
+.brand-lockup { display: flex; justify-self: start; min-width: 0; align-items: center; gap: 12px; color: inherit; text-decoration: none; }
+.brand-lockup > span { display: grid; width: 38px; height: 38px; flex: none; place-items: center; border: 1px solid currentColor; font-family: var(--font-display); font-size: 20px; }
+.brand-lockup strong, .brand-lockup small { display: block; letter-spacing: .24em; }
+.brand-lockup strong { font-family: var(--font-display); font-size: 14px; }
+.brand-lockup small { font-size: 8px; opacity: .65; }
+.header-actions { display: flex; align-items: center; gap: 6px; }
+.header-actions button { color: var(--primary-foreground); border-color: color-mix(in oklab, var(--primary-foreground) 38%, transparent); background: color-mix(in oklab, var(--foreground) 30%, transparent); backdrop-filter: blur(12px); width: 40px; height: 40px; display: grid; place-items: center; border-radius: 2px; }
+.header-actions button.book-btn { width: auto; padding: 0 18px; font-size: 13px; letter-spacing: .02em; }
+.eyebrow { display: block; color: var(--accent); font-size: 10px; letter-spacing: .28em; }
+.wall-display { position: absolute; z-index: 35; top: 50%; width: min(430px, calc(100% - 48px)); border: 1px solid color-mix(in oklab, var(--primary-foreground) 28%, transparent); background: color-mix(in oklab, var(--foreground) 79%, transparent); padding: clamp(25px, 3.4vw, 48px); color: var(--primary-foreground); box-shadow: var(--shadow-luxe); backdrop-filter: blur(15px); animation: station-in .65s cubic-bezier(.22,.8,.25,1) both; transition: opacity .28s ease, transform .28s ease; }
+.wall-display-right { right: 7vw; transform: translateY(-50%) perspective(900px) rotateY(-3deg); transform-origin: right center; }
+.wall-display-left { left: 7vw; transform: translateY(-50%) perspective(900px) rotateY(3deg); transform-origin: left center; }
+.wall-display-center, .wall-display-front { right: 50%; transform: translate(50%,-50%); text-align: center; }
+.wall-display-entrance { width: min(610px, calc(100% - 48px)); }
+.wall-display-front { width: min(520px, calc(100% - 48px)); border-color: color-mix(in oklab, var(--accent) 55%, transparent); }
+.wall-display h1 { margin: 13px 0 10px; font-family: var(--font-display); font-size: clamp(42px, 5vw, 70px); font-weight: 400; line-height: .95; letter-spacing: 0; }
+.wall-display p { margin: 0; color: color-mix(in oklab, var(--primary-foreground) 72%, transparent); font-size: 16px; line-height: 1.75; }
+.wall-display-entrance p { max-width: 470px; margin-inline: auto; }
+.start-walk { margin-top: 26px; display: inline-flex; align-items: center; gap: 10px; padding: 14px 26px; background: var(--primary-foreground); color: var(--foreground); border: none; font-size: 14px; letter-spacing: .03em; }
+.wall-palette { margin-top: 26px; border-top: 1px solid color-mix(in oklab, var(--primary-foreground) 20%, transparent); padding-top: 20px; }
+.wall-palette > span { display: block; margin-bottom: 12px; font-size: 11px; }
+.wall-palette > div { display: flex; gap: 11px; direction: ltr; }
+.wall-palette > small { display: block; margin-top: 16px; color: color-mix(in oklab, var(--primary-foreground) 56%, transparent); font-size: 10px; letter-spacing: .08em; }
+.swatch { width: 32px; height: 32px; min-width: 32px; border: 1px solid color-mix(in oklab, var(--primary-foreground) 30%, transparent); border-radius: 50%; padding: 0; }
+.swatch-active { outline: 1px solid var(--primary-foreground); outline-offset: 3px; }
+.fabric-snow { background: oklch(0.98 0.008 90); }
+.fabric-ivory { background: oklch(0.92 0.026 84); }
+.fabric-oat { background: oklch(0.86 0.035 83); }
+.fabric-fog { background: oklch(0.67 0.012 70); }
+.fabric-chalk { background: oklch(0.94 0.014 87); }
+.fabric-linen { background: oklch(0.82 0.04 75); }
+.fabric-mushroom { background: oklch(0.72 0.028 70); }
+.fabric-stone { background: oklch(0.59 0.027 62); }
+.fabric-pearl { background: oklch(0.84 0.012 50); }
+.fabric-sand { background: oklch(0.78 0.046 76); }
+.fabric-clay { background: oklch(0.6 0.065 48); }
+.fabric-charcoal { background: oklch(0.32 0.015 65); }
+.projects-wall-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 7px; margin-top: 20px; }
+.projects-wall-grid button { position: relative; display: block; height: 105px; overflow: hidden; border-radius: 0; padding: 0; border: none; }
+.projects-wall-grid img { width: 100%; height: 100%; object-fit: cover; transition: transform .45s ease; display: block; }
+.projects-wall-grid button:hover img { transform: scale(1.06); }
+.projects-wall-grid svg { position: absolute; left: 8px; bottom: 8px; width: 14px; height: 14px; color: var(--primary-foreground); filter: drop-shadow(0 1px 4px var(--foreground)); }
+.front-offer { display: grid; grid-template-columns: 1fr auto; align-items: end; margin-top: 28px; border-top: 1px solid color-mix(in oklab, var(--primary-foreground) 25%, transparent); padding-top: 22px; text-align: right; }
+.front-offer > span { font-size: 11px; }
+.front-offer > strong { grid-row: 1 / 3; grid-column: 2; font-family: var(--font-display); font-size: 76px; font-weight: 400; line-height: .8; }
+.front-offer > small { color: color-mix(in oklab, var(--primary-foreground) 65%, transparent); }
+.front-offer > button { grid-column: 1 / 3; margin-top: 25px; display: inline-flex; align-items: center; gap: 10px; justify-content: center; padding: 15px 20px; background: var(--primary-foreground); color: var(--foreground); border: none; font-size: 14px; }
+.station-rail { position: absolute; z-index: 25; top: 50%; right: 20px; display: flex; flex-direction: column; gap: 4px; transform: translateY(-50%); direction: ltr; }
+.station-rail button { width: 34px; height: 34px; color: color-mix(in oklab, var(--primary-foreground) 50%, transparent); border-radius: 0; font-family: var(--font-display); font-size: 10px; border: none; background: transparent; }
+.station-rail .station-dot-active { color: var(--primary-foreground); border-right: 2px solid var(--accent); background: color-mix(in oklab, var(--foreground) 35%, transparent); }
+.walk-controls { position: absolute; z-index: 30; right: 50%; bottom: 20px; display: grid; width: min(570px, calc(100% - 44px)); grid-template-columns: 42px minmax(0,1fr) 42px; align-items: center; gap: 12px; transform: translateX(50%); color: var(--primary-foreground); }
+.walk-controls > button { color: var(--primary-foreground); width: 42px; height: 42px; display: grid; place-items: center; border-radius: 2px; background: color-mix(in oklab, var(--foreground) 30%, transparent); backdrop-filter: blur(12px); }
+.walk-controls > button:disabled { opacity: .25; pointer-events: none; }
+.walk-track { position: relative; height: 22px; touch-action: none; cursor: ew-resize; }
+.walk-track::before { position: absolute; right: 0; left: 0; top: 10px; height: 1px; content: ""; background: color-mix(in oklab, var(--primary-foreground) 35%, transparent); }
+.walk-progress { position: absolute; left: 0; top: 10px; height: 1px; background: var(--accent); }
+.walk-handle { position: absolute; top: 1px; width: 21px; height: 21px; transform: translateX(-50%); color: var(--primary-foreground); filter: drop-shadow(0 2px 5px var(--foreground)); border: 2px solid var(--primary-foreground); border-radius: 50%; background: var(--accent); box-shadow: 0 1px 5px var(--foreground); }
+.entrance-caption { position: absolute; z-index: 18; right: 50%; top: 50%; width: min(560px, calc(100% - 64px)); transform: translate(50%,-50%); text-align: center; color: var(--primary-foreground); text-shadow: 0 2px 22px color-mix(in oklab, var(--foreground) 75%, transparent), 0 1px 3px color-mix(in oklab, var(--foreground) 90%, transparent); transition: opacity .5s ease, filter .5s ease, transform .5s ease; pointer-events: none; }
+.entrance-caption h1 { margin: 12px 0 12px; font-family: var(--font-display); font-size: clamp(38px, 5vw, 64px); font-weight: 400; line-height: 1.02; }
+.entrance-caption p { margin: 0 auto; max-width: 430px; font-size: 15px; line-height: 1.8; color: color-mix(in oklab, var(--primary-foreground) 88%, transparent); }
+.entrance-caption.caption-hidden { opacity: 0; filter: blur(6px); transform: translate(50%,-50%) translateY(-14px); }
+@media (max-width: 767px) { .entrance-caption h1 { font-size: 34px; } .entrance-caption p { font-size: 13.5px; } }
+.mouse-hint { position: absolute; z-index: 20; right: 50%; bottom: 64px; display: flex; align-items: center; gap: 9px; transform: translateX(50%); color: var(--primary-foreground); font-size: 11px; animation: hint-pulse 2.2s ease-in-out infinite; transition: opacity .35s ease; }
+.mouse-hint svg { width: 17px; height: 17px; }
+.walking-indicator { position: absolute; z-index: 20; right: 50%; top: 50%; transform: translate(50%,-50%); color: var(--primary-foreground); text-align: center; pointer-events: none; }
+.walking-indicator span { display: block; width: 70px; height: 1px; margin: 0 auto 12px; background: var(--accent); animation: walk-line .8s ease-in-out infinite alternate; }
+.walking-indicator p { font-size: 11px; letter-spacing: .1em; }
+.lightbox, .consultation-backdrop { position: fixed; z-index: 80; inset: 0; display: grid; place-items: center; background: color-mix(in oklab, var(--foreground) 92%, transparent); padding: 24px; }
+.lightbox > img { max-width: 88vw; max-height: 80vh; object-fit: contain; box-shadow: var(--shadow-luxe); }
+.lightbox-close { position: absolute; top: 20px; left: 20px; color: var(--primary-foreground); width: 40px; height: 40px; display: grid; place-items: center; border-radius: 2px; }
+.lightbox-nav { position: absolute; bottom: 22px; display: flex; align-items: center; gap: 20px; color: var(--primary-foreground); }
+.lightbox-nav button { border-radius: 0; color: var(--primary-foreground); width: 40px; height: 40px; display: grid; place-items: center; }
+.consultation-backdrop { background: color-mix(in oklab, var(--foreground) 62%, transparent); backdrop-filter: blur(9px); }
+.consultation-panel { position: relative; width: min(430px, 100%); border: 1px solid var(--border); background: var(--background); padding: 46px 38px 38px; text-align: center; box-shadow: var(--shadow-luxe); }
+.consultation-close { position: absolute; left: 12px; top: 12px; width: 36px; height: 36px; display: grid; place-items: center; border-radius: 2px; }
+.consultation-panel h2 { margin: 15px 0 8px; font-family: var(--font-display); font-size: 38px; font-weight: 500; }
+.consultation-panel p { color: var(--muted-foreground); line-height: 1.8; margin: 0; }
+.consultation-link { width: 100%; margin-top: 28px; display: inline-flex; align-items: center; gap: 10px; justify-content: center; padding: 15px 20px; background: var(--foreground); color: var(--primary-foreground); border: none; font-size: 14px; text-decoration: none; }
+
+/* A tall fabric-swatch tag that hangs right on the product itself, filled
+   with the shade currently selected below — so clicking a color updates
+   the marker instantly — instead of an empty outline off to the side. */
+.hotspot { position: absolute; z-index: 15; width: 58px; height: 150px; margin: -75px 0 0 -29px; border: none; padding: 0; overflow: hidden; border-radius: 3px 3px 9px 9px; background:
+    linear-gradient(180deg, transparent 0%, rgba(0,0,0,.06) 100%),
+    repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,.02) 2px, rgba(0,0,0,.02) 4px),
+    repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,.01) 3px, rgba(0,0,0,.01) 6px);
+  box-shadow:
+    0 2px 4px rgba(0,0,0,.12),
+    0 8px 20px color-mix(in oklab, var(--foreground) 45%, transparent),
+    0 16px 40px color-mix(in oklab, var(--foreground) 25%, transparent),
+    inset 0 1px 0 rgba(255,255,255,.2),
+    inset 0 -2px 4px rgba(0,0,0,.08);
+  animation: hotspot-dwell 3.8s ease-in-out infinite;
+  transition: transform .32s cubic-bezier(.34,.1,.64,.94), box-shadow .32s ease;
+}
+.hotspot-fill { position: absolute; inset: 0; background-size: 100% 100%; }
+.hotspot-fill::after { content: ""; position: absolute; inset: 0; background:
+    linear-gradient(135deg, rgba(255,255,255,.18) 0%, transparent 35%, transparent 65%, rgba(0,0,0,.22) 100%),
+    linear-gradient(180deg, rgba(255,255,255,.08), transparent 50%, rgba(0,0,0,.12));
+  backdrop-filter: brightness(1.02);
+}
+.fabric-default { background: linear-gradient(180deg, var(--secondary), var(--accent)); }
+.hotspot:hover, .hotspot.hotspot-open { transform: scale(1.12) translateY(-4px); box-shadow:
+    0 3px 6px rgba(0,0,0,.15),
+    0 12px 28px color-mix(in oklab, var(--foreground) 52%, transparent),
+    0 20px 50px color-mix(in oklab, var(--foreground) 32%, transparent),
+    inset 0 1px 0 rgba(255,255,255,.25),
+    inset 0 -2px 6px rgba(0,0,0,.12);
+}
+@keyframes hotspot-dwell { 0%, 100% { box-shadow: 0 2px 4px rgba(0,0,0,.12), 0 8px 20px color-mix(in oklab, var(--foreground) 45%, transparent), 0 16px 40px color-mix(in oklab, var(--foreground) 25%, transparent), inset 0 1px 0 rgba(255,255,255,.2), inset 0 -2px 4px rgba(0,0,0,.08); } 50% { box-shadow: 0 3px 6px rgba(0,0,0,.14), 0 10px 26px color-mix(in oklab, var(--foreground) 48%, transparent), 0 18px 46px color-mix(in oklab, var(--foreground) 28%, transparent), inset 0 1px 0 rgba(255,255,255,.22), inset 0 -2px 5px rgba(0,0,0,.1); } }
+.hotspot-hint { position: absolute; z-index: 15; top: 100%; margin-top: 10px; left: 50%; transform: translateX(-50%); white-space: nowrap; font-size: 11px; letter-spacing: .04em; color: var(--primary-foreground); background: color-mix(in oklab, var(--foreground) 55%, transparent); backdrop-filter: blur(6px); padding: 5px 11px; pointer-events: none; opacity: .82; transition: opacity .3s ease; }
+.hotspot-wrap:hover .hotspot-hint, .hotspot-wrap.hotspot-hint-show .hotspot-hint { opacity: 1; }
+.wall-display.card-hidden { animation: none !important; opacity: 0; pointer-events: none; transform: translateY(-50%) scale(.96); }
+.wall-display-right.card-hidden { transform: translateY(-50%) perspective(900px) rotateY(-3deg) scale(.96); }
+.wall-display-left.card-hidden { transform: translateY(-50%) perspective(900px) rotateY(3deg) scale(.96); }
+.wall-display-center.card-hidden, .wall-display-front.card-hidden { transform: translate(50%,-50%) scale(.96); }
+.card-close-btn { position: absolute; top: 10px; left: 10px; z-index: 3; width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; background: color-mix(in oklab, var(--background) 60%, transparent); }
+@media (max-width: 767px) {
+  .hotspot { width: 44px; height: 118px; margin: -59px 0 0 -22px; }
+  .hotspot-hint { font-size: 10px; padding: 4px 9px; }
+}
+
+/* Compact popup: a small detail card that sits right beside the real display
+   pedestal seen in the video, instead of a large panel dominating the screen. */
+.wall-display.compact-popup {
+  top: 0; right: auto; bottom: auto;
+  width: min(272px, calc(100% - 32px));
+  min-height: 0;
+  max-height: min(340px, calc(100dvh - 150px));
+  overflow-y: auto;
+  padding: 16px 19px;
+  border: 1px solid color-mix(in oklab, var(--background) 82%, transparent);
+  background: color-mix(in oklab, var(--background) 90%, transparent);
+  box-shadow: 0 16px 46px color-mix(in oklab, var(--foreground) 38%, transparent), inset 0 0 0 1px color-mix(in oklab, var(--foreground) 10%, transparent);
+  backdrop-filter: blur(10px);
+  color: var(--foreground);
+  animation: station-in .4s cubic-bezier(.22,.8,.25,1) both;
+}
+.wall-display.compact-popup.card-hidden { transform: scale(.94) !important; }
+.wall-display.compact-popup::before { display: none; }
+.wall-display.compact-popup .fabric-preview { display: none; }
+.wall-display.compact-popup .display-cube-content { min-height: 0; padding: 0; background: none; justify-content: flex-start; }
+.wall-display.compact-popup .eyebrow { font-size: 9px; }
+.wall-display.compact-popup h1 { font-size: clamp(22px, 2.4vw, 28px); margin: 7px 0 6px; }
+.wall-display.compact-popup p { font-size: 13px; line-height: 1.6; }
+.wall-display.compact-popup .wall-palette { margin-top: 15px; padding-top: 13px; }
+.wall-display.compact-popup .wall-palette > span { font-size: 10px; margin-bottom: 9px; }
+.wall-display.compact-popup .swatch { width: 23px; height: 23px; min-width: 23px; }
+.wall-display.compact-popup .projects-wall-grid { gap: 5px; margin-top: 14px; }
+.wall-display.compact-popup .projects-wall-grid button { height: 62px; }
+.wall-display.compact-popup .front-offer { margin-top: 18px; padding-top: 15px; }
+.wall-display.compact-popup .front-offer > strong { font-size: 42px; }
+.wall-display.compact-popup .front-offer > button { margin-top: 16px; padding: 11px 16px; font-size: 12.5px; }
+.wall-display.compact-popup .card-close-btn { width: 24px; height: 24px; top: 7px; left: 7px; }
+@media (max-width: 767px) {
+  .wall-display.compact-popup { width: min(78vw, 260px); padding: 14px 16px; }
+}
+@keyframes station-in { from { opacity: 0; filter: blur(6px); } to { opacity: 1; filter: blur(0); } }
+@keyframes hint-pulse { 50% { opacity: .45; transform: translate(50%,4px); } }
+@keyframes walk-line { from { transform: scaleX(.35); } to { transform: scaleX(1); } }
+
+@media (max-width: 767px) {
+  .immersive-header { padding: 14px 15px; }
+  .brand-lockup > span { width: 32px; height: 32px; }
+  .brand-lockup strong { font-size: 12px; }
+  .header-actions > button.mute-btn { display: none; }
+  .header-actions > button.book-btn { height: 36px; padding: 0 12px; font-size: 11px; }
+  .station-rail { top: auto; right: 50%; bottom: 72px; flex-direction: row; transform: translateX(50%); }
+  .station-rail button { width: 31px; height: 31px; border-right: 0; }
+  .station-rail .station-dot-active { border-right: 0; border-bottom: 2px solid var(--accent); }
+  .wall-display, .wall-display-right, .wall-display-left, .wall-display-center, .wall-display-front { top: auto; right: 18px; bottom: 116px; left: auto; width: calc(100% - 36px); max-height: calc(100dvh - 205px); overflow-y: auto; transform: none; padding: 25px; text-align: right; }
+  .wall-display h1 { font-size: 43px; }
+  .wall-display p { font-size: 14px; }
+  .wall-display-entrance { text-align: center; }
+  .projects-wall-grid button { height: 82px; }
+  .front-offer > strong { font-size: 59px; }
+  .walk-controls { bottom: 14px; width: calc(100% - 28px); gap: 5px; }
+  .mouse-hint { bottom: 106px; }
+  .tour-film { inset: 0; width: 100%; height: 100%; }
+  .wall-display-projects { bottom: 110px; }
+}
+
+.wall-display.display-cube { min-height: 500px; overflow: hidden; border: 8px solid color-mix(in oklab, var(--background) 92%, transparent); background: color-mix(in oklab, var(--background) 94%, transparent); padding: 18px; color: var(--foreground); box-shadow: 0 24px 70px color-mix(in oklab, var(--foreground) 46%, transparent), inset 0 0 0 1px color-mix(in oklab, var(--foreground) 14%, transparent); backdrop-filter: none; transition: opacity .35s ease, filter .35s ease; }
+.display-cube::before { position: absolute; inset: 10px; border: 1px solid color-mix(in oklab, var(--foreground) 16%, transparent); content: ""; pointer-events: none; }
+.display-cube-content { position: relative; z-index: 2; display: flex; min-height: 446px; flex-direction: column; justify-content: center; background: color-mix(in oklab, var(--background) 90%, transparent); padding: clamp(24px, 3vw, 40px); }
+.display-cube-travelling { opacity: .4; filter: blur(3px); pointer-events: none; }
+.wall-display.display-cube p, .wall-display.display-cube .wall-palette > small { color: var(--muted-foreground); }
+.wall-display.display-cube .wall-palette { border-color: var(--border); }
+.wall-display.display-cube .swatch-active { outline-color: var(--foreground); }
+.wall-display-entrance.display-cube { min-height: 350px; }
+.wall-display-entrance .display-cube-content { min-height: 296px; }
+.fabric-preview { position: absolute; z-index: 1; inset: 18px 18px auto; display: flex; height: 46%; overflow: hidden; background: var(--muted); }
+.fabric-preview span { width: 25%; height: 115%; background: linear-gradient(90deg, color-mix(in oklab, currentColor 72%, transparent), currentColor 40%, color-mix(in oklab, currentColor 70%, transparent)); clip-path: polygon(0 0,100% 0,82% 100%,18% 100%); }
+.fabric-preview + .display-cube-content { justify-content: flex-end; padding-top: 220px; background: linear-gradient(180deg, transparent 30%, color-mix(in oklab, var(--background) 96%, transparent) 52%); }
+.fabric-tone-0 { color: var(--background); }
+.fabric-tone-1 { color: var(--secondary); }
+.fabric-tone-2 { color: var(--border); }
+.fabric-tone-3 { color: var(--muted-foreground); }
+
+@media (max-width: 767px) {
+  .wall-display.display-cube, .wall-display-right.display-cube, .wall-display-left.display-cube, .wall-display-center.display-cube, .wall-display-front.display-cube { top: 50%; right: 50%; bottom: auto; left: auto; width: min(76vw, 330px); min-height: 410px; max-height: calc(100dvh - 190px); overflow-y: auto; transform: translate(50%,-50%); padding: 10px; text-align: right; }
+  .display-cube-content { min-height: 390px; padding: 22px; }
+  .wall-display-entrance.display-cube { min-height: 320px; text-align: center; }
+  .wall-display-entrance .display-cube-content { min-height: 298px; }
+  .fabric-preview { inset: 10px 10px auto; height: 43%; }
+  .fabric-preview + .display-cube-content { padding-top: 175px; }
+  .wall-display-projects.display-cube { width: min(82vw, 350px); }
+  .mouse-hint { bottom: 108px; white-space: nowrap; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+</style>
+</head>
+<body>
+<main class="immersive-tour" id="tour" dir="rtl">
+  <video id="tourVideo" class="tour-film" src="tour.mp4" muted playsinline preload="auto"></video>
+  <div class="tour-film-grade"></div>
+  <div class="motion-vignette" id="vignette"></div>
+
+  <div class="entrance-caption" id="entranceCaption">
+    <span class="eyebrow">ENTRANCE</span>
+    <h1>ברוכים הבאים לאולם התצוגה</h1>
+    <p>טיילו איתנו באולם — כשמגיעים לתצוגה, לחצו עליה כדי לראות פרטים. אפשר גם לגרור או לגלול כדי להתקדם בעצמכם.</p>
+  </div>
+
+  <header class="immersive-header" dir="ltr">
+    <a href="https://hawamdesign.com" target="_blank" rel="noreferrer" class="brand-lockup" aria-label="HAWAM website"><span>H</span><div><strong>HAWAM</strong><small>LUXE CURTAINS</small></div></a>
+    <div class="header-actions">
+      <button class="mute-btn" id="muteBtn" aria-label="הפעלת קול/השתקה"></button>
+      <button class="book-btn" id="bookBtn">תיאום פגישה</button>
+    </div>
+  </header>
+
+  <div class="hotspot-wrap" id="hotspotWrap" style="position:absolute; z-index:15;">
+    <button class="hotspot" id="hotspotBtn" aria-label="לחצו לפרטים על התצוגה"><span class="hotspot-fill" id="hotspotFill"></span></button>
+    <span class="hotspot-hint" id="hotspotHint">לחצו לפרטים</span>
+  </div>
+  <section class="wall-display display-cube" id="wallDisplay"></section>
+
+  <div class="walking-indicator" id="walkingIndicator" style="display:none;"><span></span><p>נעים באולם…</p></div>
+
+  <aside class="station-rail" id="stationRail" aria-label="עמדות באולם"></aside>
+
+  <div class="walk-controls">
+    <button id="prevBtn" aria-label="חזרה לעמדה הקודמת"></button>
+    <div class="walk-track" id="walkTrack">
+      <div class="walk-progress" id="walkProgress"></div>
+      <span class="walk-handle" id="walkHandle"></span>
+    </div>
+    <button id="nextBtn" aria-label="התקדמות לעמדה הבאה"></button>
+  </div>
+
+  <div class="mouse-hint" id="mouseHint"><span id="mouseHintIcon"></span><span>אפשר גם לגרור כדי להתקדם בעצמכם</span></div>
+
+  <div class="lightbox" id="lightbox" style="display:none;" role="dialog" aria-modal="true" aria-label="תצוגת פרויקט">
+    <button class="lightbox-close" id="lightboxClose" aria-label="סגירה"></button>
+    <img id="lightboxImg" src="" alt="">
+    <div class="lightbox-nav">
+      <button id="lightboxPrev" aria-label="פרויקט קודם"></button>
+      <span id="lightboxCount"></span>
+      <button id="lightboxNext" aria-label="פרויקט הבא"></button>
+    </div>
+  </div>
+
+  <div class="consultation-backdrop" id="consultBackdrop" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="consultation-title">
+    <div class="consultation-panel">
+      <button class="consultation-close" id="consultClose" aria-label="סגירה"></button>
+      <span class="eyebrow">PRIVATE APPOINTMENT</span>
+      <h2 id="consultation-title">נשמח לפגוש אתכם</h2>
+      <p>המשיכו לאתר HAWAM לתיאום מדידה וייעוץ אישי בבית.</p>
+      <a class="consultation-link" href="https://hawamdesign.com" target="_blank" rel="noreferrer">לתיאום פגישה <span id="extLinkIcon"></span></a>
+    </div>
+  </div>
+</main>
+
+<script>
+(function(){
+"use strict";
+
+var ICONS = {
+  chevronDown: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>',
+  arrowLeft: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>',
+  arrowRight: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>',
+  x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>',
+  maximize2: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>',
+  moveHorizontal: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8l4 4-4 4M6 8l-4 4 4 4M2 12h20"/></svg>',
+  moveVertical: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 18l4 4 4-4M8 6l4-4 4 4M12 2v20"/></svg>',
+  volume2: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>',
+  volumeX: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M23 9l-6 6M17 9l6 6"/></svg>',
+  externalLink: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>'
+};
+
+var PROJECTS = [
+  { src: "project-wave-sheer.jpeg", alt: "וילונות גלישה שקופים בגובה מלא" },
+  { src: "project-sfold-full.jpeg", alt: "וילון גל שקוף מהתקרה עד הרצפה" },
+  { src: "project-roman.jpeg", alt: "וילון רומאי מודרני" },
+  { src: "project-roman-linen.jpeg", alt: "וילון רומאי בבד פשתן טבעי" }
+];
+
+var STATIONS = [
+  { id: "entrance", time: 0.3, eyebrow: "ENTRANCE", title: "ברוכים הבאים לאולם התצוגה", copy: "התקדמו עם גלגלת העכבר או גררו את הידית כדי לטייל באולם. עצרו ליד כל נקודת עניין ולחצו עליה כדי לראות פרטים.", side: "center" },
+  { id: "sheer", time: 3.1, eyebrow: "DISPLAY 01", title: "קיר התריסים והווילונות", copy: "תריסי בד ווילונות קיר בגימור מדויק, מוצגים זה לצד זה כדי להשוות מרקם, גוון ואופן נפילה.", side: "right", colors: ["snow", "ivory", "oat", "fog"], hotspot: { x: 90, y: 37 } },
+  { id: "linen", time: 6.8, eyebrow: "DISPLAY 02", title: "פינת דוגמאות הבד", copy: "מגוון גוני בד תלויים זה לצד זה — הדרך הכי טובה להרגיש מרקם ונפילה אמיתיים לפני שמזמינים.", side: "left", colors: ["chalk", "linen", "mushroom", "stone"], hotspot: { x: 23, y: 46 } },
+  { id: "crepe", time: 9.3, eyebrow: "DISPLAY 03", title: "ספריית הבדים", copy: "מאות גוונים ומרקמים מאורגנים לפי קולקציה, כדי שתמצאו בדיוק את מה שמתאים לחלל שלכם.", side: "right", colors: ["pearl", "sand", "clay", "charcoal"], hotspot: { x: 38, y: 40 } },
+  { id: "projects", time: 14.0, eyebrow: "DISPLAY 04", title: "העבודות שלנו", copy: "הצצה לפרויקטים אמיתיים שתוכננו, נתפרו והותקנו על ידינו.", side: "left", hotspot: { x: 41, y: 68 } },
+  { id: "offer", time: 18.7, eyebrow: "עמדת הייעוץ", title: "בואו נתכנן את הפרויקט שלכם", copy: "פגישת ייעוץ אישית, מדידה בבית והצעת מחיר מדויקת — הכל במקום אחד.", side: "front", hotspot: { x: 77, y: 63 } }
+];
+var VIDEO_DURATION = 19.6;
+
+var video = document.getElementById("tourVideo");
+var tour = document.getElementById("tour");
+var vignette = document.getElementById("vignette");
+var wallDisplay = document.getElementById("wallDisplay");
+var stationRail = document.getElementById("stationRail");
+var walkingIndicator = document.getElementById("walkingIndicator");
+var mouseHint = document.getElementById("mouseHint");
+var entranceCaption = document.getElementById("entranceCaption");
+var muteBtn = document.getElementById("muteBtn");
+var bookBtn = document.getElementById("bookBtn");
+var prevBtn = document.getElementById("prevBtn");
+var nextBtn = document.getElementById("nextBtn");
+var walkTrack = document.getElementById("walkTrack");
+var walkProgress = document.getElementById("walkProgress");
+var walkHandle = document.getElementById("walkHandle");
+var lightbox = document.getElementById("lightbox");
+var lightboxImg = document.getElementById("lightboxImg");
+var lightboxCount = document.getElementById("lightboxCount");
+var lightboxClose = document.getElementById("lightboxClose");
+var lightboxPrev = document.getElementById("lightboxPrev");
+var lightboxNext = document.getElementById("lightboxNext");
+var consultBackdrop = document.getElementById("consultBackdrop");
+var consultClose = document.getElementById("consultClose");
+
+document.getElementById("mouseHintIcon").innerHTML = ICONS.moveVertical;
+document.getElementById("extLinkIcon").innerHTML = ICONS.externalLink;
+prevBtn.innerHTML = ICONS.arrowRight;
+nextBtn.innerHTML = ICONS.arrowLeft;
+lightboxClose.innerHTML = ICONS.x;
+lightboxPrev.innerHTML = ICONS.arrowRight;
+lightboxNext.innerHTML = ICONS.arrowLeft;
+consultClose.innerHTML = ICONS.x;
+
+var state = {
+  station: 0,
+  stationNear: false,
+  dwelledStation: -1,   // index of the display we've already paused the film at, so arriving doesn't re-trigger it
+  color: 0,
+  lightboxIndex: null,
+  consultation: false,
+  muted: true,
+  dragging: false,
+  progress: 0,
+  cardOpen: false
+};
+
+var hotspotWrap = document.getElementById("hotspotWrap");
+var hotspotBtn = document.getElementById("hotspotBtn");
+var hotspotHint = document.getElementById("hotspotHint");
+var hotspotFill = document.getElementById("hotspotFill");
+hotspotBtn.addEventListener("click", function(){
+  setCardOpen(!state.cardOpen);
+});
+
+function renderMute(){
+  muteBtn.innerHTML = state.muted ? ICONS.volumeX : ICONS.volume2;
+  muteBtn.setAttribute("aria-label", state.muted ? "הפעלת קול" : "השתקת קול");
+}
+renderMute();
+
+// Build station rail
+STATIONS.forEach(function(item, index){
+  var b = document.createElement("button");
+  b.innerHTML = "<span>" + String(index + 1).padStart(2, "0") + "</span>";
+  b.setAttribute("aria-label", "מעבר לעמדה " + (index + 1));
+  b.addEventListener("click", function(){ travelTo(STATIONS[index].time); });
+  b.dataset.index = index;
+  stationRail.appendChild(b);
+});
+
+function updateStationRail(){
+  Array.prototype.forEach.call(stationRail.children, function(b, i){
+    b.classList.toggle("station-dot-active", i === state.station);
+  });
+}
+updateStationRail();
+
+function renderWallDisplay(){
+  var active = STATIONS[state.station];
+
+  // The entrance is the doorway into the space, not a display to point at —
+  // it gets the unboxed title caption instead of a card, so visitors step
+  // straight into the room with nothing blocking the view.
+  if (active.id === "entrance") {
+    hotspotWrap.style.display = "none";
+    wallDisplay.className = "wall-display card-hidden";
+    wallDisplay.innerHTML = "";
+    entranceCaption.classList.toggle("caption-hidden", state.station !== 0);
+    return;
+  }
+  entranceCaption.classList.add("caption-hidden");
+
+  // Position the hotspot over the physical display cube visible in the video
+  // frame for this station, but only once the walk has actually brought the
+  // visitor close to it — otherwise it stays hidden while passing through.
+  if (active.hotspot && state.stationNear) {
+    hotspotWrap.style.display = "";
+    hotspotWrap.style.left = active.hotspot.x + "%";
+    hotspotWrap.style.top = active.hotspot.y + "%";
+    hotspotBtn.classList.toggle("hotspot-open", state.cardOpen);
+    // The marker itself is a fabric swatch — it shows whichever shade is
+    // currently selected below, and updates the instant a color is clicked.
+    var fillShade = active.colors ? active.colors[state.color] : "default";
+    hotspotFill.className = "hotspot-fill fabric-" + fillShade;
+  } else {
+    hotspotWrap.style.display = "none";
+  }
+
+  var cardVisible = state.cardOpen && state.stationNear;
+  var isCompact = !!active.hotspot;
+  var sideClasses = "wall-display " + (isCompact ? "compact-popup" : "display-cube wall-display-" + active.side) + " wall-display-" + active.id
+    + (cardVisible ? "" : " card-hidden");
+  wallDisplay.className = sideClasses;
+
+  var html = "";
+  if (active.hotspot) {
+    html += '<button class="card-close-btn" id="cardCloseBtn" aria-label="סגירת הפרטים">' + ICONS.x + '</button>';
+  }
+  if (active.id !== "entrance" && active.id !== "projects" && active.id !== "offer") {
+    html += '<div class="fabric-preview fabric-preview-' + active.id + ' fabric-tone-' + state.color + '" aria-hidden="true"><span></span><span></span><span></span><span></span></div>';
+  }
+  html += '<div class="display-cube-content">';
+  html += '<span class="eyebrow">' + active.eyebrow + ' · ' + String(state.station + 1).padStart(2, "0") + '</span>';
+  html += '<h1>' + active.title + '</h1>';
+  html += '<p>' + active.copy + '</p>';
+
+  if (active.colors) {
+    html += '<div class="wall-palette"><span>בחרו גוון</span><div>';
+    active.colors.forEach(function(shade, index){
+      html += '<button class="swatch fabric-' + shade + (state.color === index ? ' swatch-active' : '') + '" data-swatch-index="' + index + '" aria-label="בחירת גוון ' + (index + 1) + '"></button>';
+    });
+    html += '</div><small>גובה תצוגה סטנדרטי · 2 מטר</small></div>';
+  }
+
+  if (active.id === "projects") {
+    html += '<div class="projects-wall-grid">';
+    PROJECTS.forEach(function(project, index){
+      html += '<button data-lightbox-index="' + index + '" aria-label="פתיחת פרויקט ' + (index + 1) + '"><img src="' + project.src + '" alt="' + project.alt + '">' + ICONS.maximize2 + '</button>';
+    });
+    html += '</div>';
+  }
+
+  if (active.id === "offer") {
+    html += '<div class="front-offer"><span>החל מ־</span><strong>₪895</strong><small>למטר</small><button id="offerConsultBtn" class="offer-consult-btn">שמרו פגישת ייעוץ ' + ICONS.arrowLeft + '</button></div>';
+  }
+
+  html += '</div>';
+  wallDisplay.innerHTML = html;
+
+  // wire up dynamically created buttons
+  var swatches = wallDisplay.querySelectorAll(".swatch");
+  swatches.forEach(function(sw){
+    sw.addEventListener("click", function(){
+      state.color = parseInt(sw.dataset.swatchIndex, 10);
+      renderWallDisplay();
+    });
+  });
+  var lbButtons = wallDisplay.querySelectorAll("[data-lightbox-index]");
+  lbButtons.forEach(function(btn){
+    btn.addEventListener("click", function(){ openLightbox(parseInt(btn.dataset.lightboxIndex, 10)); });
+  });
+  var offerBtn = document.getElementById("offerConsultBtn");
+  if (offerBtn) offerBtn.addEventListener("click", openConsult);
+  var cardCloseBtn = document.getElementById("cardCloseBtn");
+  if (cardCloseBtn) cardCloseBtn.addEventListener("click", function(){ setCardOpen(false); });
+
+  // Position: the compact popup sits right beside the real pedestal (the
+  // hotspot dot); everything else keeps the original centered/side layout.
+  if (isCompact) {
+    positionCompactPopup(active.hotspot);
+  } else {
+    wallDisplay.style.left = "";
+    wallDisplay.style.top = "";
+    wallDisplay.style.transform = "";
+  }
+}
+
+function positionCompactPopup(hotspot){
+  var vw = window.innerWidth, vh = window.innerHeight;
+  var margin = 16;
+  var gap = 14;
+  var popW = wallDisplay.offsetWidth || 260;
+  var popH = wallDisplay.offsetHeight || 200;
+
+  // Anchor the card directly to the swatch marker itself — opening right
+  // below it (like it's dropping out of the swatch), or above it when
+  // there isn't room below, instead of floating off to whichever side.
+  var rect = hotspotBtn.getBoundingClientRect();
+  var openBelow = (rect.bottom + gap + popH) <= (vh - margin);
+  var top = openBelow ? (rect.bottom + gap) : Math.max(margin, rect.top - gap - popH);
+
+  var left = (rect.left + rect.width / 2) - popW / 2;
+  left = Math.max(margin, Math.min(vw - popW - margin, left));
+
+  wallDisplay.style.left = left + "px";
+  wallDisplay.style.top = top + "px";
+  wallDisplay.style.transform = "none";
+}
+
+// The film itself does the walking now — video.play() at a relaxed pace,
+// exactly like watching a video, never a hand-driven seek. We only ever
+// pause() it (to rest in front of a display, or because the visitor is
+// scrubbing by hand) and play() it again — the footage itself supplies all
+// the motion, so it always flows the way real video flows.
+var AUTOPLAY_RATE = 0.5;        // playback speed while walking on its own — a relaxed pace
+var STATION_PROXIMITY = 1.15;   // seconds within which a display counts as "reached"
+var DWELL_MS = 3400;            // how long the film rests in front of each display before moving on
+var ENTRANCE_DWELL_MS = 1800;   // how long it rests at the entrance before setting off
+var RESUME_DELAY_MS = 900;      // how long after letting go of a manual scrub before it resumes on its own
+var WHEEL_SPEED = 0.0075;       // seconds of footage per wheel-delta unit, for a manual nudge
+var DRAG_SPEED = 0.06;          // seconds of footage per pixel of pointer drag, for a manual nudge
+
+var dragState = null;
+var trackDragging = false;
+var videoReady = false;
+var resumeTimer = null;
+
+function isHandDriven(){ return !!dragState || trackDragging; }
+
+function totalDuration(){
+  return (videoReady && video.duration && isFinite(video.duration)) ? video.duration : VIDEO_DURATION;
+}
+
+function nearestStation(time){
+  var best = 0, bestDist = Infinity;
+  STATIONS.forEach(function(item, index){
+    var d = Math.abs(item.time - time);
+    if (d < bestDist) { bestDist = d; best = index; }
+  });
+  return { index: best, dist: bestDist };
+}
+
+function clearResumeTimer(){
+  if (resumeTimer) { clearTimeout(resumeTimer); resumeTimer = null; }
+}
+
+// Schedule the film to continue walking on its own after a short pause —
+// used once a manual scrub ends, once a display's dwell time is up, or once
+// the visitor closes a product card. If anything more important has taken
+// over by the time it fires (the card is open, a manual scrub is happening,
+// the lightbox or consultation panel is open) it simply does nothing.
+function scheduleResume(delay){
+  clearResumeTimer();
+  resumeTimer = setTimeout(function(){
+    resumeTimer = null;
+    if (state.cardOpen || isHandDriven() || state.lightboxIndex !== null || state.consultation) return;
+    if (video.currentTime >= totalDuration() - 0.05) return;
+    var p = video.play();
+    if (p && p.catch) p.catch(function(){ /* autoplay may need a user gesture first — a click or drag still works */ });
+  }, delay);
+}
+
+function setCardOpen(open){
+  state.cardOpen = open;
+  if (open) {
+    video.pause();
+    clearResumeTimer();
+  } else {
+    scheduleResume(400);
+  }
+  renderWallDisplay();
+}
+
+function updateProgressUI(){
+  walkProgress.style.width = state.progress + "%";
+  walkHandle.style.left = state.progress + "%";
+}
+
+function updateWalkButtons(){
+  prevBtn.disabled = state.station === 0;
+  nextBtn.disabled = state.station === STATIONS.length - 1;
+}
+
+// Runs on every native playback frame (and is also called by hand right
+// after a manual seek, so the display stays in sync while paused too).
+// It only ever reads video.currentTime — it never sets it — so this can
+// never fight with the browser's own smooth decoding.
+function onVideoTime(){
+  var time = video.currentTime;
+  state.progress = (time / totalDuration()) * 100;
+  updateProgressUI();
+
+  var near = nearestStation(time);
+  var isNear = near.dist <= STATION_PROXIMITY;
+  var changed = near.index !== state.station;
+  if (changed) {
+    state.station = near.index;
+    state.color = 0;
+    state.cardOpen = false;
+    if (state.station !== 0) mouseHint.style.display = "none";
+  } else if (!isNear && state.cardOpen) {
+    state.cardOpen = false;
+    changed = true;
+  }
+  if (isNear !== state.stationNear) changed = true;
+  state.stationNear = isNear;
+
+  if (changed) {
+    updateStationRail();
+    updateWalkButtons();
+    renderWallDisplay();
+  } else if (state.cardOpen && STATIONS[state.station].hotspot) {
+    positionCompactPopup(STATIONS[state.station].hotspot);
+  }
+
+  // Let the film come to rest in front of each display, once, on arrival —
+  // never while the visitor is scrubbing it by hand themselves.
+  if (isNear && near.index !== state.dwelledStation && !isHandDriven() && !video.paused) {
+    state.dwelledStation = near.index;
+    video.pause();
+    onVideoTime();
+    scheduleResume(near.index === 0 ? ENTRANCE_DWELL_MS : DWELL_MS);
+  }
+}
+video.addEventListener("timeupdate", onVideoTime);
+
+video.addEventListener("loadedmetadata", function(){
+  videoReady = true;
+  video.loop = false;
+  video.playbackRate = AUTOPLAY_RATE;
+  video.currentTime = STATIONS[0].time;
+  state.dwelledStation = 0;
+  onVideoTime();
+  scheduleResume(ENTRANCE_DWELL_MS);
+});
+video.addEventListener("error", function(){
+  console.error("Tour video failed to load", video.error);
+});
+
+window.addEventListener("resize", function(){
+  var active = STATIONS[state.station];
+  if (active.hotspot && state.cardOpen && state.stationNear) positionCompactPopup(active.hotspot);
+});
+
+muteBtn.addEventListener("click", function(){
+  state.muted = !state.muted;
+  video.muted = state.muted;
+  renderMute();
+});
+bookBtn.addEventListener("click", openConsult);
+
+// A directed walk to a specific display (from a click on a station dot, the
+// prev/next buttons, or the keyboard) — a quick, deliberate cut straight
+// there, after which the film simply resumes its own natural walk from that
+// point, exactly as if it had strolled there itself.
+function travelTo(targetTime){
+  video.pause();
+  clearResumeTimer();
+  video.currentTime = Math.max(0, Math.min(totalDuration(), targetTime));
+  state.dwelledStation = -1;
+  onVideoTime();
+  mouseHint.style.display = "none";
+  scheduleResume(280);
+}
+prevBtn.addEventListener("click", function(){ travelTo(STATIONS[Math.max(0, state.station - 1)].time); });
+nextBtn.addEventListener("click", function(){ travelTo(STATIONS[Math.min(STATIONS.length - 1, state.station + 1)].time); });
+
+// A direct, hand-driven move — the visitor's own scroll, drag or scrub-bar
+// grab always wins immediately over the film's own walking, and the film
+// waits quietly until they let go before it continues on its own.
+function directSeek(time){
+  video.pause();
+  clearResumeTimer();
+  video.currentTime = Math.max(0, Math.min(totalDuration(), time));
+  state.dwelledStation = -1;
+  onVideoTime();
+  mouseHint.style.display = "none";
+}
+
+// Walk track: click anywhere on it, or drag the handle, to scrub freely
+// through the whole walk.
+function scrubFromClientX(clientX){
+  var rect = walkTrack.getBoundingClientRect();
+  var ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+  directSeek(ratio * totalDuration());
+}
+walkTrack.addEventListener("pointerdown", function(e){
+  e.stopPropagation();
+  trackDragging = true;
+  scrubFromClientX(e.clientX);
+});
+window.addEventListener("pointermove", function(e){
+  if (trackDragging) scrubFromClientX(e.clientX);
+});
+window.addEventListener("pointerup", function(){
+  if (!trackDragging) return;
+  trackDragging = false;
+  scheduleResume(RESUME_DELAY_MS);
+});
+
+// Mouse wheel: scroll to nudge through the room by hand.
+tour.addEventListener("wheel", function(e){
+  if (state.lightboxIndex !== null || state.consultation) return;
+  directSeek(video.currentTime + e.deltaY * WHEEL_SPEED);
+  scheduleResume(RESUME_DELAY_MS);
+}, { passive: true });
+
+// Pointer drag / swipe on the room itself: grab and nudge, matching the hint text.
+function isChromeTarget(target){
+  return !!(target.closest && target.closest("button, a, .wall-display, .hotspot-wrap, .immersive-header, .walk-controls, .station-rail, .lightbox, .consultation-backdrop"));
+}
+tour.addEventListener("pointerdown", function(e){
+  if (state.lightboxIndex !== null || state.consultation || isChromeTarget(e.target)) return;
+  dragState = { y: e.clientY, time: video.currentTime };
+  state.dragging = true;
+  video.pause();
+  clearResumeTimer();
+  tour.classList.add("tour-dragging");
+  vignette.classList.add("motion-vignette-active");
+});
+tour.addEventListener("pointermove", function(e){
+  if (!dragState) return;
+  e.preventDefault();
+  // Swipe/drag up to keep moving forward — the same direction as scrolling
+  // down a page, and the same sense as the mouse wheel below.
+  var dy = e.clientY - dragState.y;
+  directSeek(dragState.time - dy * DRAG_SPEED);
+});
+window.addEventListener("pointerup", function(){
+  if (!dragState) return;
+  dragState = null;
+  state.dragging = false;
+  tour.classList.remove("tour-dragging");
+  vignette.classList.remove("motion-vignette-active");
+  scheduleResume(RESUME_DELAY_MS);
+});
+
+// keyboard: quick jump to the previous/next display, like a chapter skip.
+window.addEventListener("keydown", function(e){
+  if (e.key === "Escape") { closeLightbox(); closeConsult(); }
+  if (state.lightboxIndex !== null || state.consultation) return;
+  if (e.key === "ArrowLeft" || e.key === "ArrowDown") travelTo(STATIONS[Math.min(STATIONS.length - 1, state.station + 1)].time);
+  if (e.key === "ArrowRight" || e.key === "ArrowUp") travelTo(STATIONS[Math.max(0, state.station - 1)].time);
+});
+
+function openLightbox(index){
+  state.lightboxIndex = index;
+  video.pause();
+  clearResumeTimer();
+  renderLightbox();
+  lightbox.style.display = "grid";
+}
+function closeLightbox(){
+  state.lightboxIndex = null;
+  lightbox.style.display = "none";
+  scheduleResume(400);
+}
+function renderLightbox(){
+  var p = PROJECTS[state.lightboxIndex];
+  lightboxImg.src = p.src;
+  lightboxImg.alt = p.alt;
+  lightboxCount.textContent = (state.lightboxIndex + 1) + " / " + PROJECTS.length;
+}
+lightboxClose.addEventListener("click", closeLightbox);
+lightboxPrev.addEventListener("click", function(){ state.lightboxIndex = (state.lightboxIndex + PROJECTS.length - 1) % PROJECTS.length; renderLightbox(); });
+lightboxNext.addEventListener("click", function(){ state.lightboxIndex = (state.lightboxIndex + 1) % PROJECTS.length; renderLightbox(); });
+lightbox.addEventListener("click", function(e){ if (e.target === lightbox) closeLightbox(); });
+
+function openConsult(){
+  state.consultation = true;
+  video.pause();
+  clearResumeTimer();
+  consultBackdrop.style.display = "grid";
+}
+function closeConsult(){
+  state.consultation = false;
+  consultBackdrop.style.display = "none";
+  scheduleResume(400);
+}
+consultClose.addEventListener("click", closeConsult);
+consultBackdrop.addEventListener("click", function(e){ if (e.target === consultBackdrop) closeConsult(); });
+
+renderWallDisplay();
+updateWalkButtons();
+
+})();
+</script>
+</body>
+</html>
