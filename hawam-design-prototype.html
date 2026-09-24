@@ -8,6 +8,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
 <style>
   :root{
     --bg:#0a0b0b;
@@ -48,7 +54,7 @@
   /* ---------- DIVE SECTION ---------- */
   #dive-wrap{
     position:relative;
-    height:340svh;
+    height:620svh;
     background:var(--bg);
   }
   #dive-sticky{
@@ -473,20 +479,21 @@
 
   function drawLabel(ctx, c, cat){
     ctx.fillStyle = 'rgba(236,231,221,0.85)';
-    ctx.font = '28px Georgia, serif';
+    ctx.font = '34px Georgia, serif';
     ctx.textAlign = 'right';
     ctx.direction = 'rtl';
-    ctx.fillText(cat.eyebrow, c.width - 24, c.height - 28);
+    ctx.fillText(cat.eyebrow, c.width - 28, c.height - 34);
   }
 
   function makeTexture(cat, photoSrc){
+    // portrait, same 3:4 ratio as the fabric panels
     const c = document.createElement('canvas');
-    c.width = 512; c.height = 320;
+    c.width = 480; c.height = 640;
     const ctx = c.getContext('2d');
     ctx.fillStyle = cat.color;
     ctx.fillRect(0,0,c.width,c.height);
     ctx.strokeStyle = 'rgba(236,231,221,0.08)';
-    for (let i=0;i<10;i++){
+    for (let i=0;i<20;i++){
       ctx.beginPath();
       ctx.moveTo(0, i*34);
       ctx.lineTo(c.width, i*34 + 18);
@@ -495,6 +502,7 @@
     drawLabel(ctx, c, cat);
     const tex = new THREE.CanvasTexture(c);
     tex.minFilter = THREE.LinearFilter;
+    tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
 
     // swap in the real photo (cover-cropped) once it has loaded
     if (photoSrc){
@@ -503,7 +511,7 @@
         const scale = Math.max(c.width / img.width, c.height / img.height);
         const w = img.width * scale, h = img.height * scale;
         ctx.drawImage(img, (c.width - w) / 2, (c.height - h) / 2, w, h);
-        const shade = ctx.createLinearGradient(0, c.height * 0.55, 0, c.height);
+        const shade = ctx.createLinearGradient(0, c.height * 0.6, 0, c.height);
         shade.addColorStop(0, 'rgba(10,11,11,0)');
         shade.addColorStop(1, 'rgba(10,11,11,0.75)');
         ctx.fillStyle = shade;
@@ -515,75 +523,178 @@
     return tex;
   }
 
-  const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  const coarse = window.matchMedia('(pointer: coarse)').matches;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const renderer = new THREE.WebGLRenderer({canvas, antialias:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, coarse ? 1.75 : 2));
+  renderer.setClearColor(0x0a0b0b, 1);
 
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 4000);
+  const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
 
-  const TUNNEL_LENGTH = 2600;
-  const SPRITE_COUNT = 46;
-  const sprites = [];
+  // ---- fabric panels on a descending helix around a column of light ----
+  // Scrolling turns the helix so each panel in turn hangs in front of the camera.
+  const CARD_COUNT = 12;
+  const RADIUS = 4.2;
+  const STEP = Math.PI * 2 / 7;   // angle between neighbouring panels
+  const DROP = 1.6;               // vertical drop between neighbouring panels
+  const CARD_W = 2.4, CARD_H = 3.2;
 
-  for (let i=0;i<SPRITE_COUNT;i++){
+  const fabricVert = `
+    uniform float uTime, uPhase, uAmp;
+    varying vec2 vUv;
+    varying float vShade;
+    void main(){
+      vUv = uv;
+      vec3 p = position;
+      // five pleats across the width, drifting slowly; the hem moves more than the top
+      float k = uv.x * 6.2831 * 5.0 + uTime * 0.5 + uPhase;
+      float hang = 1.0 - uv.y;
+      p.z += sin(k) * uAmp * (0.6 + 0.4 * hang);
+      p.z += sin(uv.y * 4.0 + uTime * 0.8 + uPhase) * 0.06 * hang;
+      p.x += sin(uTime * 0.6 + uPhase + uv.y * 2.0) * 0.03 * hang;
+      vShade = cos(k);
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
+    }`;
+  const fabricFrag = `
+    uniform sampler2D map;
+    uniform float uDim;
+    varying vec2 vUv;
+    varying float vShade;
+    void main(){
+      vec3 c = texture2D(map, vUv).rgb;
+      c *= 0.8 + 0.2 * vShade;            // light on the pleat crests, shadow in the folds
+      c *= gl_FrontFacing ? uDim : uDim * 0.3;
+      gl_FragColor = vec4(c, 1.0);
+    }`;
+
+  const helix = new THREE.Group();
+  scene.add(helix);
+  const cardGeo = new THREE.PlaneGeometry(CARD_W, CARD_H, 60, 30);
+  const rodGeo = new THREE.CylinderGeometry(0.018, 0.018, CARD_W + 0.3, 8);
+  rodGeo.rotateZ(Math.PI / 2);
+  const cards = [];
+
+  for (let i = 0; i < CARD_COUNT; i++){
     const cat = categories[i % categories.length];
     const round = Math.floor(i / categories.length);
     const tex = makeTexture(cat, cat.images.length ? cat.images[round % cat.images.length] : null);
-    const mat = new THREE.SpriteMaterial({ map: tex, transparent:true, opacity:0.9 });
-    const sprite = new THREE.Sprite(mat);
-    const scale = 90 + Math.random()*70;
-    sprite.scale.set(scale * 1.6, scale, 1);
-    sprite.position.set(
-      (Math.random()-0.5) * 620,
-      (Math.random()-0.5) * 360,
-      -Math.random() * TUNNEL_LENGTH
-    );
-    sprite.userData.cat = cat;
-    scene.add(sprite);
-    sprites.push(sprite);
+    const mat = new THREE.ShaderMaterial({
+      uniforms: {
+        map: { value: tex },
+        uTime: { value: 0 },
+        uPhase: { value: i * 1.7 },
+        uAmp: { value: 0.07 },
+        uDim: { value: 1 },
+      },
+      vertexShader: fabricVert,
+      fragmentShader: fabricFrag,
+      side: THREE.DoubleSide,
+    });
+    const card = new THREE.Mesh(cardGeo, mat);
+    const a = i * STEP;
+    card.position.set(Math.sin(a) * RADIUS, -i * DROP, Math.cos(a) * RADIUS);
+    card.rotation.y = a;   // face outward
+    // brass curtain rod above each panel
+    const rodMat = new THREE.MeshBasicMaterial({ color: 0xc9a15a });
+    const rod = new THREE.Mesh(rodGeo, rodMat);
+    rod.position.y = CARD_H / 2 + 0.06;
+    card.add(rod);
+    card.userData = { cat, rodMat };
+    helix.add(card);
+    cards.push(card);
   }
 
-  let camZ = 0;
+  // ---- dust in the light: warm particles drifting up through the centre ----
+  const DUST = coarse ? 500 : 1100;
+  const DUST_SPAN = 16;
+  const dustPos = new Float32Array(DUST * 3);
+  const dustSpeed = new Float32Array(DUST);
+  for (let i = 0; i < DUST; i++){
+    const r = 0.2 + Math.pow(Math.random(), 1.6) * 1.8;
+    const t = Math.random() * Math.PI * 2;
+    dustPos[i*3]   = Math.cos(t) * r;
+    dustPos[i*3+1] = (Math.random() - 0.5) * DUST_SPAN;
+    dustPos[i*3+2] = Math.sin(t) * r;
+    dustSpeed[i] = 0.08 + Math.random() * 0.25;
+  }
+  const dustGeo = new THREE.BufferGeometry();
+  dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPos, 3));
+  const dotCanvas = document.createElement('canvas');
+  dotCanvas.width = dotCanvas.height = 32;
+  const dctx = dotCanvas.getContext('2d');
+  const grad = dctx.createRadialGradient(16,16,0,16,16,16);
+  grad.addColorStop(0, 'rgba(255,255,255,1)');
+  grad.addColorStop(1, 'rgba(255,255,255,0)');
+  dctx.fillStyle = grad;
+  dctx.fillRect(0,0,32,32);
+  const dust = new THREE.Points(dustGeo, new THREE.PointsMaterial({
+    size: 0.085, map: new THREE.CanvasTexture(dotCanvas), color: 0xe8c98a,
+    transparent: true, opacity: 0.85, depthWrite: false, blending: THREE.AdditiveBlending,
+  }));
+  scene.add(dust);
+
+  // ---- post-processing: soft bloom + film grain/vignette (skipped if the add-ons didn't load) ----
+  let composer = null, grainPass = null;
+  if (THREE.EffectComposer && THREE.RenderPass && THREE.UnrealBloomPass && THREE.ShaderPass){
+    composer = new THREE.EffectComposer(renderer);
+    composer.addPass(new THREE.RenderPass(scene, camera));
+    composer.addPass(new THREE.UnrealBloomPass(new THREE.Vector2(256, 256), 0.6, 0.5, 0.93));
+    grainPass = new THREE.ShaderPass({
+      uniforms: { tDiffuse: { value: null }, uTime: { value: 0 } },
+      vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+      fragmentShader: `
+        uniform sampler2D tDiffuse; uniform float uTime; varying vec2 vUv;
+        float rand(vec2 co){ return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453); }
+        void main(){
+          vec3 c = texture2D(tDiffuse, vUv).rgb;
+          c += (rand(vUv * 1000.0 + uTime) - 0.5) * 0.05;
+          c *= smoothstep(1.15, 0.3, length(vUv - 0.5) * 1.45);
+          gl_FragColor = vec4(c, 1.0);
+        }`,
+    });
+    composer.addPass(grainPass);
+  }
+
   let targetSteerX = 0, targetSteerY = 0;
   let steerX = 0, steerY = 0;
 
   window.addEventListener('pointermove', (e) => {
-    targetSteerX = ((e.clientX / window.innerWidth) - 0.5) * 140;
-    targetSteerY = ((e.clientY / window.innerHeight) - 0.5) * -90;
+    targetSteerX = ((e.clientX / window.innerWidth) - 0.5) * 1.0;
+    targetSteerY = ((e.clientY / window.innerHeight) - 0.5) * -0.6;
   }, {passive:true});
 
+  let camDist = 5.5;
   function resize(){
     const w = stickyEl.clientWidth, h = stickyEl.clientHeight;
-    camera.aspect = w / Math.max(h,1);
+    const aspect = w / Math.max(h,1);
+    camera.aspect = aspect;
     camera.updateProjectionMatrix();
+    // back the camera off on narrow screens so the front panel always fits
+    const tanHalf = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+    camDist = Math.max(5.5, (CARD_W * (aspect < 1 ? 1.45 : 1.3)) / (2 * tanHalf * aspect));
     renderer.setSize(w, h);
+    if (composer) composer.setSize(w, h);
   }
   window.addEventListener('resize', resize);
   resize();
 
-  let nearestLabel = '';
-  function updateHud(){
-    let nearest = null, best = Infinity;
-    sprites.forEach(s => {
-      const d = Math.abs(s.position.z - camZ);
-      if (d < best){ best = d; nearest = s; }
-    });
-    if (nearest && nearest.userData.cat.title !== nearestLabel){
-      nearestLabel = nearest.userData.cat.title;
-      hudTitle.style.opacity = 0;
-      hudEyebrow.style.opacity = 0;
-      setTimeout(() => {
-        hudTitle.textContent = nearest.userData.cat.title;
-        hudEyebrow.textContent = nearest.userData.cat.eyebrow;
-        hudTitle.style.opacity = 1;
-        hudEyebrow.style.opacity = 1;
-      }, 200);
-      const idx = categories.indexOf(nearest.userData.cat) + 1;
-      hudIndex.textContent = '0' + idx + ' / 0' + categories.length;
-    }
+  let frontIndex = -1;
+  function updateHud(index){
+    if (index === frontIndex) return;
+    frontIndex = index;
+    const cat = cards[index].userData.cat;
+    hudTitle.style.opacity = 0;
+    hudEyebrow.style.opacity = 0;
+    setTimeout(() => {
+      hudTitle.textContent = cat.title;
+      hudEyebrow.textContent = cat.eyebrow;
+      hudTitle.style.opacity = 1;
+      hudEyebrow.style.opacity = 1;
+    }, 200);
+    hudIndex.textContent = '0' + (categories.indexOf(cat) + 1) + ' / 0' + categories.length;
   }
-
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   function scrollProgress(){
     const rect = wrapEl.getBoundingClientRect();
@@ -592,36 +703,66 @@
     return total > 0 ? scrolled / total : 0;
   }
 
+  // only render while the section is on screen
+  let visible = true;
+  new IntersectionObserver(entries => { visible = entries[0].isIntersecting; }).observe(wrapEl);
+
+  const clock = new THREE.Clock();
+  const tmp = new THREE.Vector3();
+  let turn = 0;   // how many panels the helix has turned (fractional)
+
   function animate(){
     requestAnimationFrame(animate);
+    const dt = Math.min(clock.getDelta(), 0.05);
+    if (!visible) return;
+    const time = reduceMotion ? 0 : clock.elapsedTime;
 
-    const progress = scrollProgress();
-    const targetZ = -progress * TUNNEL_LENGTH * 1.35;
-    camZ += (targetZ - camZ) * 0.08;
+    // each panel holds centred for the middle of its scroll slice, then eases on to the next
+    const raw = scrollProgress() * (CARD_COUNT - 1);
+    const whole = Math.floor(raw), f = raw - whole;
+    const move = THREE.MathUtils.clamp((f - 0.35) / 0.3, 0, 1);
+    const target = whole + move * move * (3 - 2 * move);
+    // frame-rate independent easing (same feel at 30 or 120 fps)
+    turn = reduceMotion ? target : turn + (target - turn) * (1 - Math.exp(-dt * 5));
+    helix.rotation.y = -turn * STEP;
+    helix.position.y = turn * DROP;
 
     if (!reduceMotion){
-      steerX += (targetSteerX - steerX) * 0.04;
-      steerY += (targetSteerY - steerY) * 0.04;
+      steerX += (targetSteerX - steerX) * (1 - Math.exp(-dt * 2.5));
+      steerY += (targetSteerY - steerY) * (1 - Math.exp(-dt * 2.5));
     }
+    camera.position.set(steerX, 0.25 + steerY, RADIUS + camDist);
+    camera.lookAt(0, 0, 0);
 
-    camera.position.set(steerX, steerY, camZ);
-    camera.lookAt(steerX * 0.3, steerY * 0.3, camZ - 400);
-
-    sprites.forEach(s => {
-      let rel = s.position.z - camZ;
-      if (rel > 60){
-        s.position.z -= TUNNEL_LENGTH;
-        s.position.x = (Math.random()-0.5) * 620;
-        s.position.y = (Math.random()-0.5) * 360;
-        rel = s.position.z - camZ;
-      }
-      const dist = Math.abs(rel);
-      const fade = THREE.MathUtils.clamp(1 - Math.abs(dist - 500) / 900, 0.08, 1);
-      s.material.opacity = fade;
+    // panels facing the camera are lit; the ones turning away fall into shadow
+    cards.forEach(card => {
+      card.getWorldPosition(tmp);
+      const facing = (tmp.z + RADIUS) / (2 * RADIUS);
+      const vertical = THREE.MathUtils.clamp(1 - Math.abs(tmp.y) / 4.5, 0, 1);
+      // capped at 0.9 so photos stay under the bloom threshold and only the dust glows
+      const dim = THREE.MathUtils.lerp(0.12, 0.9, Math.pow(THREE.MathUtils.clamp(facing, 0, 1), 3)) * (0.35 + 0.65 * vertical);
+      card.material.uniforms.uDim.value = dim;
+      card.material.uniforms.uTime.value = time;
+      card.userData.rodMat.color.setRGB(0.79 * dim, 0.63 * dim, 0.35 * dim);
     });
 
-    updateHud();
-    renderer.render(scene, camera);
+    if (!reduceMotion){
+      for (let i = 0; i < DUST; i++){
+        let y = dustPos[i*3+1] + dustSpeed[i] * dt;
+        if (y > DUST_SPAN / 2) y -= DUST_SPAN;
+        dustPos[i*3+1] = y;
+      }
+      dustGeo.attributes.position.needsUpdate = true;
+      dust.rotation.y += dt * 0.05;
+    }
+
+    updateHud(Math.round(turn));
+    if (composer){
+      grainPass.uniforms.uTime.value = time;
+      composer.render();
+    } else {
+      renderer.render(scene, camera);
+    }
   }
   animate();
 })();
