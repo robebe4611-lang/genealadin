@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>חוואם דיזיין — צלילה לחלל הפתוח</title>
+<title>חוואם דיזיין — וילונות בהתאמה אישית</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
@@ -96,6 +96,10 @@
     max-width:640px;
   }
   #note p{font-size:15px;line-height:1.7;color:var(--ink-dim);}
+  #note p.kicker{color:var(--accent);margin:0 0 10px;}
+  #note .quote{margin:24px 0 0;padding-inline-start:16px;border-inline-start:1px solid var(--accent);}
+  #note .quote p{margin:0;color:var(--ink);font-family:'Fraunces',Georgia,serif;font-size:18px;}
+  #note .quote cite{display:block;margin-top:6px;font-style:normal;font-size:13px;color:var(--ink-dim);}
   #note .ask-bar{
     margin-top:36px;
     display:flex;
@@ -242,6 +246,17 @@
     color:var(--ink);
     min-height:1.4em;
   }
+  .wa-cta{
+    align-self:center;
+    text-decoration:none;
+    font-size:14px;
+    color:var(--bg);
+    background:var(--accent);
+    padding:11px 24px;
+    border-radius:999px;
+  }
+  .wa-cta:hover{filter:brightness(1.08);}
+  .wa-cta:focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
   .config-note{
     text-align:center;
     font-size:12.5px;
@@ -280,18 +295,6 @@
     transition:opacity .45s ease;
   }
   .print-stage img.fading{opacity:0;}
-  .print-stage .print-missing{
-    position:absolute;inset:0;
-    display:none;
-    align-items:center;justify-content:center;
-    padding:24px;
-    text-align:center;
-    font-size:13.5px;line-height:1.6;
-    color:var(--ink-dim);
-    background:repeating-linear-gradient(135deg,#171c1e 0 14px,#13171a 14px 28px);
-  }
-  .print-stage.missing img{display:none;}
-  .print-stage.missing .print-missing{display:flex;}
   .print-stage .print-hint{
     position:absolute;inset-inline-start:12px;bottom:12px;
     font-size:12px;color:var(--ink);
@@ -349,16 +352,16 @@
 <section id="hero">
   <div class="hero-top">
     <span class="brand-mark">חוואם דיזיין</span>
-    <span>וילונות בהתאמה אישית · 50 שנה</span>
+    <span>וילונות בהתאמה אישית · כמעט 50 שנה</span>
   </div>
   <div class="hero-body">
-    <p class="kicker">כיוון עיצובי חדש — חלל פתוח, לא שואורום</p>
-    <h1>לא מסתכלים על הבית שלכם.<br>צוללים לתוכו.</h1>
-    <p class="lede">במקום "אולם תצוגה" עם תאים סגורים — חלל אחד פתוח שבו בדים, דוגמאות ועבודות שלנו צפים סביבכם. גוללים, וממשיכים לצלול פנימה.</p>
+    <p class="kicker">חוואם דיזיין — וילונות בהתאמה אישית</p>
+    <h1>הבית שלכם.<br>בדיוק בטעם שלכם.</h1>
+    <p class="lede">עיצוב, תפירה והתקנה מקצועית עם מבחר בדים וסגנונות — אצלכם בבית.</p>
   </div>
   <div class="hero-bottom">
     <div class="scroll-cue"><span class="line"></span><span>גללו כדי לצלול</span></div>
-    <span>הדגמת אינטראקציה · נכסים ממלאי מקום</span>
+    <span>חיפה והכרמל · הקריות · עכו · נהריה · נצרת ונוף הגליל · עפולה</span>
   </div>
 </section>
 
@@ -367,7 +370,7 @@
     <canvas id="dive-canvas"></canvas>
     <div class="dive-hud">
       <div class="top-row">
-        <span id="hud-index">01 / 04</span>
+        <span id="hud-index" dir="ltr">01 / 04</span>
         <span>גררו / הזיזו עכבר לכיוון</span>
       </div>
       <div class="caption">
@@ -379,7 +382,10 @@
 </section>
 
 <section id="note">
-  <p>זו הדגמת תנועה בלבד — הכרטיסים בחלל הם ממלאי מקום. בבנייה בפועל כל כרטיס יהיה תמונה אמיתית: דוגמת בד, עבודה שביצענו, או וילון מוגמר בבית של לקוח — בהתאם לביקוש בשוק (בד, רומאי/רומאי רך, גלילה וונציאני).</p>
+  <p class="kicker">הסיפור שלנו</p>
+  <p>כמעט 50 שנות התמחות בבדים, תפירה ועיצוב. ידע וניסיון רב-דורי במשפחה. ליווי אישי של הלקוח מהרעיון הראשוני ועד ההתקנה הסופית בבית.</p>
+  <blockquote class="quote"><p>"תודה רבה עבודה מאוד מקצועית ובד איכותי"</p><cite>רנין חוואם-ספרארה</cite></blockquote>
+  <blockquote class="quote"><p>"כשמקצועיות ויופי נפגשים!"</p><cite>ליאת</cite></blockquote>
   <div class="ask-bar">
     <input type="text" placeholder="מה מחפשים? וילון בד, רומאי, גלילה…" aria-label="חיפוש">
     <button type="button">חיפוש →</button>
@@ -388,9 +394,9 @@
 
 <section id="configurator">
   <div class="config-head">
-    <p class="kicker">כיוון להמשך — התאמה אישית</p>
-    <h2>פותחים את הווילון, מחליפים צבע</h2>
-    <p class="sub">הדגמת מנגנון: אותה תמונת בד מוצגת בכמה גוונים בלי לצלם כל צבע בנפרד — הצבע "נצבע" בזמן אמת מעל טקסטורת קפלים אחת. בפרויקט האמיתי זה עובד הכי טוב על בדים חלקים/צבע אחיד; בד עם הדפס עדיין יצטרך תמונה אמיתית לכל דוגמה.</p>
+    <p class="kicker">התאמה אישית</p>
+    <h2>פותחים את הווילון, בוחרים גוון</h2>
+    <p class="sub">גררו את הווילון הצידה או לחצו עליו, ובחרו גוון כדי לראות איך הבד נראה בצבעים שונים. אהבתם? שלחו לנו את הגוון בוואטסאפ ונתאם מדידה.</p>
   </div>
 
   <div class="window-frame" id="window-frame">
@@ -408,16 +414,16 @@
     <button type="button" id="toggle-open" aria-controls="window-frame" aria-expanded="false">פתחו את הווילון</button>
     <div class="swatches" id="swatches" role="group" aria-label="בחירת צבע בד"></div>
     <p class="swatch-name" id="swatch-name" aria-live="polite"></p>
-    <p class="config-note">גוונים לדוגמה — הצבעים הסופיים ייקבעו לפי מלאי הבדים בפועל</p>
+    <a class="wa-cta" id="wa-cta" href="https://wa.me/972506541828" target="_blank" rel="noopener">שלחו לנו את הגוון בוואטסאפ</a>
+    <p class="config-note">הגוונים להמחשה — את הבד בוחרים מקרוב, עם דוגמאות אמיתיות אצלכם בבית</p>
   </div>
 
-  <div class="print-card" id="print-card">
+  <div class="print-card" id="print-card" hidden>
     <p class="kicker">בד עם הדפס</p>
     <h3>דוגמה מודפסת — תמונה אמיתית לכל דוגמה</h3>
     <p class="sub">בבד מודפס אי אפשר "לצבוע" את התמונה מחדש בלי להרוס את ההדפס, ולכן כאן כל דוגמה מוצגת בצילום משלה. לחצו על התמונה או על אחת הדוגמאות כדי להחליף.</p>
     <button type="button" class="print-stage" id="print-stage" aria-label="הדוגמה הבאה">
       <img id="print-img" alt="">
-      <span class="print-missing" id="print-missing"></span>
       <span class="print-hint" aria-hidden="true">לחצו להחלפה</span>
     </button>
     <div class="print-thumbs" id="print-thumbs" role="group" aria-label="בחירת בד מודפס"></div>
@@ -425,7 +431,8 @@
 </section>
 
 <footer>
-  <span>© חוואם דיזיין — הדגמה פנימית, לא לפרסום</span>
+  <span>© חוואם דיזיין · וילונות בהתאמה אישית</span>
+  <span><a href="tel:+972506541828" dir="ltr">050-654-1828</a> · <a href="https://wa.me/972506541828" target="_blank" rel="noopener">וואטסאפ</a></span>
   <a href="#hero">חזרה למעלה</a>
 </footer>
 
@@ -441,15 +448,38 @@
   const hudEyebrow = document.getElementById('hud-eyebrow');
   const hudIndex = document.getElementById('hud-index');
 
+  // The four service categories from hawamdesign.com. `images` are the
+  // site's own photos; a category without one keeps the plain colour card.
   const categories = [
-    { eyebrow:'בדים', title:'וילונות בד בהתאמה אישית', color:'#2a2f24' },
-    { eyebrow:'רומאי', title:'וילונות רומאיים ורומאיים רכים', color:'#2c241f' },
-    { eyebrow:'גלילה', title:'וילונות גלילה וונציאניים', color:'#1f262c' },
-    { eyebrow:'עבודות שלנו', title:'תוצאה בבית של לקוח אמיתי', color:'#241f2a' },
-    { eyebrow:'מבחר בדים', title:'דוגמאות טקסטורה וצבע', color:'#292020' },
+    { eyebrow:'בדים', title:'וילונות בד בהתאמה אישית', color:'#2a2f24', images:['custom-curtains.jpeg'] },
+    { eyebrow:'רומאי', title:'וילונות רומיים ורומיים רכים', color:'#2c241f', images:['roman-curtain.jpeg','soft-roman.jpeg'] },
+    { eyebrow:'גלילה', title:'תריסי גלילה וונציאניים', color:'#1f262c', images:[] },
+    { eyebrow:'סגנונות', title:'מגוון סגנונות תפירה ובדים', color:'#241f2a', images:['sheer-living-room.jpeg'] },
   ];
 
-  function makeTexture(cat){
+  // one shared <img> per photo, however many sprites use it
+  const photoCache = {};
+  function loadPhoto(src){
+    if (!photoCache[src]){
+      photoCache[src] = new Promise(resolve => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = () => resolve(null);
+        img.src = src;
+      });
+    }
+    return photoCache[src];
+  }
+
+  function drawLabel(ctx, c, cat){
+    ctx.fillStyle = 'rgba(236,231,221,0.85)';
+    ctx.font = '28px Georgia, serif';
+    ctx.textAlign = 'right';
+    ctx.direction = 'rtl';
+    ctx.fillText(cat.eyebrow, c.width - 24, c.height - 28);
+  }
+
+  function makeTexture(cat, photoSrc){
     const c = document.createElement('canvas');
     c.width = 512; c.height = 320;
     const ctx = c.getContext('2d');
@@ -462,13 +492,26 @@
       ctx.lineTo(c.width, i*34 + 18);
       ctx.stroke();
     }
-    ctx.fillStyle = 'rgba(236,231,221,0.85)';
-    ctx.font = '28px Georgia, serif';
-    ctx.textAlign = 'right';
-    ctx.direction = 'rtl';
-    ctx.fillText(cat.eyebrow, c.width - 24, c.height - 28);
+    drawLabel(ctx, c, cat);
     const tex = new THREE.CanvasTexture(c);
     tex.minFilter = THREE.LinearFilter;
+
+    // swap in the real photo (cover-cropped) once it has loaded
+    if (photoSrc){
+      loadPhoto(photoSrc).then(img => {
+        if (!img) return;
+        const scale = Math.max(c.width / img.width, c.height / img.height);
+        const w = img.width * scale, h = img.height * scale;
+        ctx.drawImage(img, (c.width - w) / 2, (c.height - h) / 2, w, h);
+        const shade = ctx.createLinearGradient(0, c.height * 0.55, 0, c.height);
+        shade.addColorStop(0, 'rgba(10,11,11,0)');
+        shade.addColorStop(1, 'rgba(10,11,11,0.75)');
+        ctx.fillStyle = shade;
+        ctx.fillRect(0, 0, c.width, c.height);
+        drawLabel(ctx, c, cat);
+        tex.needsUpdate = true;
+      });
+    }
     return tex;
   }
 
@@ -484,7 +527,8 @@
 
   for (let i=0;i<SPRITE_COUNT;i++){
     const cat = categories[i % categories.length];
-    const tex = makeTexture(cat);
+    const round = Math.floor(i / categories.length);
+    const tex = makeTexture(cat, cat.images.length ? cat.images[round % cat.images.length] : null);
     const mat = new THREE.SpriteMaterial({ map: tex, transparent:true, opacity:0.9 });
     const sprite = new THREE.Sprite(mat);
     const scale = 90 + Math.random()*70;
@@ -589,15 +633,27 @@
   const tints = document.querySelectorAll('[data-tint]');
   const swatchName = document.getElementById('swatch-name');
 
-  // Sample shades. Replace with the real inventory (name + hex measured from the fabric).
+  // Palette built around the fabrics in Hawam's own photos (ivory roman,
+  // linen soft-roman, warm-grey sheers, the sand wall behind the roman),
+  // plus two deeper tones for contrast. Not a stock list: swap in real
+  // inventory (name + hex) when the client provides it.
   const colors = [
-    { name:'אבן', hex:'#a9a08c' },
-    { name:'קרם', hex:'#cbbfa0' },
-    { name:'זית', hex:'#5c6448' },
-    { name:'חרדל', hex:'#8a6a2e' },
-    { name:'פחם', hex:'#3a3a3c' },
-    { name:'יין', hex:'#5e2f34' },
+    { name:'שנהב', hex:'#ede6d8' },
+    { name:'לינן טבעי', hex:'#d6cbb5' },
+    { name:'חול', hex:'#c2ad8e' },
+    { name:'אפור חם', hex:'#a39e92' },
+    { name:'מוקה', hex:'#7a6453' },
+    { name:'ירוק זית', hex:'#676a4f' },
   ];
+  const waCta = document.getElementById('wa-cta');
+  const WA_NUMBER = '972506541828';
+
+  function pick(c){
+    tints.forEach(t => t.style.background = c.hex);
+    swatchName.textContent = c.name;
+    waCta.href = 'https://wa.me/' + WA_NUMBER + '?text=' +
+      encodeURIComponent('שלום, ראיתי באתר וילון בגוון "' + c.name + '" ואשמח לתאם מדידה');
+  }
 
   colors.forEach((c, i) => {
     const b = document.createElement('button');
@@ -607,14 +663,12 @@
     b.setAttribute('aria-label', 'צבע ' + c.name);
     b.setAttribute('aria-pressed', i === 0 ? 'true' : 'false');
     b.addEventListener('click', () => {
-      tints.forEach(t => t.style.setProperty('--tint-color', c.hex));
-      tints.forEach(t => t.style.background = c.hex);
       swatchWrap.querySelectorAll('.swatch').forEach(s => s.setAttribute('aria-pressed', 'false'));
       b.setAttribute('aria-pressed', 'true');
-      swatchName.textContent = c.name;
+      pick(c);
     });
     swatchWrap.appendChild(b);
-    if (i === 0){ tints.forEach(t => t.style.background = c.hex); swatchName.textContent = c.name; }
+    if (i === 0) pick(c);
   });
 
   function setOpen(open){
@@ -684,33 +738,23 @@
 (function(){
   // Printed fabrics are shown as separate real photos (no multiply recolor,
   // which would muddy the print). Put the photos at these paths, or change
-  // the paths; add a third entry if needed.
-  const prints = [
+  // the paths. Entries whose photo doesn't load are dropped, and the whole
+  // card stays hidden until at least one exists.
+  const allPrints = [
     { name:'הדפס 1', src:'assets/prints/print-1.jpg' },
     { name:'הדפס 2', src:'assets/prints/print-2.jpg' },
     { name:'הדפס 3', src:'assets/prints/print-3.jpg' },
   ];
 
+  const card = document.getElementById('print-card');
   const stage = document.getElementById('print-stage');
   const img = document.getElementById('print-img');
-  const missing = document.getElementById('print-missing');
   const thumbWrap = document.getElementById('print-thumbs');
   const thumbs = [];
+  let prints = [];
   let current = -1;
 
-  img.addEventListener('load', () => {
-    stage.classList.remove('missing');
-    img.classList.remove('fading');
-  });
-  img.addEventListener('error', () => {
-    stage.classList.add('missing');
-    img.classList.remove('fading');
-    const path = document.createElement('bdi');
-    path.dir = 'ltr';
-    path.textContent = prints[current].src;
-    missing.textContent = 'אין עדיין תמונה ל"' + prints[current].name + '" — יש להעלות קובץ: ';
-    missing.append(path);
-  });
+  img.addEventListener('load', () => img.classList.remove('fading'));
 
   function show(i){
     if (i === current) return;
@@ -724,25 +768,38 @@
     setTimeout(() => { if (current === i) img.src = p.src; }, 200);
   }
 
-  prints.forEach((p, i) => {
-    const b = document.createElement('button');
-    b.type = 'button';
-    b.className = 'print-thumb';
-    b.setAttribute('aria-pressed', 'false');
-    const sw = document.createElement('span');
-    sw.className = 'thumb-img';
-    sw.style.backgroundImage = 'url("' + p.src + '")';
-    sw.setAttribute('aria-hidden', 'true');
-    const label = document.createElement('span');
-    label.textContent = p.name;
-    b.append(sw, label);
-    b.addEventListener('click', () => show(i));
-    thumbWrap.appendChild(b);
-    thumbs.push(b);
-  });
+  function build(){
+    prints.forEach((p, i) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'print-thumb';
+      b.setAttribute('aria-pressed', 'false');
+      const sw = document.createElement('span');
+      sw.className = 'thumb-img';
+      sw.style.backgroundImage = 'url("' + p.src + '")';
+      sw.setAttribute('aria-hidden', 'true');
+      const label = document.createElement('span');
+      label.textContent = p.name;
+      b.append(sw, label);
+      b.addEventListener('click', () => show(i));
+      thumbWrap.appendChild(b);
+      thumbs.push(b);
+    });
 
-  stage.addEventListener('click', () => show((current + 1) % prints.length));
-  show(0);
+    stage.addEventListener('click', () => show((current + 1) % prints.length));
+    show(0);
+    card.hidden = false;
+  }
+
+  Promise.all(allPrints.map(p => new Promise(resolve => {
+    const probe = new Image();
+    probe.onload = () => resolve(p);
+    probe.onerror = () => resolve(null);
+    probe.src = p.src;
+  }))).then(found => {
+    prints = found.filter(Boolean);
+    if (prints.length) build();
+  });
 })();
 </script>
 </body>
