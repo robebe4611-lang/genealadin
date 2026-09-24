@@ -91,25 +91,68 @@
   }
 
   /* ---------- HERO ---------- */
+  /* Asymmetric split on wide screens: a text column that fills its half
+     with real scale (huge display type, not a centered block floating in
+     empty black), beside a full-height photo column, graded dark and
+     given a slow drift so the hero reads as directed, not just laid out.
+     On narrow screens the photo becomes a shorter top band and the two
+     stack — same material, no split needed to still feel intentional. */
   #hero{
     position:relative;
     height:100svh;
+    min-height:560px;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+  .hero-content{
+    position:relative;
+    z-index:2;
+    flex:1;
     display:flex;
     flex-direction:column;
     justify-content:space-between;
-    padding:28px clamp(20px,5vw,64px) 40px;
+    padding:28px clamp(20px,5vw,56px) 40px;
+    min-height:0;
+  }
+  .hero-media{
+    position:relative;
+    flex:0 0 40svh;
     overflow:hidden;
+    background:#15130f;
+  }
+  .hero-media img{
+    position:absolute;inset:0;
+    width:100%;height:100%;
+    object-fit:cover;
+    filter:brightness(.6) saturate(1.08) contrast(1.05);
+    transform:scale(1.1);
+    transition:transform 3.5s cubic-bezier(.16,.6,.3,1);
+  }
+  #hero.in .hero-media img{transform:scale(1);}
+  .hero-media::after{
+    content:'';
+    position:absolute;inset:0;
+    background:linear-gradient(180deg, rgba(10,11,11,0) 55%, var(--bg) 100%);
   }
   .hero-top{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--ink-dim);}
   .brand-mark{color:var(--ink);font-family:'Fraunces',serif;font-size:18px;letter-spacing:.02em;}
-  .hero-body{position:relative;z-index:2;max-width:780px;}
+  .hero-body{position:relative;z-index:2;}
   .hero-body p.kicker{color:var(--accent);font-size:15px;margin:0 0 18px;}
-  .hero-body h1{font-size:clamp(38px,6.6vw,76px);line-height:1.05;}
-  .hero-body .lede{margin-top:20px;max-width:540px;font-size:16.5px;line-height:1.65;color:var(--ink-dim);}
+  .hero-body h1{font-size:clamp(40px,10vw,92px);line-height:.98;text-wrap:balance;}
+  .hero-body .lede{margin-top:22px;max-width:480px;font-size:17px;line-height:1.65;color:var(--ink-dim);}
   .hero-bottom{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:flex-end;gap:24px;font-size:13px;color:var(--ink-dim);}
   .scroll-cue{display:flex;align-items:center;gap:10px;}
   .scroll-cue .line{width:36px;height:1px;background:var(--ink-dim);animation:pulseline 2.4s ease-in-out infinite;}
   @keyframes pulseline{0%,100%{opacity:.35;}50%{opacity:1;}}
+
+  @media (min-width:900px){
+    #hero{flex-direction:row-reverse;}   /* RTL: content stays at the visual start (right) */
+    .hero-content{flex:0 0 54%;padding:36px clamp(28px,4vw,72px) 48px;}
+    .hero-media{flex:1;}
+    .hero-media::after{background:linear-gradient(90deg, var(--bg) 0%, rgba(10,11,11,0) 16%, rgba(10,11,11,0) 78%, rgba(10,11,11,.55) 100%);}
+    .hero-body h1{font-size:clamp(56px,6.6vw,128px);}
+  }
 
   /* hero's own entrance, held until the intro dissolves into it */
   .hero-top,.hero-body,.hero-bottom{opacity:0;transform:translateY(10px);transition:opacity .9s ease, transform .9s ease;}
@@ -118,6 +161,7 @@
   #hero.in .hero-bottom{opacity:1;transform:none;transition-delay:.22s;}
   @media (prefers-reduced-motion: reduce){
     .hero-top,.hero-body,.hero-bottom{opacity:1;transform:none;}
+    .hero-media img{transition:none;transform:none;}
   }
 
   /* ---------- DIVE SECTION ---------- */
@@ -435,18 +479,23 @@
 </div>
 
 <section id="hero">
-  <div class="hero-top">
-    <span class="brand-mark">חוואם דיזיין</span>
-    <span>וילונות בהתאמה אישית · כמעט 50 שנה</span>
+  <div class="hero-content">
+    <div class="hero-top">
+      <span class="brand-mark">חוואם דיזיין</span>
+      <span>וילונות בהתאמה אישית · כמעט 50 שנה</span>
+    </div>
+    <div class="hero-body">
+      <p class="kicker">חוואם דיזיין — וילונות בהתאמה אישית</p>
+      <h1>הבית שלכם.<br>בדיוק בטעם שלכם.</h1>
+      <p class="lede">עיצוב, תפירה והתקנה מקצועית עם מבחר בדים וסגנונות — אצלכם בבית.</p>
+    </div>
+    <div class="hero-bottom">
+      <div class="scroll-cue"><span class="line"></span><span>גללו כדי לצלול</span></div>
+      <span>חיפה והכרמל · הקריות · עכו · נהריה · נצרת ונוף הגליל · עפולה</span>
+    </div>
   </div>
-  <div class="hero-body">
-    <p class="kicker">חוואם דיזיין — וילונות בהתאמה אישית</p>
-    <h1>הבית שלכם.<br>בדיוק בטעם שלכם.</h1>
-    <p class="lede">עיצוב, תפירה והתקנה מקצועית עם מבחר בדים וסגנונות — אצלכם בבית.</p>
-  </div>
-  <div class="hero-bottom">
-    <div class="scroll-cue"><span class="line"></span><span>גללו כדי לצלול</span></div>
-    <span>חיפה והכרמל · הקריות · עכו · נהריה · נצרת ונוף הגליל · עפולה</span>
+  <div class="hero-media">
+    <img src="custom-curtains.jpeg" alt="">
   </div>
 </section>
 
