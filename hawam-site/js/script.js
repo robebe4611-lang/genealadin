@@ -74,17 +74,23 @@ filterBtns.forEach(btn => {
 if (window.gsap && window.ScrollTrigger) {
   gsap.registerPlugin(ScrollTrigger);
 
+  // Single-line "exploded diagram" layout, right-to-left reading order (01 → 04)
+  // Computed in px (not CSS vw/vh strings — GSAP's x/y transform tween does not
+  // reliably resolve viewport units against the right base).
+  const vw = window.innerWidth / 100;
+  const vh = window.innerHeight / 100;
   const parts = {
-    rod: { el: '#partRod', assembled: { x: 0, y: -150, rotate: 0, scale: 1 }, exploded: { x: '-30vw', y: '-28vh', rotate: -8, scale: 1.15 } },
-    rings: { el: '#partRings', assembled: { x: 0, y: -85, rotate: 0, scale: 1 }, exploded: { x: '28vw', y: '-30vh', rotate: 14, scale: 1.1 } },
-    fabric: { el: '#partFabric', assembled: { x: 0, y: 40, rotate: 0, scale: 1 }, exploded: { x: '-26vw', y: '10vh', rotate: -4, scale: 1.2 } },
-    tieback: { el: '#partTieback', assembled: { x: 55, y: 120, rotate: 0, scale: 1 }, exploded: { x: '28vw', y: '26vh', rotate: 10, scale: 1.1 } }
+    rod: { el: '#partRod', assembled: { x: 0, y: -150, rotate: 0, scale: 1 }, exploded: { x: 34 * vw, y: 4 * vh, rotate: 0, scale: 1 } },
+    rings: { el: '#partRings', assembled: { x: 0, y: -85, rotate: 0, scale: 1 }, exploded: { x: 12 * vw, y: 4 * vh, rotate: 0, scale: 1 } },
+    fabric: { el: '#partFabric', assembled: { x: 0, y: 40, rotate: 0, scale: 1 }, exploded: { x: -12 * vw, y: 4 * vh, rotate: 0, scale: 1.05 } },
+    tieback: { el: '#partTieback', assembled: { x: 55, y: 120, rotate: 0, scale: 1 }, exploded: { x: -34 * vw, y: 4 * vh, rotate: 0, scale: 1 } }
   };
 
   Object.values(parts).forEach(p => {
     gsap.set(p.el, { xPercent: -50, yPercent: -50, x: p.assembled.x, y: p.assembled.y, rotate: p.assembled.rotate, scale: p.assembled.scale, opacity: 1 });
   });
-  gsap.set('.part-label', { opacity: 0 });
+  gsap.set(['.part-label', '.part-num'], { opacity: 0 });
+  gsap.set('#assembleLine', { scaleX: 0, y: '4vh' });
   gsap.set('#assembleWordmark', { opacity: 0, xPercent: -50, yPercent: -50, top: '50%', left: '50%' });
 
   const tl = gsap.timeline({
@@ -96,17 +102,19 @@ if (window.gsap && window.ScrollTrigger) {
     }
   });
 
-  // 1) assembled -> exploded, labels fade in
+  // 1) assembled -> exploded (single line), guide line draws, labels fade in
   Object.values(parts).forEach(p => {
     tl.to(p.el, { x: p.exploded.x, y: p.exploded.y, rotate: p.exploded.rotate, scale: p.exploded.scale, duration: 1, ease: 'power2.inOut' }, 0);
   });
-  tl.to('.part-label', { opacity: 1, duration: 0.4 }, 0.5);
+  tl.to('#assembleLine', { scaleX: 1, duration: 1, ease: 'power2.inOut' }, 0);
+  tl.to(['.part-num', '.part-label'], { opacity: 1, duration: 0.4, stagger: 0.05 }, 0.55);
 
   // hold exploded briefly
   tl.to({}, { duration: 0.5 }, 1.2);
 
-  // 2) exploded -> reassembled, labels fade out
-  tl.to('.part-label', { opacity: 0, duration: 0.3 }, 1.7);
+  // 2) exploded -> reassembled, guide line retracts, labels fade out
+  tl.to(['.part-label', '.part-num'], { opacity: 0, duration: 0.3 }, 1.7);
+  tl.to('#assembleLine', { scaleX: 0, duration: 0.6, ease: 'power2.inOut' }, 1.7);
   Object.values(parts).forEach(p => {
     tl.to(p.el, { x: p.assembled.x, y: p.assembled.y, rotate: p.assembled.rotate, scale: p.assembled.scale, duration: 1, ease: 'power2.inOut' }, 1.9);
   });
