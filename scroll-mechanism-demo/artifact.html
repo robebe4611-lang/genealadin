@@ -1,6 +1,4 @@
 <title>מנגנון גלילה</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500&family=Assistant:wght@400;600&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -68,10 +66,9 @@
     inset: 0;
     will-change: transform, opacity;
   }
-  .layer img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  #layerHero { z-index: 1; opacity: 1; }
-  #layerTexture { z-index: 2; opacity: 0; }
-  #layerCollections { z-index: 3; opacity: 0; }
+  .layer img { width: 100%; height: 100%; object-fit: cover; display: block; position: absolute; inset: 0; }
+  #layerZoom { z-index: 1; opacity: 1; }
+  #layerCollections { z-index: 2; opacity: 0; transform: scale(1.18); }
 
   .collections-grid {
     width: 100%; height: 100%;
@@ -81,7 +78,7 @@
     gap: 3px;
     background: var(--ink);
   }
-  .collections-grid img { width: 100%; height: 100%; object-fit: cover; }
+  .collections-grid img { width: 100%; height: 100%; object-fit: cover; position: static; }
 
   .stage-caption {
     position: absolute;
@@ -121,17 +118,15 @@
 
 <div class="rtl-root" lang="he">
 
-  <div class="badge">דמו מנגנון · תמונות זמניות</div>
+  <div class="badge">דמו מנגנון · קולקציות = placeholder</div>
 
-  <div class="spacer"><h1>גלול למטה כדי לבדוק את המעבר בין שלוש הסצנות</h1></div>
+  <div class="spacer"><h1>גלול למטה כדי לבדוק את הזום הרציף לתוך הבד ואת המעבר לקולקציות</h1></div>
 
   <section class="stage-wrap" id="stageWrap">
     <div class="stage" id="stage">
-      <div class="layer" id="layerHero">
-        <img src="assets/hero-living-room.jpg" alt="וילון יוקרתי בסלון">
-      </div>
-      <div class="layer" id="layerTexture">
-        <img src="assets/texture-closeup.jpg" alt="תקריב על אריגת הבד">
+      <div class="layer" id="layerZoom">
+        <img id="zoomImgA" alt="וילון יוקרתי — זום רציף לתוך הבד">
+        <img id="zoomImgB" alt="" style="opacity:0">
       </div>
       <div class="layer" id="layerCollections">
         <div class="collections-grid">
@@ -152,44 +147,73 @@
 </div>
 
 <script>
-  gsap.registerPlugin(ScrollTrigger);
+  // Direct scroll-linked scrubbing — no library, no easing lag.
+  // Progress is recomputed from scrollY every frame; scrolling up
+  // reverses identically since nothing is time-based.
 
-  gsap.set('#layerHero', { scale: 1, opacity: 1 });
-  gsap.set('#layerTexture', { scale: 1.18, opacity: 0 });
-  gsap.set('#layerCollections', { scale: 1.18, opacity: 0 });
+  const ZOOM_FRAME_COUNT = 16;
+  const zoomFrameUrls = Array.from({ length: ZOOM_FRAME_COUNT }, (_, i) =>
+    `assets/zoom/hawam_zoom_${String(i).padStart(2, '0')}.jpg`
+  );
+  zoomFrameUrls.forEach(src => { const im = new Image(); im.src = src; }); // preload
 
-  const tl = gsap.timeline({
-    scrollTrigger: {
-      trigger: '#stageWrap',
-      start: 'top top',
-      end: 'bottom bottom',
-      scrub: 0.4
-    }
-  });
-
-  tl.to('#layerHero', { scale: 1.35, opacity: 0, ease: 'none', duration: 0.45 }, 0);
-  tl.to('#layerTexture', { scale: 1.0, opacity: 1, ease: 'none', duration: 0.4 }, 0.08);
-
-  tl.to('#layerTexture', { scale: 1.3, opacity: 0, ease: 'none', duration: 0.42 }, 0.55);
-  tl.to('#layerCollections', { scale: 1.0, opacity: 1, ease: 'none', duration: 0.4 }, 0.62);
-
+  const stageWrap = document.getElementById('stageWrap');
+  const zoomImgA = document.getElementById('zoomImgA');
+  const zoomImgB = document.getElementById('zoomImgB');
+  const layerZoom = document.getElementById('layerZoom');
+  const layerCollections = document.getElementById('layerCollections');
   const captionText = document.getElementById('captionText');
-  const captions = [
-    { until: 0.35, text: 'וילון יוקרתי' },
-    { until: 0.65, text: 'כל קפל, מרקם משלו' },
-    { until: 1.01, text: 'הקולקציות שלנו' }
-  ];
   const readout = document.getElementById('progressReadout');
 
-  ScrollTrigger.create({
-    trigger: '#stageWrap',
-    start: 'top top',
-    end: 'bottom bottom',
-    onUpdate: (self) => {
-      const p = self.progress;
-      readout.textContent = 'progress: ' + p.toFixed(2);
-      const match = captions.find(c => p < c.until) || captions[captions.length - 1];
-      if (captionText.textContent !== match.text) captionText.textContent = match.text;
+  zoomImgA.src = zoomFrameUrls[0];
+  zoomImgB.src = zoomFrameUrls[1];
+
+  const clamp01 = (v) => Math.max(0, Math.min(1, v));
+  const smoothstep = (a, b, x) => clamp01((x - a) / (b - a));
+
+  const captions = [
+    { until: 0.28, text: 'וילון יוקרתי' },
+    { until: 0.55, text: 'כל קפל, מרקם משלו' },
+    { until: 1.01, text: 'הקולקציות שלנו' }
+  ];
+
+  function getProgress() {
+    const total = stageWrap.offsetHeight - window.innerHeight;
+    if (total <= 0) return 0;
+    return clamp01((window.scrollY - stageWrap.offsetTop) / total);
+  }
+
+  function render() {
+    const p = getProgress();
+    readout.textContent = 'progress: ' + p.toFixed(2);
+
+    const zoomT = clamp01(p / 0.55);
+    const frameFloat = zoomT * (ZOOM_FRAME_COUNT - 1);
+    const lo = Math.floor(frameFloat);
+    const hi = Math.min(lo + 1, ZOOM_FRAME_COUNT - 1);
+    const frac = frameFloat - lo;
+    zoomImgA.src = zoomFrameUrls[lo];
+    zoomImgB.src = zoomFrameUrls[hi];
+    zoomImgB.style.opacity = frac;
+
+    const zoomOpacity = 1 - smoothstep(0.55, 0.85, p);
+    const collProgress = smoothstep(0.6, 0.9, p);
+    layerZoom.style.opacity = zoomOpacity;
+    layerCollections.style.opacity = collProgress;
+    layerCollections.style.transform = `scale(${1.18 - 0.18 * collProgress})`;
+
+    const match = captions.find(c => p < c.until) || captions[captions.length - 1];
+    if (captionText.textContent !== match.text) captionText.textContent = match.text;
+  }
+
+  let ticking = false;
+  function onScroll() {
+    if (!ticking) {
+      requestAnimationFrame(() => { render(); ticking = false; });
+      ticking = true;
     }
-  });
+  }
+  document.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', render);
+  render();
 </script>

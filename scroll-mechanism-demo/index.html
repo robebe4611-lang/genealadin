@@ -5,11 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>הדגמת מנגנון גלילה — HAWAM</title>
 <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500&family=Assistant:wght@400;600&display=swap" rel="stylesheet">
-<script src="js/vendor/gsap.min.js"></script>
-<script src="js/vendor/ScrollTrigger.min.js"></script>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family:'Assistant',sans-serif; background:#111; color:#f6f2ea; }
+  body { font-family:'Assistant',sans-serif; background:#1c1712; color:#f6f2ea; }
 
   .notice {
     position: fixed; top:0; left:0; right:0; z-index:50;
@@ -23,22 +21,17 @@
   .stage-wrap { position:relative; height:400vh; }
   .stage { position:sticky; top:0; height:100vh; overflow:hidden; }
 
-  .layer {
-    position:absolute; inset:0;
-    will-change: transform, opacity;
-  }
-  .layer img, .layer .collections-grid {
-    width:100%; height:100%; object-fit:cover;
-  }
-  #layerHero { z-index:1; opacity:1; }
-  #layerTexture { z-index:2; opacity:0; }
-  #layerCollections { z-index:3; opacity:0; }
+  .layer { position:absolute; inset:0; }
+  .layer img { width:100%; height:100%; object-fit:cover; display:block; position:absolute; inset:0; }
+
+  #layerZoom { z-index:1; opacity:1; }
+  #layerCollections { z-index:2; opacity:0; transform:scale(1.18); }
 
   .collections-grid {
     display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:4px;
-    background:#000;
+    background:#000; width:100%; height:100%;
   }
-  .collections-grid img { width:100%; height:100%; object-fit:cover; display:block; }
+  .collections-grid img { width:100%; height:100%; object-fit:cover; display:block; position:static; }
 
   .stage-caption {
     position:absolute; z-index:10; top:8%; left:50%; transform:translateX(-50%);
@@ -58,17 +51,15 @@
 </head>
 <body>
 
-<div class="notice">דמו מבודד — בודק רק את מנגנון הגלילה. חלק מהנכסים הם placeholder (ראה הסבר בצ'אט).</div>
+<div class="notice">דמו מבודד — בודק רק את מנגנון הגלילה. סצנת "הקולקציות" היא placeholder (ראה הסבר בצ'אט).</div>
 
-<div class="spacer"><h1>גלול למטה כדי לבדוק את מנגנון המעבר בין שלוש הסצנות</h1></div>
+<div class="spacer"><h1>גלול למטה כדי לבדוק את הזום הרציף לתוך הבד ואת המעבר לקולקציות</h1></div>
 
 <section class="stage-wrap" id="stageWrap">
   <div class="stage" id="stage">
-    <div class="layer" id="layerHero">
-      <img src="assets/hero-living-room.jpg" alt="וילון יוקרתי בסלון">
-    </div>
-    <div class="layer" id="layerTexture">
-      <img src="assets/texture-closeup.jpg" alt="תקריב על אריגת הבד">
+    <div class="layer" id="layerZoom">
+      <img id="zoomImgA" alt="וילון יוקרתי — זום רציף לתוך הבד">
+      <img id="zoomImgB" alt="" style="opacity:0">
     </div>
     <div class="layer" id="layerCollections">
       <div class="collections-grid">
