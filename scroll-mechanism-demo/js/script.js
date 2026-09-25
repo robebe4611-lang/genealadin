@@ -13,8 +13,10 @@ const frames = Array.from({ length: FRAME_COUNT }, (_, i) =>
 
 const stageWrap = document.getElementById('stageWrap');
 const captionEl = document.getElementById('captionText');
+const settleCaptionEl = document.getElementById('settleCaption');
 
 const clamp01 = (v) => Math.max(0, Math.min(1, v));
+const smoothstep = (a, b, x) => clamp01((x - a) / (b - a));
 
 let ready = false;
 Promise.all(frames.map(img => {
@@ -45,6 +47,14 @@ function render() {
 
   const captionOpacity = 1 - clamp01(p / 0.12);
   captionEl.style.opacity = captionOpacity;
+
+  // Settle-on-fabric title: fades in once the push-in has held on frame 15
+  // for a moment, then fades back out just before the pin releases. Purely
+  // additive on top of the untouched zoom mechanism above — reads the same
+  // progress value but never touches frame selection.
+  const settleIn = smoothstep(HOLD_FROM + 0.03, HOLD_FROM + 0.08, p);
+  const settleOut = 1 - smoothstep(0.96, 1.0, p);
+  settleCaptionEl.style.opacity = settleIn * settleOut;
 }
 
 let ticking = false;

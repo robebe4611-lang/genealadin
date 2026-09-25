@@ -29,6 +29,34 @@
     font-size:clamp(1.6rem,3.6vw,2.6rem);
     color:#f6f2ea; text-shadow:0 2px 20px rgba(0,0,0,0.55);
   }
+
+  .settle-caption {
+    position:absolute; z-index:10; top:50%; left:50%; transform:translate(-50%,-50%);
+    text-align:center; pointer-events:none; padding:0 1.5rem; max-width:34rem;
+    opacity:0;
+  }
+  .settle-caption h2 {
+    font-family:'Frank Ruhl Libre',serif; font-weight:500;
+    font-size:clamp(1.7rem,3.8vw,2.6rem);
+    color:#f6f2ea; text-shadow:0 2px 24px rgba(0,0,0,0.6);
+    margin-bottom:0.9rem;
+  }
+  .settle-caption p {
+    font-size:clamp(0.95rem,1.6vw,1.1rem);
+    color:#e7ddc9; text-shadow:0 2px 16px rgba(0,0,0,0.6);
+  }
+
+  .collections-section {
+    background:#f6f2ea; color:#2b2621;
+    padding:14vh 2rem; text-align:center;
+  }
+  .collections-section h2 {
+    font-family:'Frank Ruhl Libre',serif; font-weight:500;
+    font-size:clamp(1.8rem,4vw,2.8rem); margin-bottom:1rem;
+  }
+  .collections-section p {
+    color:#5c5449; font-size:1.05rem; max-width:36ch; margin:0 auto;
+  }
 </style>
 </head>
 <body>
@@ -54,10 +82,17 @@
     <img class="zoom-frame" id="zoomFrame14" src="assets/zoom/hawam_zoom_14.jpg" alt="" style="opacity:0">
     <img class="zoom-frame" id="zoomFrame15" src="assets/zoom/hawam_zoom_15.jpg" alt="תקריב על אריגת הבד" style="opacity:0">
     <div class="stage-caption"><p id="captionText">וילון יוקרתי</p></div>
+    <div class="settle-caption" id="settleCaption">
+      <h2>מרקם שמספר סיפור</h2>
+      <p>כל בד נבחר בקפידה, וכל וילון נתפר בהתאמה אישית.</p>
+    </div>
   </div>
 </section>
 
-<div class="spacer"><h1>כל וילון מספר סיפור</h1></div>
+<section class="collections-section">
+  <h2>הקולקציות שלנו</h2>
+  <p>כל קולקציה מספרת סיפור אחר של אור, בד וצבע.</p>
+</section>
 
 <script src="js/script.js"></script>
 </body>
