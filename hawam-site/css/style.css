@@ -210,6 +210,88 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 500; line-height: 1.25; }
   50% { transform: scaleY(0.6); opacity: 1; }
 }
 
+/* Assemble (scroll-driven explode/reassemble) */
+.assemble {
+  position: relative;
+  height: 500vh;
+  background: linear-gradient(180deg, #1c1712, #2b2621 40%, #2b2621 60%, #1c1712);
+}
+.assemble-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.assemble-caption {
+  position: absolute;
+  top: 12%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 5;
+  color: var(--cream);
+  max-width: 560px;
+  padding: 0 1.5rem;
+}
+.assemble-caption .eyebrow { color: var(--gold-soft); }
+.assemble-caption h2 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); }
+
+.wordmark {
+  position: absolute;
+  z-index: 4;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+}
+.wordmark span {
+  font-family: var(--serif);
+  font-size: clamp(3rem, 10vw, 7rem);
+  color: var(--cream);
+  letter-spacing: 0.04em;
+  display: block;
+}
+.wordmark p {
+  margin-top: 0.8rem;
+  color: var(--gold-soft);
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+}
+
+.part {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  will-change: transform, opacity;
+}
+.part img { pointer-events: none; user-select: none; filter: drop-shadow(0 20px 30px rgba(0,0,0,0.4)); }
+.part-label {
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  color: var(--gold-soft);
+  white-space: nowrap;
+  opacity: 0;
+}
+
+.part-rod img { width: 300px; }
+.part-rings img { width: 90px; }
+.part-fabric img { width: 220px; }
+.part-tieback img { width: 130px; }
+
+@media (max-width: 720px) {
+  .part-rod img { width: 200px; }
+  .part-rings img { width: 60px; }
+  .part-fabric img { width: 150px; }
+  .part-tieback img { width: 90px; }
+  .assemble-caption { top: 8%; }
+}
+
 /* Story */
 .story { padding: 8rem 2rem; max-width: 1200px; margin: 0 auto; }
 .story-grid {
