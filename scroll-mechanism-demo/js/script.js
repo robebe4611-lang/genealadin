@@ -33,17 +33,14 @@ function render() {
 
   const p = getProgress();
   const zoomT = clamp01(p / HOLD_FROM);
-  const frameFloat = zoomT * (FRAME_COUNT - 1);
-  const lo = Math.floor(frameFloat);
-  const hi = Math.min(lo + 1, FRAME_COUNT - 1);
-  const frac = frameFloat - lo;
+  // Snap to the nearest frame instead of cross-fading two adjacent ones —
+  // blending two different crops as opacity overlaps produces a hazy
+  // double-exposure look. The 16 frames are dense enough that a hard
+  // switch still reads as a continuous push-in.
+  const active = Math.round(zoomT * (FRAME_COUNT - 1));
 
-  for (let i = 0; i < FRAME_COUNT; i++) frames[i].style.opacity = 0;
-  if (hi === lo) {
-    frames[lo].style.opacity = 1;
-  } else {
-    frames[lo].style.opacity = 1 - frac;
-    frames[hi].style.opacity = frac;
+  for (let i = 0; i < FRAME_COUNT; i++) {
+    frames[i].style.opacity = i === active ? 1 : 0;
   }
 
   const captionOpacity = 1 - clamp01(p / 0.12);
