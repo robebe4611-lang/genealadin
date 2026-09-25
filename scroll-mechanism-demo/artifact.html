@@ -3,10 +3,7 @@
 <style>
   :root {
     --ink: #1c1712;
-    --ink-2: #2b2621;
     --cream: #f6f2ea;
-    --gold: #b6905f;
-    --gold-soft: #d9c3a0;
     color-scheme: dark;
   }
 
@@ -21,20 +18,6 @@
 
   .rtl-root { direction: rtl; }
 
-  .badge {
-    position: fixed;
-    top: calc(env(safe-area-inset-top, 0px) + 12px);
-    right: 16px;
-    z-index: 50;
-    background: var(--ink-2);
-    border: 1px solid rgba(217, 195, 160, 0.35);
-    color: var(--gold-soft);
-    font-size: 0.72rem;
-    padding: 0.4rem 0.8rem;
-    border-radius: 999px;
-    letter-spacing: 0.01em;
-  }
-
   .spacer {
     min-height: 50vh;
     display: flex;
@@ -46,14 +29,14 @@
   .spacer h1 {
     font-family: 'Frank Ruhl Libre', serif;
     font-weight: 500;
-    font-size: clamp(1.2rem, 3.2vw, 1.7rem);
-    max-width: 32ch;
-    line-height: 1.55;
+    font-size: clamp(1.4rem, 3.4vw, 2rem);
+    max-width: 28ch;
+    line-height: 1.5;
     text-wrap: balance;
     color: var(--cream);
   }
 
-  .stage-wrap { position: relative; height: 400vh; }
+  .stage-wrap { position: relative; height: 350vh; }
   .stage {
     position: sticky;
     top: 0;
@@ -61,24 +44,14 @@
     overflow: hidden;
   }
 
-  .layer {
+  .zoom-frame {
     position: absolute;
     inset: 0;
-    will-change: transform, opacity;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
-  .layer img { width: 100%; height: 100%; object-fit: cover; display: block; position: absolute; inset: 0; }
-  #layerZoom { z-index: 1; opacity: 1; }
-  #layerCollections { z-index: 2; opacity: 0; transform: scale(1.18); }
-
-  .collections-grid {
-    width: 100%; height: 100%;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 3px;
-    background: var(--ink);
-  }
-  .collections-grid img { width: 100%; height: 100%; object-fit: cover; position: static; }
 
   .stage-caption {
     position: absolute;
@@ -92,90 +65,66 @@
   }
   .stage-caption p {
     font-family: 'Frank Ruhl Libre', serif;
-    font-size: clamp(1.3rem, 3.4vw, 2.1rem);
-    text-shadow: 0 2px 24px rgba(0,0,0,0.65);
-  }
-
-  .readout {
-    position: fixed;
-    bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
-    left: 16px;
-    z-index: 50;
-    font-family: 'SF Mono', 'Consolas', 'Cascadia Code', monospace;
-    font-variant-numeric: tabular-nums;
-    font-size: 0.7rem;
-    color: var(--gold);
-    background: rgba(28, 23, 18, 0.7);
-    border: 1px solid rgba(217, 195, 160, 0.25);
-    padding: 0.3rem 0.6rem;
-    border-radius: 4px;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .layer { transition: none !important; }
+    font-weight: 500;
+    font-size: clamp(1.5rem, 3.6vw, 2.3rem);
+    text-shadow: 0 2px 24px rgba(0,0,0,0.6);
   }
 </style>
 
 <div class="rtl-root" lang="he">
 
-  <div class="badge">דמו מנגנון · קולקציות = placeholder</div>
-
-  <div class="spacer"><h1>גלול למטה כדי לבדוק את הזום הרציף לתוך הבד ואת המעבר לקולקציות</h1></div>
+  <div class="spacer"><h1>וילונות שהם יצירת אמנות</h1></div>
 
   <section class="stage-wrap" id="stageWrap">
     <div class="stage" id="stage">
-      <div class="layer" id="layerZoom">
-        <img id="zoomImgA" alt="וילון יוקרתי — זום רציף לתוך הבד">
-        <img id="zoomImgB" alt="" style="opacity:0">
-      </div>
-      <div class="layer" id="layerCollections">
-        <div class="collections-grid">
-          <img src="assets/roman-shade.jpg" alt="">
-          <img src="assets/sheer-living-room.jpg" alt="">
-          <img src="assets/soft-roman.jpg" alt="">
-          <img src="assets/custom-curtains.jpg" alt="">
-        </div>
-      </div>
+      <img class="zoom-frame" id="zoomFrame0" src="assets/zoom/hawam_zoom_00.jpg" alt="וילון יוקרתי" style="opacity:1">
+      <img class="zoom-frame" id="zoomFrame1" src="assets/zoom/hawam_zoom_01.jpg" alt="" style="opacity:0">
+      <img class="zoom-frame" id="zoomFrame2" src="assets/zoom/hawam_zoom_02.jpg" alt="" style="opacity:0">
+      <img class="zoom-frame" id="zoomFrame3" src="assets/zoom/hawam_zoom_03.jpg" alt="" style="opacity:0">
+      <img class="zoom-frame" id="zoomFrame4" src="assets/zoom/hawam_zoom_04.jpg" alt="" style="opacity:0">
+      <img class="zoom-frame" id="zoomFrame5" src="assets/zoom/hawam_zoom_05.jpg" alt="" style="opacity:0">
+      <img class="zoom-frame" id="zoomFrame6" src="assets/zoom/hawam_zoom_06.jpg" alt="" style="opacity:0">
+      <img class="zoom-frame" id="zoomFrame7" src="assets/zoom/hawam_zoom_07.jpg" alt="" style="opacity:0">
+      <img class="zoom-frame" id="zoomFrame8" src="assets/zoom/hawam_zoom_08.jpg" alt="" style="opacity:0">
+      <img class="zoom-frame" id="zoomFrame9" src="assets/zoom/hawam_zoom_09.jpg" alt="" style="opacity:0">
+      <img class="zoom-frame" id="zoomFrame10" src="assets/zoom/hawam_zoom_10.jpg" alt="" style="opacity:0">
+      <img class="zoom-frame" id="zoomFrame11" src="assets/zoom/hawam_zoom_11.jpg" alt="" style="opacity:0">
+      <img class="zoom-frame" id="zoomFrame12" src="assets/zoom/hawam_zoom_12.jpg" alt="" style="opacity:0">
+      <img class="zoom-frame" id="zoomFrame13" src="assets/zoom/hawam_zoom_13.jpg" alt="" style="opacity:0">
+      <img class="zoom-frame" id="zoomFrame14" src="assets/zoom/hawam_zoom_14.jpg" alt="" style="opacity:0">
+      <img class="zoom-frame" id="zoomFrame15" src="assets/zoom/hawam_zoom_15.jpg" alt="תקריב על אריגת הבד" style="opacity:0">
       <div class="stage-caption"><p id="captionText">וילון יוקרתי</p></div>
     </div>
   </section>
 
-  <div class="spacer"><h1>סוף הדמו — גלול חזרה למעלה כדי לוודא שהמעבר עובד גם אחורה</h1></div>
-
-  <div class="readout" id="progressReadout">progress: 0.00</div>
+  <div class="spacer"><h1>כל וילון מספר סיפור</h1></div>
 
 </div>
 
 <script>
-  // Direct scroll-linked scrubbing — no library, no easing lag.
-  // Progress is recomputed from scrollY every frame; scrolling up
-  // reverses identically since nothing is time-based.
+  // Direct scroll-linked frame scrubbing. All 16 frames are already in the
+  // DOM (no src swapping, no network fetch mid-scroll) — only opacity is
+  // toggled, so there is nothing to flash or decode while scrolling.
+  // Progress is recomputed from scrollY on every frame; nothing is
+  // time-based, so scrolling up reverses identically.
 
-  const ZOOM_FRAME_COUNT = 16;
-  const zoomFrameUrls = Array.from({ length: ZOOM_FRAME_COUNT }, (_, i) =>
-    `assets/zoom/hawam_zoom_${String(i).padStart(2, '0')}.jpg`
+  const FRAME_COUNT = 16;
+  const HOLD_FROM = 0.85; // frame 15 holds steady before the pin releases
+
+  const frames = Array.from({ length: FRAME_COUNT }, (_, i) =>
+    document.getElementById('zoomFrame' + i)
   );
-  zoomFrameUrls.forEach(src => { const im = new Image(); im.src = src; }); // preload
 
   const stageWrap = document.getElementById('stageWrap');
-  const zoomImgA = document.getElementById('zoomImgA');
-  const zoomImgB = document.getElementById('zoomImgB');
-  const layerZoom = document.getElementById('layerZoom');
-  const layerCollections = document.getElementById('layerCollections');
-  const captionText = document.getElementById('captionText');
-  const readout = document.getElementById('progressReadout');
-
-  zoomImgA.src = zoomFrameUrls[0];
-  zoomImgB.src = zoomFrameUrls[1];
+  const captionEl = document.getElementById('captionText');
 
   const clamp01 = (v) => Math.max(0, Math.min(1, v));
-  const smoothstep = (a, b, x) => clamp01((x - a) / (b - a));
 
-  const captions = [
-    { until: 0.28, text: 'וילון יוקרתי' },
-    { until: 0.55, text: 'כל קפל, מרקם משלו' },
-    { until: 1.01, text: 'הקולקציות שלנו' }
-  ];
+  let ready = false;
+  Promise.all(frames.map(img => {
+    if (img.complete) return Promise.resolve();
+    return new Promise(resolve => { img.addEventListener('load', resolve, { once: true }); });
+  })).then(() => { ready = true; render(); });
 
   function getProgress() {
     const total = stageWrap.offsetHeight - window.innerHeight;
@@ -184,26 +133,24 @@
   }
 
   function render() {
+    if (!ready) return;
+
     const p = getProgress();
-    readout.textContent = 'progress: ' + p.toFixed(2);
-
-    const zoomT = clamp01(p / 0.55);
-    const frameFloat = zoomT * (ZOOM_FRAME_COUNT - 1);
+    const zoomT = clamp01(p / HOLD_FROM);
+    const frameFloat = zoomT * (FRAME_COUNT - 1);
     const lo = Math.floor(frameFloat);
-    const hi = Math.min(lo + 1, ZOOM_FRAME_COUNT - 1);
+    const hi = Math.min(lo + 1, FRAME_COUNT - 1);
     const frac = frameFloat - lo;
-    zoomImgA.src = zoomFrameUrls[lo];
-    zoomImgB.src = zoomFrameUrls[hi];
-    zoomImgB.style.opacity = frac;
 
-    const zoomOpacity = 1 - smoothstep(0.55, 0.85, p);
-    const collProgress = smoothstep(0.6, 0.9, p);
-    layerZoom.style.opacity = zoomOpacity;
-    layerCollections.style.opacity = collProgress;
-    layerCollections.style.transform = `scale(${1.18 - 0.18 * collProgress})`;
+    for (let i = 0; i < FRAME_COUNT; i++) frames[i].style.opacity = 0;
+    if (hi === lo) {
+      frames[lo].style.opacity = 1;
+    } else {
+      frames[lo].style.opacity = 1 - frac;
+      frames[hi].style.opacity = frac;
+    }
 
-    const match = captions.find(c => p < c.until) || captions[captions.length - 1];
-    if (captionText.textContent !== match.text) captionText.textContent = match.text;
+    captionEl.style.opacity = 1 - clamp01(p / 0.12);
   }
 
   let ticking = false;
