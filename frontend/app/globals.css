@@ -1,0 +1,23 @@
+@import "tailwindcss";
+@import "lenis/dist/lenis.css";
+
+:root {
+  --ivory: #f6efe4;
+  --sand: #c9a877;
+  --walnut: #4a3323;
+  --charcoal: #1c1712;
+}
+
+@theme inline {
+  --color-ivory: var(--ivory);
+  --color-sand: var(--sand);
+  --color-walnut: var(--walnut);
+  --color-charcoal: var(--charcoal);
+  --font-sans: var(--font-heebo);
+  --font-serif: var(--font-frank-ruhl);
+}
+
+body {
+  background: var(--ivory);
+  color: var(--walnut);
+}
