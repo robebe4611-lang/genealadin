@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+@theme {
+  --color-void: #0e1419;
+  --color-navy: #1c2a38;
+  --color-slate: #2a3b4c;
+  --color-cream: #f4ece3;
+  --color-muted: #c9b9a6;
+  --color-flame: #c45c12;
+  --color-ember: #f08a2a;
+  --color-good: #3d8f6e;
+  --color-wait: #c4923a;
+  --color-bad: #b5523a;
+  --color-ring: #f4ece3;
+  --font-display: "Frank Ruhl Libre", "Times New Roman", serif;
+  --font-body: "Heebo", "Segoe UI", sans-serif;
+  --shadow-border: 0 0 0 1px rgba(244, 236, 227, 0.1);
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+.vignette {
+  background: radial-gradient(ellipse at center, transparent 42%, rgb(14 20 25 / 0.72) 100%);
+}
+
+.stagger-in > * {
+  animation: rise 500ms var(--ease-out-soft) both;
+}
+.stagger-in > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-in > *:nth-child(2) { animation-delay: 70ms; }
+.stagger-in > *:nth-child(3) { animation-delay: 130ms; }
+.stagger-in > *:nth-child(4) { animation-delay: 180ms; }
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stagger-in > * {
+    animation: none;
+  }
+}
