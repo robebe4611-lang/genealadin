@@ -1,13 +1,15 @@
-import { useLayoutEffect, useMemo, useRef } from "react";
-import { useFrame } from "@react-three/fiber";
-import { ContactShadows } from "@react-three/drei";
+import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
+import { useFrame, useThree } from "@react-three/fiber";
+import { ContactShadows, Html } from "@react-three/drei";
 import * as THREE from "three";
 import { CHAPTERS } from "@/lib/presentation/chapters";
 import { P } from "@/lib/presentation/palette";
 import {
   House,
   MoneyPedestals,
+  Protagonist,
   StageDisc,
+  Truck,
   Warehouse,
 } from "@/components/stage/meshes";
 
@@ -15,13 +17,38 @@ function damp(current: number, target: number, lambda: number, dt: number) {
   return THREE.MathUtils.damp(current, target, lambda, dt);
 }
 
+/** Camera poses are authored for a ~16:10 screen; narrower screens pull back so the diorama still fits. */
+const AUTHORED_ASPECT = 1.5;
+const MAX_REACH = 1.6;
+/** On portrait screens the HUD covers the lower half, so the scene is lifted by this share of the height. */
+const PORTRAIT_LIFT = 0.17;
+
 function CameraRig({ index, reduced }: { index: number; reduced: boolean }) {
   const look = useRef(new THREE.Vector3(0, 0.4, 0));
+  const camera = useThree((s) => s.camera);
+  const { width, height } = useThree((s) => s.size);
+
+  useEffect(() => {
+    if (!(camera instanceof THREE.PerspectiveCamera)) return;
+    if (width < height) {
+      camera.setViewOffset(width, height, 0, height * PORTRAIT_LIFT, width, height);
+    } else {
+      camera.clearViewOffset();
+    }
+  }, [camera, width, height]);
+
   useFrame((state, delta) => {
     const d = Math.min(delta, 0.08);
     const ch = CHAPTERS[index] ?? CHAPTERS[0];
-    const [px, py, pz] = ch.cam.pos;
     const [lx, ly, lz] = ch.cam.look;
+    const reach = THREE.MathUtils.clamp(
+      AUTHORED_ASPECT / (state.size.width / state.size.height),
+      1,
+      MAX_REACH,
+    );
+    const px = lx + (ch.cam.pos[0] - lx) * reach;
+    const py = ly + (ch.cam.pos[1] - ly) * reach;
+    const pz = lz + (ch.cam.pos[2] - lz) * reach;
     const k = reduced ? 20 : 2.4;
     state.camera.position.x = damp(state.camera.position.x, px, k, d);
     state.camera.position.y = damp(state.camera.position.y, py, k, d);
@@ -34,6 +61,25 @@ function CameraRig({ index, reduced }: { index: number; reduced: boolean }) {
   return null;
 }
 
+const RESERVE_SHARE = 0.34;
+/**
+ * A text label pinned to a point in the scene. In this RTL document drei's absolutely positioned
+ * label box resolves to the left of its anchor, so it is pinned with `left-0` and centers itself.
+ */
+function SceneLabel({ position, children }: { position: [number, number, number]; children: string }) {
+  return (
+    <Html position={position} className="pointer-events-none left-0">
+      <span className="block w-max -translate-x-1/2 -translate-y-1/2 font-body text-xs text-cream">
+        {children}
+      </span>
+    </Html>
+  );
+}
+const SILOS = [
+  { x: -0.9, label: "מחסן", color: P.good },
+  { x: 0.9, label: "רכב", color: P.ember },
+] as const;
+
 export function World({ index, reduced }: { index: number; reduced: boolean }) {
   const id = CHAPTERS[index]?.id ?? "loop";
   const cyl = useRef<THREE.Group>(null);
@@ -42,11 +88,9 @@ export function World({ index, reduced }: { index: number; reduced: boolean }) {
   const money = useRef<THREE.Group>(null);
   const clock = useRef<THREE.Group>(null);
   const pulse = useRef<THREE.Mesh>(null);
-  const fills = useRef<[THREE.Mesh | null, THREE.Mesh | null, THREE.Mesh | null]>([
-    null,
-    null,
-    null,
-  ]);
+  const fills = useRef<[THREE.Mesh | null, THREE.Mesh | null]>([null, null]);
+  const reserve = useRef<THREE.Mesh>(null);
+  const branchMat = useRef<THREE.MeshStandardMaterial>(null);
   const railMat = useRef<THREE.MeshStandardMaterial>(null);
   const tRef = useRef(0);
 
@@ -81,6 +125,15 @@ export function World({ index, reduced }: { index: number; reduced: boolean }) {
       new THREE.Vector3(4.2, 0.08, -1.6),
     ]);
     return new THREE.TubeGeometry(curve, 64, 0.045, 8, false);
+  }, []);
+  // Off-rail exit for a failed attempt: it leads to "tomorrow" or "cancelled", never back to delivered.
+  const branchGeo = useMemo(() => {
+    const curve = new THREE.QuadraticBezierCurve3(
+      new THREE.Vector3(3.1, 0.08, -0.6),
+      new THREE.Vector3(2.9, 0.08, -1.7),
+      new THREE.Vector3(2.0, 0.08, -2.5),
+    );
+    return new THREE.TubeGeometry(curve, 24, 0.035, 8, false);
   }, []);
   const arcGeo = useMemo(() => {
     const c = new THREE.QuadraticBezierCurve3(
@@ -149,14 +202,30 @@ export function World({ index, reduced }: { index: number; reduced: boolean }) {
       );
     }
 
+    if (branchMat.current) {
+      branchMat.current.emissiveIntensity = damp(
+        branchMat.current.emissiveIntensity,
+        id === "order" ? 0.9 : 0.05,
+        4,
+        d,
+      );
+    }
+
     if (id === "stock") {
-      const levels = [0.82, 0.42 + Math.sin(t) * 0.08, 0.58];
+      const levels = [0.82, 0.42 + Math.sin(t) * 0.08];
       fills.current.forEach((mesh, i) => {
         if (!mesh) return;
         const h = Math.max(0.1, levels[i] * 1.9);
         mesh.scale.y = damp(mesh.scale.y, h, 3, d);
         mesh.position.y = 0.12 + mesh.scale.y / 2;
       });
+      // The reserve is a lock on the top of the warehouse stock, not a separate pile.
+      const wh = fills.current[0];
+      if (wh && reserve.current) {
+        reserve.current.scale.y = wh.scale.y * RESERVE_SHARE;
+        // A hair above the fill so the two top caps don't z-fight.
+        reserve.current.position.y = 0.125 + wh.scale.y - reserve.current.scale.y / 2;
+      }
     }
 
     if (pulse.current) {
@@ -196,35 +265,11 @@ export function World({ index, reduced }: { index: number; reduced: boolean }) {
       <House position={[3.35, 0, 1.15]} lit={id === "route"} />
 
       <group ref={truck}>
-        <mesh position={[0.15, 0.42, 0]} castShadow>
-          <boxGeometry args={[1.35, 0.48, 0.72]} />
-          <meshStandardMaterial
-            color={id === "route" || id === "actors" ? P.flame : P.slate}
-            roughness={0.45}
-            metalness={0.2}
-          />
-        </mesh>
-        <mesh position={[-0.7, 0.52, 0]} castShadow>
-          <boxGeometry args={[0.55, 0.55, 0.7]} />
-          <meshStandardMaterial color={P.cream} roughness={0.35} />
-        </mesh>
+        <Truck active={id === "route" || id === "actors"} />
       </group>
 
       <group ref={cyl}>
-        <mesh castShadow>
-          <capsuleGeometry args={[0.2, 0.52, 6, 18]} />
-          <meshStandardMaterial
-            color={P.flame}
-            metalness={0.42}
-            roughness={0.28}
-            emissive={P.flame}
-            emissiveIntensity={0.22}
-          />
-        </mesh>
-        <mesh position={[0, 0.44, 0]} rotation={[Math.PI / 2, 0, 0]}>
-          <torusGeometry args={[0.16, 0.035, 8, 18]} />
-          <meshStandardMaterial color={P.cream} metalness={0.7} roughness={0.2} />
-        </mesh>
+        <Protagonist />
       </group>
 
       <mesh geometry={railGeo}>
@@ -237,12 +282,36 @@ export function World({ index, reduced }: { index: number; reduced: boolean }) {
         />
       </mesh>
 
+      <mesh geometry={branchGeo} visible={id === "order"}>
+        <meshStandardMaterial
+          ref={branchMat}
+          color={P.bad}
+          emissive={P.bad}
+          emissiveIntensity={0.05}
+          roughness={0.4}
+        />
+      </mesh>
+      <mesh position={[2.0, 0.1, -2.5]} visible={id === "order"}>
+        <cylinderGeometry args={[0.16, 0.16, 0.06, 16]} />
+        <meshStandardMaterial color={P.bad} emissive={P.bad} emissiveIntensity={0.8} />
+      </mesh>
+      {id === "order" && (
+        <SceneLabel position={[2.0, 0.6, -2.5]}>נכשל → מחר / ביטול</SceneLabel>
+      )}
+
       <group ref={silos} position={[0, 0, -0.2]}>
-        {([-1.6, 0, 1.6] as const).map((x, i) => (
+        {SILOS.map(({ x, color }, i) => (
           <group key={x} position={[x, 0, 0]}>
             <mesh position={[0, 1.15, 0]}>
               <cylinderGeometry args={[0.42, 0.48, 2.3, 20]} />
-              <meshStandardMaterial color={P.navy} roughness={0.55} metalness={0.25} transparent opacity={0.88} />
+              <meshStandardMaterial
+                color={P.navy}
+                roughness={0.55}
+                metalness={0.25}
+                transparent
+                opacity={0.45}
+                depthWrite={false}
+              />
             </mesh>
             <mesh
               ref={(el) => {
@@ -251,14 +320,25 @@ export function World({ index, reduced }: { index: number; reduced: boolean }) {
               position={[0, 0.6, 0]}
             >
               <cylinderGeometry args={[0.32, 0.32, 1, 16]} />
-              <meshStandardMaterial
-                color={i === 2 ? P.wait : i === 1 ? P.ember : P.good}
-                emissive={i === 2 ? P.wait : i === 1 ? P.ember : P.good}
-                emissiveIntensity={0.35}
-              />
+              <meshStandardMaterial color={color} emissive={color} emissiveIntensity={0.35} />
             </mesh>
           </group>
         ))}
+        <group position={[SILOS[0].x, 0, 0]}>
+          <mesh ref={reserve} position={[0, 1.2, 0]}>
+            <cylinderGeometry args={[0.345, 0.345, 1, 16]} />
+            <meshStandardMaterial color={P.wait} emissive={P.wait} emissiveIntensity={0.6} />
+          </mesh>
+        </group>
+        {id === "stock" &&
+          [
+            ...SILOS.map(({ x, label }) => ({ key: label, pos: [x, -0.05, 0.75] as const, label })),
+            { key: "reserve", pos: [SILOS[0].x, 2.6, 0] as const, label: "רזרבה = מנעול" },
+          ].map(({ key, pos, label }) => (
+            <SceneLabel key={key} position={[pos[0], pos[1], pos[2]]}>
+              {label}
+            </SceneLabel>
+          ))}
       </group>
 
       <group ref={money} position={[0, 0, 1.35]}>

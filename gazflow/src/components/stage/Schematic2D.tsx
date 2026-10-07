@@ -2,7 +2,12 @@ import { CHAPTERS } from "@/lib/presentation/chapters";
 import { cn } from "@/lib/utils";
 
 const STATES = ["חדשה", "היום", "נהג", "בדרך", "סופקה"] as const;
-const SILOS = ["מחסן", "רכב", "רזרבה"] as const;
+const SILOS = [
+  { label: "מחסן", fill: "#3d8f6e", level: 86 },
+  { label: "רכב", fill: "#f08a2a", level: 52 },
+] as const;
+/** Share of warehouse stock locked for open orders — drawn on the warehouse, not as its own pile. */
+const RESERVE_SHARE = 0.34;
 const MONEY = ["מזומן", "העברה", "חוב"] as const;
 
 export function Schematic2D({ index }: { index: number }) {
@@ -50,21 +55,59 @@ export function Schematic2D({ index }: { index: number }) {
           );
         })}
 
+        {(() => {
+          const a = -Math.PI / 2 + (3 / STATES.length) * Math.PI * 2;
+          const x = 360 + Math.cos(a) * 188;
+          const y = 268 + Math.sin(a) * 188;
+          const on = id === "order";
+          return (
+            <g className={on ? "opacity-100" : "opacity-0"}>
+              <path
+                d={`M ${x} ${y} L ${x - 110} ${y + 30}`}
+                stroke="#b5523a"
+                strokeWidth="2"
+                strokeDasharray="6 5"
+              />
+              <circle cx={x - 110} cy={y + 30} r="9" fill="#b5523a" />
+              <text
+                x={x - 110}
+                y={y + 56}
+                textAnchor="middle"
+                fill="#f4ece3"
+                fontSize="12"
+                fontFamily="Heebo, sans-serif"
+              >
+                נכשל → מחר / ביטול
+              </text>
+            </g>
+          );
+        })()}
+
         <g className={id === "stock" ? "opacity-100" : "opacity-35"}>
-          {SILOS.map((label, i) => {
-            const x = 250 + i * 110;
-            const h = id === "stock" ? [86, 52, 70][i] : 28;
+          {SILOS.map(({ label, fill, level }, i) => {
+            const x = 290 + i * 110;
+            const h = id === "stock" ? level : 28;
+            const top = 268 - 90 + (100 - h);
+            const lock = i === 0 ? Math.round(h * RESERVE_SHARE) : 0;
             return (
               <g key={label}>
                 <rect x={x} y={268 - 90} width="36" height="100" rx="6" fill="#1c2a38" />
-                <rect
-                  x={x + 6}
-                  y={268 - 90 + (100 - h)}
-                  width="24"
-                  height={h}
-                  rx="4"
-                  fill={i === 2 ? "#c4923a" : i === 1 ? "#f08a2a" : "#3d8f6e"}
-                />
+                <rect x={x + 6} y={top} width="24" height={h} rx="4" fill={fill} />
+                {lock > 0 && (
+                  <>
+                    <rect x={x + 3} y={top} width="30" height={lock} rx="4" fill="#c4923a" />
+                    <text
+                      x={x + 18}
+                      y={268 - 100}
+                      textAnchor="middle"
+                      fill="#c4923a"
+                      fontSize="11"
+                      fontFamily="Heebo, sans-serif"
+                    >
+                      רזרבה = מנעול
+                    </text>
+                  </>
+                )}
                 <text
                   x={x + 18}
                   y={296}

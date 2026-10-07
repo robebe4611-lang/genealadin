@@ -18,10 +18,12 @@ export function Presentation() {
   const [briefOpen, setBriefOpen] = useState(false);
   const [reduced, setReduced] = useState(false);
   const [ready, setReady] = useState(false);
+  const [internal, setInternal] = useState(false);
   const last = CHAPTERS.length - 1;
 
   useEffect(() => {
     setReady(true);
+    setInternal(new URLSearchParams(window.location.search).has("internal"));
   }, []);
 
   useEffect(() => {
@@ -75,11 +77,7 @@ export function Presentation() {
     <div className="relative h-dvh w-full overflow-hidden bg-void text-cream">
       <div className="absolute inset-0">
         {mode === "2d" ? (
-          <div
-            className="h-full w-full"
-            onClick={() => go(index + 1)}
-            onKeyDown={() => undefined}
-          >
+          <div className="h-full w-full" onClick={() => go(index + 1)}>
             <Schematic2D index={index} />
           </div>
         ) : ready ? (
@@ -100,13 +98,14 @@ export function Presentation() {
         mode={mode}
         auto={auto}
         copied={copied}
+        showBrief={internal}
         onIndex={go}
         onMode={setMode}
         onAuto={() => setAuto((v) => !v)}
         onCopy={() => void copyBrief()}
       />
       <BriefPanel
-        open={briefOpen}
+        open={internal && briefOpen}
         copied={copied}
         onClose={() => setBriefOpen(false)}
         onCopy={() => void copyBrief()}

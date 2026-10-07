@@ -15,6 +15,7 @@ export function Hud({
   mode,
   auto,
   copied,
+  showBrief,
   onIndex,
   onMode,
   onAuto,
@@ -24,6 +25,8 @@ export function Hud({
   mode: Mode;
   auto: boolean;
   copied: boolean;
+  /** The brief is an internal production tool; client-facing runs hide it. */
+  showBrief: boolean;
   onIndex: (i: number) => void;
   onMode: (m: Mode) => void;
   onAuto: () => void;
@@ -50,15 +53,17 @@ export function Hud({
             <Box />
             <span className="max-sm:hidden">{mode === "3d" ? "תרשים" : "תלת־ממד"}</span>
           </Button>
-          <Button variant="secondary" size="sm" className="max-md:px-2" onClick={onCopy}>
-            <ClipboardCopy />
-            <span className="max-sm:hidden">{copied ? "הועתק" : "בריף"}</span>
-          </Button>
+          {showBrief && (
+            <Button variant="secondary" size="sm" className="max-md:px-2" onClick={onCopy}>
+              <ClipboardCopy />
+              <span className="max-sm:hidden">{copied ? "הועתק" : "בריף"}</span>
+            </Button>
+          )}
         </div>
       </header>
 
       <div className="pointer-events-auto flex max-w-xl flex-col gap-4">
-        <div key={ch.id} className="stagger-in">
+        <div key={ch.id} className="stagger-in" aria-live="polite">
           <p className="font-body text-xs font-semibold tracking-[0.16em] text-flame">
             {ch.kicker}
           </p>
@@ -78,6 +83,14 @@ export function Hud({
               </li>
             ))}
           </ul>
+          {ch.upgrade && (
+            <p className="mt-3 flex items-center gap-2 font-body text-xs text-muted">
+              <span className="rounded-full px-2 py-0.5 font-semibold text-ember ring-1 ring-ember/60">
+                חבילה C
+              </span>
+              {ch.upgrade}
+            </p>
+          )}
         </div>
 
         <div className="flex flex-wrap items-center gap-2">

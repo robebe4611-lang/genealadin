@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { P } from "@/lib/presentation/palette";
 
 export function StageDisc() {
@@ -81,17 +80,10 @@ export function House({
   );
 }
 
-export function Truck({
-  position,
-  heading,
-  active,
-}: {
-  position: [number, number, number];
-  heading: number;
-  active: boolean;
-}) {
+/** Delivery truck in local space; the caller positions and steers it. */
+export function Truck({ active }: { active: boolean }) {
   return (
-    <group position={position} rotation={[0, heading, 0]}>
+    <group>
       <mesh position={[0.15, 0.42, 0]} castShadow>
         <boxGeometry args={[1.35, 0.48, 0.72]} />
         <meshStandardMaterial
@@ -106,7 +98,7 @@ export function Truck({
       </mesh>
       {[-0.55, 0.45].map((x) =>
         [-0.38, 0.38].map((z) => (
-          <mesh key={`${x}-${z}`} position={[x, 0.16, z]} rotation={[0, 0, Math.PI / 2]}>
+          <mesh key={`${x}-${z}`} position={[x, 0.16, z]} rotation={[Math.PI / 2, 0, 0]}>
             <cylinderGeometry args={[0.14, 0.14, 0.12, 12]} />
             <meshStandardMaterial color="#12171c" roughness={0.9} />
           </mesh>
@@ -116,9 +108,10 @@ export function Truck({
   );
 }
 
-export function Protagonist({ position }: { position: [number, number, number] }) {
+/** The copper gas cylinder that travels the machine; the caller moves it. */
+export function Protagonist() {
   return (
-    <group position={position}>
+    <group>
       <mesh castShadow>
         <capsuleGeometry args={[0.2, 0.52, 6, 18]} />
         <meshStandardMaterial
@@ -133,36 +126,6 @@ export function Protagonist({ position }: { position: [number, number, number] }
         <torusGeometry args={[0.16, 0.035, 8, 18]} />
         <meshStandardMaterial color={P.cream} metalness={0.7} roughness={0.2} />
       </mesh>
-    </group>
-  );
-}
-
-export function Silos({ fills, visible }: { fills: [number, number, number]; visible: number }) {
-  const labels = useMemo(() => [-1.6, 0, 1.6] as const, []);
-  return (
-    <group position={[0, 0, -0.2]} scale={visible}>
-      {labels.map((x, i) => (
-        <group key={x} position={[x, 0, 0]}>
-          <mesh position={[0, 1.15, 0]}>
-            <cylinderGeometry args={[0.42, 0.48, 2.3, 20]} />
-            <meshStandardMaterial
-              color={P.navy}
-              roughness={0.55}
-              metalness={0.25}
-              transparent
-              opacity={0.9}
-            />
-          </mesh>
-          <mesh position={[0, 0.15 + fills[i] * 0.95, 0]}>
-            <cylinderGeometry args={[0.32, 0.32, Math.max(0.08, fills[i] * 1.9), 16]} />
-            <meshStandardMaterial
-              color={i === 2 ? P.wait : i === 1 ? P.ember : P.good}
-              emissive={i === 2 ? P.wait : i === 1 ? P.ember : P.good}
-              emissiveIntensity={0.35}
-            />
-          </mesh>
-        </group>
-      ))}
     </group>
   );
 }
@@ -191,29 +154,6 @@ export function MoneyPedestals({ visible }: { visible: number }) {
           </mesh>
         </group>
       ))}
-    </group>
-  );
-}
-
-export function ClockRing({ progress, visible }: { progress: number; visible: number }) {
-  return (
-    <group position={[0, 0.05, 0]} scale={visible} rotation={[-Math.PI / 2, 0, 0]}>
-      <mesh>
-        <ringGeometry args={[2.15, 2.45, 64]} />
-        <meshStandardMaterial
-          color={P.slate}
-          emissive={P.cream}
-          emissiveIntensity={0.08}
-        />
-      </mesh>
-      <mesh rotation={[0, 0, progress * Math.PI * 2]}>
-        <circleGeometry args={[0.12, 12]} />
-        <meshStandardMaterial
-          color={P.flame}
-          emissive={P.flame}
-          emissiveIntensity={0.9}
-        />
-      </mesh>
     </group>
   );
 }
