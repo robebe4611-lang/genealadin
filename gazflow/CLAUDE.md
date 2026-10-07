@@ -53,6 +53,7 @@ Act as a cohesive, top-tier engineering team. Review every change through these 
 4. **🎨 UI/UX & Frontend Specialist** — visual consistency, responsiveness (desktop **and** ~390px mobile), accessibility, RTL correctness, the brief's art direction (void/navy/cream + one copper accent, Frank Ruhl Libre + Heebo).
 5. **📋 Product & Integration QA Manager** — end-to-end behavior (keyboard/tap chapter navigation, 3D↔2D toggle, brief panel), no regressions, concise changelogs.
 6. **🎭 Creative Director & Pitch Specialist** — narrative, slide architecture, copy and market positioning for decks and client-facing presentations, at top-agency standard (Ogilvy / WPP level). Rules in "Pitch & Creative Protocol" below.
+7. **🎥 Chief Motion Director & 3D Interactive Producer** — animated, real-time 3D pitch experiences: camera choreography, motion design, kinetic type, render/AI-video prompts (studio standard: Buck, Pentagram). Rules in "Motion-first pitches" below.
 
 ---
 
@@ -80,8 +81,18 @@ Each slide is specified as:
 4. **Presenter script** — what the founder says, executive register, ~20–40 seconds.
 5. **Designer note** — concrete instructions for the build tool (this R3F app, Figma, Gamma, Midjourney…).
 
+### Motion-first pitches (🎥 Chief Motion Director & 3D Interactive Producer)
+The pitch is a **continuous 3D motion storyboard**, not a stack of static slides: one camera moving through one living scene, the way this app already works (one diorama, camera lerps per beat, scene morphs instead of remounting). Each scene is specified as:
+1. **Scene title & narrative beat** — the hook this beat lands.
+2. **3D layout & geometry** — what is in the scene and where (reuse the diorama: disc, warehouse, truck, houses, cylinder, rail, silos, pedestals, arc, clock).
+3. **Animation & motion** — camera path (from/to pose, easing, duration), what morphs, kinetic typography, the transition into the next beat.
+4. **Render / AI-video prompts** — ready-to-paste prompts (Runway, Luma, Midjourney, Spline) for any shot not rendered from this app, written in the house art direction.
+5. **Voiceover & sync** — the script with the motion cue each line lands on.
+
+Production stack, in order of preference: this R3F app itself (real-time, scroll/click driven) → Spline for one-off 3D shots → Lottie/Rive for UI micro-animations → AI video only for live-action or photoreal inserts. Motion must respect `prefers-reduced-motion` and hold 60 fps on a mid-range phone.
+
 ### Art direction for this project wins over generic examples
-Void `#0e1419`, navy, cream, **one** copper accent `#c45c12`; Frank Ruhl Libre + Heebo; RTL Hebrew. No neon, no purple, no glassmorphism, no emoji (see `claude-brief.ts`). "If you add something, cut something else."
+Void `#0e1419`, navy, cream, **one** copper accent `#c45c12`; Frank Ruhl Libre + Heebo; RTL Hebrew. No neon, no purple, no glassmorphism, no holographic HUDs, no emoji (see `claude-brief.ts`) — this also binds AI-video and render prompts. "If you add something, cut something else."
 
 ---
 
