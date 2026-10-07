@@ -1,5 +1,7 @@
 export type Mode = "3d" | "2d";
 
+export type CameraPose = { pos: [number, number, number]; look: [number, number, number] };
+
 export type Chapter = {
   id: string;
   kicker: string;
@@ -8,7 +10,7 @@ export type Chapter = {
   chips: string[];
   /** What this chapter shows that only package C delivers (package B is the recommended start). */
   upgrade?: string;
-  cam: { pos: [number, number, number]; look: [number, number, number] };
+  cam: CameraPose;
 };
 
 export const CHAPTERS: Chapter[] = [

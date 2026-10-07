@@ -20,6 +20,7 @@ export function Presentation() {
   const [ready, setReady] = useState(false);
   const [internal, setInternal] = useState(false);
   const last = CHAPTERS.length - 1;
+  const chapter = CHAPTERS[index] ?? CHAPTERS[0];
 
   useEffect(() => {
     setReady(true);
@@ -83,7 +84,8 @@ export function Presentation() {
         ) : ready ? (
           <Suspense fallback={<div className="h-full w-full bg-void" />}>
             <StageCanvas
-              index={index}
+              beat={chapter.id}
+              cam={chapter.cam}
               reduced={reduced}
               onAdvance={() => go(index + 1)}
             />

@@ -41,6 +41,13 @@
 .stagger-in > *:nth-child(3) { animation-delay: 130ms; }
 .stagger-in > *:nth-child(4) { animation-delay: 180ms; }
 
+/* Pitch captions: each word rises in on its own delay (set inline). */
+.kinetic > span {
+  display: inline-block;
+  white-space: pre;
+  animation: rise 650ms var(--ease-out-soft) both;
+}
+
 @keyframes rise {
   from {
     opacity: 0;
@@ -55,7 +62,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .stagger-in > * {
+  .stagger-in > *,
+  .kinetic > span {
     animation: none;
   }
 }
