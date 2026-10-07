@@ -46,6 +46,7 @@ export interface Sql {
  */
 const globalRef = globalThis as typeof globalThis & {
   __pgSqlPromise__?: Promise<Sql>;
+  __pgPool__?: import("pg").Pool;
   __pgliteInstance__?: Promise<import("@electric-sql/pglite").PGlite>;
   __pgliteMigrateChain__?: Promise<void>;
 };
@@ -94,6 +95,7 @@ function createNeonSql(): Promise<Sql> {
     types.setTypeParser(OID_DATE, identity);
     types.setTypeParser(OID_INTERVAL, identity);
     const pool = new Pool({ connectionString: databaseUrl });
+    globalRef.__pgPool__ = pool;
     return toSql(async <T>(text: string, params: unknown[]) => {
       const res = await pool.query(text, params);
       return res.rows as T[];
@@ -192,6 +194,46 @@ export function getSql(): Promise<Sql> {
     throw err;
   });
   return sqlPromise;
+}
+
+/**
+ * Run `fn` inside one database transaction: every query on the `Sql` it receives
+ * commits together or not at all. Use it for any change that touches more than one
+ * row that must stay consistent (an order and the customer's balance, for example).
+ */
+export async function withTransaction<T>(fn: (sql: Sql) => Promise<T>): Promise<T> {
+  await getSql();
+  if (dbSource === "neon") {
+    const pool = globalRef.__pgPool__;
+    if (!pool) throw new Error("Postgres pool is not initialized");
+    const client = await pool.connect();
+    try {
+      await client.query("begin");
+      const result = await fn(
+        toSql(async <R>(text: string, params: unknown[]) => {
+          const res = await client.query(text, params);
+          return res.rows as R[];
+        }),
+      );
+      await client.query("commit");
+      return result;
+    } catch (err) {
+      await client.query("rollback");
+      throw err;
+    } finally {
+      client.release();
+    }
+  }
+  const pg = await globalRef.__pgliteInstance__;
+  if (!pg) throw new Error("PGLite instance failed to initialize");
+  return pg.transaction((tx) =>
+    fn(
+      toSql(async <R>(text: string, params: unknown[]) => {
+        const res = await tx.query<R>(text, params);
+        return res.rows;
+      }),
+    ),
+  );
 }
 
 /**

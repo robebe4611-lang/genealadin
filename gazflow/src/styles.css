@@ -16,6 +16,13 @@
   --font-body: "Heebo", "Segoe UI", sans-serif;
   --shadow-border: 0 0 0 1px rgba(244, 236, 227, 0.1);
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  /* Operations app (customer / driver / office): light, high contrast, big targets. */
+  --color-paper: #faf7f2;
+  --color-card: #ffffff;
+  --color-ink: #16202a;
+  --color-soft: #5b6672;
+  --color-line: #e6ddd1;
+  --font-ops: "Rubik", "Heebo", "Segoe UI", sans-serif;
 }
 
 @layer base {

@@ -17,6 +17,22 @@ TypeScript (strict). Node 22.
 
 ---
 
+## 🚚 The operations app (the product we deliver)
+A gas distributor's whole day, with the owner only watching. Three people, three secret links, no passwords:
+- `/c/<token>` — **customer** (Arabic/Hebrew): three big buttons — order like last time, call (logged, so the office sees who is about to ring), where is my order — plus cylinders at home, debt, history.
+- `/d/<token>` — **driver**: today's stops in route order; on the way → delivered (quantity, empties, cash/debt/transfer) or not delivered (reason).
+- `/o/<token>` — **office**: "needs you" (call taps, held orders, transfers to confirm), driver progress, all of today's orders, who needs gas this week; customers, drivers, settings.
+
+Automation (no human needed): an order is assigned to the least-loaded driver serving its zone; orders after the cutoff hour go to tomorrow; high debt, unknown zone, no driver or full trucks hold the order for the office; a failed stop goes to the end of the route, a second failure moves it to tomorrow and flags the office; unfinished stops carry over each morning; refill is due two days before each customer's measured cycle ends.
+
+- `src/lib/ops/logic.ts` — every business rule as a pure function (tested in `logic.test.ts`). Change rules here first.
+- `src/lib/ops/service.server.ts` — the rules wired to SQL; every entry point resolves the caller's token first. Multi-row changes go through `withTransaction` (`src/lib/db.ts`).
+- `src/lib/ops/api.ts` — validated `createServerFn` endpoints (zod); `src/lib/ops/i18n.ts` — all Arabic/Hebrew strings.
+- `src/components/ops/` — `CustomerApp`, `DriverApp`, `OfficeApp`, shared `kit.tsx` / `hooks.ts`. Light theme (`paper`/`ink`, Rubik for Arabic + Hebrew), big touch targets.
+- `migrations/0002_ops.sql` — schema. New changes go in new numbered files.
+- **Preview / dev** (no `DATABASE_URL`): in-memory PGlite with demo data — `/o/demo-owner`, `/c/demo-c1`…`demo-c6`, `/d/demo-d1`, `/d/demo-d2`. Demo prices are 0 until set in office settings.
+- **Production:** set `DATABASE_URL` (Postgres) and `OWNER_TOKEN` (a long random string — it is the office password). The office link is logged at first start. No demo data is created.
+
 ## 🗺️ Where things live
 - `src/routes/__root.tsx` — document shell, `<head>` meta (title, OG, fonts), `lang="he" dir="rtl"`.
 - `src/routes/index.tsx` → `src/components/stage/Presentation.tsx` — the app.
