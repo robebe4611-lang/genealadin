@@ -49,7 +49,15 @@ export class OpsError extends Error {
 const newId = () => randomUUID();
 const newToken = () => randomBytes(18).toString("base64url");
 const num = (v: unknown) => Number(v ?? 0);
-const today = (now = new Date()) => israelClock(now).date;
+/**
+ * The current instant. In preview only (in-memory demo database), OPS_FIXED_NOW pins it so
+ * the end-to-end tests behave the same at any hour; production always uses the real clock.
+ */
+const clock = () => {
+  const fixed = dbSource === "pglite" ? process.env.OPS_FIXED_NOW : undefined;
+  return fixed ? new Date(fixed) : new Date();
+};
+const today = (now = clock()) => israelClock(now).date;
 
 // ---------- bootstrap ----------
 
@@ -141,7 +149,7 @@ async function business(sql: Sql): Promise<Business> {
  * Once per Israel day: stops left unfinished on an earlier day move to today, keeping
  * their driver. Runs lazily on the first request of the day — no cron needed.
  */
-async function dailyTick(now = new Date()) {
+async function dailyTick(now = clock()) {
   const sql = await getSql();
   const day = today(now);
   const b = await business(sql);
@@ -304,7 +312,7 @@ async function createOrder(
   await tx`insert into ops_orders (id, customer_id, address_id, type_code, qty, kind, service_date, time_window,
                                    unit_price, source)
            values (${id}, ${input.customerId}, ${addr.id}, ${input.typeCode}, ${input.qty}, ${input.kind},
-                   ${serviceDateFor(new Date(), b.cutoff_hour)}, ${input.timeWindow}, ${num(type.price)},
+                   ${serviceDateFor(clock(), b.cutoff_hour)}, ${input.timeWindow}, ${num(type.price)},
                    ${input.source})`;
   await logEvent(tx, {
     orderId: id,

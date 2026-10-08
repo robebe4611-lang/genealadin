@@ -31,6 +31,7 @@ Automation (no human needed): an order is assigned to the least-loaded driver se
 - `src/components/ops/` — `CustomerApp`, `DriverApp`, `OfficeApp`, shared `kit.tsx` / `hooks.ts`. Light theme (`paper`/`ink`, Rubik for Arabic + Hebrew), big touch targets.
 - `migrations/0002_ops.sql` — schema. New changes go in new numbered files.
 - **Preview / dev** (no `DATABASE_URL`): in-memory PGlite with demo data — `/o/demo-owner`, `/c/demo-c1`…`demo-c6`, `/d/demo-d1`, `/d/demo-d2`. Demo prices are 0 until set in office settings.
+- `e2e/ops.e2e.mjs` — the full day as browser tests (names in Hebrew). Run `npm run e2e` before every change that touches ops; add a test for every new flow. `OPS_FIXED_NOW` pins the clock, and only in preview.
 - **Production:** set `DATABASE_URL` (Postgres) and `OWNER_TOKEN` (a long random string — it is the office password). The office link is logged at first start. No demo data is created.
 
 ## 🗺️ Where things live
@@ -124,6 +125,7 @@ Void `#0e1419`, navy, cream, **one** copper accent `#c45c12`; Frank Ruhl Libre +
 | Type check | `npx tsc --noEmit` (or `npm run typecheck`) |
 | Lint | `npm run lint` |
 | All tests | `npm test` |
+| End-to-end (customer → office → driver, real browser) | `npm run e2e` — starts its own server on :8090 with fresh demo data and a clock pinned to 08:30 Israel time; screenshots in `e2e-results/` |
 | One test file | `node --test scripts/<name>.test.mjs` or `node --experimental-strip-types --test src/<path>.test.ts` |
 
 Tests use Node's built-in `node:test` runner — **not Jest**. A new `src/**/*.test.ts` file must also be added to the `test` script in `package.json`.
