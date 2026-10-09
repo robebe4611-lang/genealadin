@@ -226,7 +226,7 @@
     ? { phoneW: 620, phoneX: (W - 648) / 2, phoneY: 450, capY: 190, capY2: 270,
         trioW: 268, trioY: 500, trioGap: 26, xY: [1440, 1555, 1670], c7Y: 200 }
     : { phoneW: 380, phoneX: 300, phoneY: 115, capY: 400, capY2: 470,
-        trioW: 250, trioY: 210, trioGap: 50, xY: [965, 965, 965], c7Y: 40 };
+        trioW: 230, trioY: 250, trioGap: 60, xY: [930, 930, 930], c7Y: 30 };
   const PH = (w) => w * (1688 / 780);           // screen height for a given width
   const K = (w) => w / 390;                     // CSS px → frame px inside a screen
 
@@ -274,8 +274,8 @@
     const z = sh[2] * (1 + 0.08 * easeInOut(p));
     const fx = sh[3], fy = sh[4];
     // keep the focus point at the same screen spot it would have at zoom 1 (centered for close-ups)
-    const tx = sh[2] > 1.05 ? W / 2 - fx * z : fx - fx * z;
-    const ty = sh[2] > 1.05 ? H * 0.56 - fy * z : fy - fy * z;
+    const tx = sh[2] > 1.05 ? (FMT === "v" ? W / 2 : 520) - fx * z : fx - fx * z;
+    const ty = sh[2] > 1.05 ? (FMT === "v" ? H * 0.56 : H * 0.5) - fy * z : fy - fy * z;
     el.style.transform = `translate(${tx}px, ${ty}px) scale(${z})`;
     return sh[2] > 1.05;
   }
@@ -415,7 +415,7 @@
       ["x1", "x2", "x3"].forEach((id, i) => {
         const el = $(id);
         if (FMT === "v") capPos(el, L.xY[i]);
-        else { el.style.top = L.xY[i] + "px"; el.style.right = 90 + i * 600 + "px"; el.style.left = "auto"; el.style.width = "560px"; }
+        else { el.style.top = L.xY[i] + "px"; el.style.right = 50 + i * 610 + "px"; el.style.left = "auto"; el.style.width = "600px"; el.style.fontSize = "56px"; }
         rise(el, t, 26.0 + i);
       });
     }
