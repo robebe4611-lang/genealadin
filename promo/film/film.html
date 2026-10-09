@@ -27,6 +27,8 @@
   .cap.big { font-size: 92px; }
   .cap.mid { font-size: 70px; }
   .cap .g { color: var(--green); }
+  .cap.pill { background: rgba(255,255,255,.9); border-radius: 32px; padding: 14px 24px; box-shadow: 0 16px 40px rgba(15,23,42,.12); }
+  .cam { transform-origin: 0 0; }
   .cap .r { color: #9B2C1C; }
 
   /* light device frame: no black bezel */
@@ -86,19 +88,23 @@
 
   <!-- S4–S6: one phone at a time -->
   <div class="layer" id="s-one">
-    <div class="cap mid" id="c4"></div>
-    <div class="dev" id="dev"><div class="scr" id="scr"></div><div class="tap" id="tap"></div><div class="hl" id="hl"></div></div>
-    <div class="dev" id="mini"><div class="scr" id="miniScr"></div><div class="glow" id="miniGlow"></div></div>
+    <div class="cap mid" id="c4" style="z-index:5"></div>
+    <div class="layer cam" id="cam">
+      <div class="dev" id="dev"><div class="scr" id="scr"></div><div class="tap" id="tap"></div><div class="hl" id="hl"></div></div>
+      <div class="dev" id="mini"><div class="scr" id="miniScr"></div><div class="glow" id="miniGlow"></div></div>
+    </div>
   </div>
 
   <!-- S7: all three -->
   <div class="layer" id="s-trio">
     <div class="cap mid" id="c7"></div>
-    <svg class="lines" id="loop"><path id="loopPath" fill="none" stroke="#00843D" stroke-width="10" stroke-linecap="round"/></svg>
+    <div class="layer cam" id="cam3">
+    <svg class="lines" id="loop"><path id="loopPath" fill="none" stroke="#00843D" stroke-width="10" stroke-linecap="round"/><circle id="spark" r="18" fill="#fff" stroke="#00843D" stroke-width="8"/></svg>
     <div class="dev" id="t0"><div class="scr"></div><div class="glow"></div></div>
     <div class="dev" id="t1"><div class="scr"></div><div class="glow"></div></div>
     <div class="dev" id="t2"><div class="scr"></div><div class="glow"></div></div>
     <div class="label" id="lb0"></div><div class="label" id="lb1"></div><div class="label" id="lb2"></div>
+    </div>
     <div class="cap mid" id="x1"></div><div class="cap mid" id="x2"></div><div class="cap mid" id="x3"></div>
   </div>
 
@@ -176,6 +182,11 @@
     el.style.opacity = t < t0 ? 0 : clamp(x * 3);
     el.style.transform = `${extra} scale(${s})`;
   }
+  function capPos(el, y, half) {
+    el.style.top = y + "px";
+    if (FMT === "h" && half) { el.style.left = "860px"; el.style.right = "90px"; }
+    else { el.style.left = "70px"; el.style.right = "70px"; }
+  }
   function box(el, x, y, w, h) { el.style.left = x + "px"; el.style.top = y + "px"; if (w != null) el.style.width = w + "px"; if (h != null) el.style.height = h + "px"; }
 
   // A device that shows one of several real screenshots, hard-cut on beats.
@@ -214,8 +225,8 @@
   const L = FMT === "v"
     ? { phoneW: 620, phoneX: (W - 648) / 2, phoneY: 450, capY: 190, capY2: 270,
         trioW: 268, trioY: 500, trioGap: 26, xY: [1440, 1555, 1670], c7Y: 200 }
-    : { phoneW: 420, phoneX: 1180, phoneY: 110, capY: 330, capY2: 470,
-        trioW: 300, trioY: 150, trioGap: 60, xY: [880, 880, 880], c7Y: 60 };
+    : { phoneW: 380, phoneX: 300, phoneY: 115, capY: 400, capY2: 470,
+        trioW: 250, trioY: 210, trioGap: 50, xY: [965, 965, 965], c7Y: 40 };
   const PH = (w) => w * (1688 / 780);           // screen height for a given width
   const K = (w) => w / 390;                     // CSS px → frame px inside a screen
 
@@ -227,7 +238,7 @@
   }
   layoutOne($("dev"), $("scr"), L.phoneW, L.phoneX, L.phoneY);
   const miniW = FMT === "v" ? 270 : 260;
-  layoutOne($("mini"), $("miniScr"), miniW, FMT === "v" ? 40 : 700, FMT === "v" ? 1080 : 330);
+  layoutOne($("mini"), $("miniScr"), FMT === "v" ? miniW : 230, FMT === "v" ? 40 : 60, FMT === "v" ? 1080 : 420);
   const trioPos = [];
   trio.forEach(([id], i) => {
     const w = i === 1 ? L.trioW + 30 : L.trioW;
@@ -237,7 +248,7 @@
     const y = L.trioY + (i === 1 ? -40 : 0);
     layoutOne($(id), $(id).querySelector(".scr"), w, x, y);
     trioPos.push({ x, y, w: w + 28, h: PH(w) + 28 });
-    const lb = $("lb" + i); lb.textContent = T.lb[2 - i]; box(lb, x, L.trioY + PH(L.trioW + 30) - 40 + 28 + 70, w + 28);
+    const lb = $("lb" + i); lb.textContent = T.lb[2 - i]; box(lb, x, L.trioY + PH(L.trioW + 30) - 40 + 28 + (FMT === "v" ? 70 : 52), w + 28);
   });
   // The order's path: one loop through the three screens.
   (function () {
@@ -254,6 +265,23 @@
   $("b1").textContent = T.b1; $("b2").innerHTML = T.b2; $("c3").innerHTML = T.c3; $("c4").innerHTML = T.c4;
   $("c7").innerHTML = T.c7; $("x1").textContent = T.x1; $("x2").textContent = T.x2; $("x3").textContent = T.x3;
   $("word").innerHTML = '<span class="stars">★★</span>' + T.word; $("tag").innerHTML = T.tag;
+
+  // ---------- camera: slow push-in on every hold, hard-cut close-ups on beats ----------
+  // A shot = [start, end, zoom, focusX, focusY] in stage px; the focus point stays put while zoom grows 4 % over the shot.
+  function cam(el, t, shots) {
+    const sh = shots.find((x) => t >= x[0] && t < x[1]) || shots[shots.length - 1];
+    const p = clamp((t - sh[0]) / (sh[1] - sh[0]));
+    const z = sh[2] * (1 + 0.08 * easeInOut(p));
+    const fx = sh[3], fy = sh[4];
+    // keep the focus point at the same screen spot it would have at zoom 1 (centered for close-ups)
+    const tx = sh[2] > 1.05 ? W / 2 - fx * z : fx - fx * z;
+    const ty = sh[2] > 1.05 ? H * 0.56 - fy * z : fy - fy * z;
+    el.style.transform = `translate(${tx}px, ${ty}px) scale(${z})`;
+    return sh[2] > 1.05;
+  }
+  // stage px of a point given in 390x844 app CSS px inside the main phone
+  const inPhone = (x, y, scroll = 0) => [L.phoneX + 14 + x * K(L.phoneW), L.phoneY + 14 + (y - scroll) * K(L.phoneW)];
+  const inMini = (x, y) => { const m = $("mini"); return [parseFloat(m.style.left) + 14 + x * K(FMT === "v" ? 270 : 230), parseFloat(m.style.top) + 14 + y * K(FMT === "v" ? 270 : 230)]; };
 
   // ---------- the timeline (120 BPM: beat 0.5 s, bar 2 s) ----------
   const DUR = 32;
@@ -273,10 +301,12 @@
     // ---- S1–S2 pain (0–6) ----
     const sPain = t < 6.25; show($("s-pain"), sPain);
     if (sPain) {
+      const zp = 1 + 0.06 * p01(t, 0, 6); $("s-pain").style.transformOrigin = "50% 45%";
+      $("s-pain").style.transform = `scale(${t < 3 ? zp : zp + 0.08})`;  // a punch-in on the bar when the questions arrive
       const cx = W / 2;
       const ringOn = (t % 1.5) < 0.9 && t < 6;
       const shake = ringOn ? Math.sin(t * 60) * 9 : 0;
-      const rx = FMT === "v" ? cx - 150 : 1180, ry = FMT === "v" ? 700 : 300;
+      const rx = FMT === "v" ? cx - 150 : cx - 150, ry = FMT === "v" ? 700 : 300;
       pop($("ringer"), t, 0.0, `translate(0,0) rotate(${shake}deg)`, 0.4);
       box($("ringer"), rx, ry);
       ["w1", "w2"].forEach((id, i) => {
@@ -285,21 +315,21 @@
         box(el, rx + 150 - s / 2, ry + 150 - s / 2, s, s);
         el.style.opacity = ringOn ? (1 - ph) * 0.8 : 0;
       });
-      box($("note"), FMT === "v" ? 470 : 420, FMT === "v" ? 1120 : 300);
+      box($("note"), FMT === "v" ? 470 : 360, FMT === "v" ? 1120 : 200);
       pop($("note"), t, 1.5, "rotate(-5deg)", 0.5);
       $("c1").innerHTML = t < 1.5 ? T.c1a : T.c1a + "<br>" + T.c1b;
-      box($("c1"), 70, FMT === "v" ? L.capY : 380);
+      capPos($("c1"), FMT === "v" ? L.capY : 760);
       rise($("c1"), t, 0.5);
       if (t >= 3) { $("c1").style.opacity = 0; }
-      box($("b1"), FMT === "v" ? 420 : 1060, FMT === "v" ? 330 : 120);
-      pop($("b1"), t, 3.0); box($("b2"), FMT === "v" ? 70 : 160, FMT === "v" ? 1000 : 760);
+      box($("b1"), FMT === "v" ? 420 : 1180, FMT === "v" ? 330 : 140);
+      pop($("b1"), t, 3.0); box($("b2"), FMT === "v" ? 70 : 1150, FMT === "v" ? 1000 : 640);
       pop($("b2"), t, 4.0);
     }
 
     // ---- S3 turn (6–8) ----
     const sTurn = t >= 6 && t < 8.1; show($("s-turn"), sTurn);
     if (sTurn) {
-      box($("c3"), 70, FMT === "v" ? 760 : 380); rise($("c3"), t, 6.0);
+      capPos($("c3"), FMT === "v" ? 760 : 360); rise($("c3"), t, 6.0);
       const d = $("dot"); box(d, W / 2 - 20, FMT === "v" ? 1120 : 760);
       pop(d, t, 7.5, "", 0.3);
       if (t > 7.9) d.style.transform = `scale(${1 + 30 * easeOutExpo(p01(t, 7.9, 0.2))})`;
@@ -309,7 +339,7 @@
     const sOne = t >= 8 && t < 24; show($("s-one"), sOne);
     if (sOne) {
       const w = L.phoneW, dev = $("dev");
-      const drift = Math.sin(t * 0.9) * 8;
+      const drift = Math.sin(t * 1.3) * 14;
       // each new app enters with a pop on its bar
       const enter = t < 13 ? 8.0 : t < 18 ? 13.0 : 18.0;
       pop(dev, t, enter, `translateY(${drift}px)`, 0.5);
@@ -335,14 +365,27 @@
         hl.style.opacity = easeOutExpo(p01(t, 15.5, 0.3)); hl.style.transform = `scale(${1.04 - 0.04 * easeOutBack(p01(t, 15.5, 0.4))})`;
       } else hl.style.opacity = 0;
       // caption
-      const c4 = $("c4"); box(c4, 70, L.capY);
+      const c4 = $("c4"); capPos(c4, L.capY, true);
       if (t < 13) { c4.innerHTML = T.c4; rise(c4, t, 8.5); }
       else if (t < 18) { c4.innerHTML = t < 15.0 ? T.c5a : T.c5a + "<br>" + T.c5b; rise(c4, t, 13.5); }
       else { c4.innerHTML = t < 23.0 ? T.c6a : T.c6b; rise(c4, t, 18.5); }
-      if (FMT === "v" && t >= 13 && t < 18) box(c4, 70, L.capY - 60);
+      if (t >= 13 && t < 18) capPos(c4, L.capY - 60, true);
+      // camera: wide holds with a slow push, close-ups cut on the beat
+      const ph = inPhone(195, 422);
+      const zc = FMT === "v" ? 1.75 : 1.7;
+      const close = cam($("cam"), t, [
+        [8, 10, 1, ...ph], [10, 12, 1, ...ph],
+        [12, 13, zc, ...inPhone(195, 300)],                // the ETA
+        [13, 16.5, 1, ...ph],
+        [16.5, 18, zc * 0.95, ...inPhone(195, 905, 570)],  // the new order row, assigned
+        [18, 20, 1, ...ph], [20, 22, 1, ...ph],
+        [22, 23, zc * 0.9, ...inPhone(195, 560)],          // delivered qty + empties
+        [23, 24, 1, ...ph],
+      ]);
+      c4.classList.toggle("pill", close);
       // proof of sync: while the driver drives, the customer's phone counts down beside him
       const mini = $("mini");
-      const miniOn = t >= 20.0 && t < 24;
+      const miniOn = t >= 20.0 && t < 24 && !(t >= 22 && t < 23);  // hidden during the delivery close-up
       show(mini, miniOn);
       if (miniOn) {
         setMini(t < 23.0 ? "c07-customer-ontheway" : "c09-customer-delivered");
@@ -356,18 +399,23 @@
     if (sTrio) {
       trio.forEach(([id], i) => {
         const el = $(id); const order = 2 - i; // customer first
-        pop(el, t, 24.0 + order * 0.25, `translateY(${Math.sin(t * 1.1 + i) * 6}px)`, 0.5);
+        pop(el, t, 24.0 + order * 0.25, `translateY(${Math.sin(t * 2.2 + i * 1.3) * 14}px)`, 0.5);
         el.querySelector(".glow").style.opacity = t >= 25.0 + order * 0.25 ? 1 - 0.55 * p01(t, 25.6 + order * 0.25, 0.8) : 0;
         rise($("lb" + i), t, 24.5);
       });
+      cam($("cam3"), t, [[24, 29, 1, W / 2, H * 0.45]]);
       const drawn = easeInOut(p01(t, 24.5, 1.25));
       const lp = $("loopPath"); lp.setAttribute("stroke-dasharray", loopLen); lp.setAttribute("stroke-dashoffset", loopLen * (1 - drawn));
       lp.style.opacity = 1;
-      const c7 = $("c7"); box(c7, 70, L.c7Y); rise(c7, t, 25.0);
+      // a light keeps travelling the loop once it is closed: the order going round, again and again
+      const sp = $("spark"); const u = t < 25.75 ? drawn : (p01(t, 25.75, 1.6) + Math.floor((t - 25.75) / 1.6)) % 1;
+      const pt = $("loopPath").getPointAtLength(loopLen * (t < 25.75 ? drawn : u));
+      sp.setAttribute("cx", pt.x); sp.setAttribute("cy", pt.y); sp.style.opacity = t >= 24.5 ? 1 : 0;
+      const c7 = $("c7"); capPos(c7, L.c7Y); rise(c7, t, 25.0);
       ["x1", "x2", "x3"].forEach((id, i) => {
         const el = $(id);
-        if (FMT === "v") box(el, 70, L.xY[i]);
-        else box(el, 120 + (2 - i) * 580, L.xY[i], 520);
+        if (FMT === "v") capPos(el, L.xY[i]);
+        else { el.style.top = L.xY[i] + "px"; el.style.right = 90 + i * 600 + "px"; el.style.left = "auto"; el.style.width = "560px"; }
         rise(el, t, 26.0 + i);
       });
     }
@@ -375,11 +423,12 @@
     // ---- S8 callback + end card (29–32) ----
     const sEnd = t >= 29; show($("s-end"), sEnd);
     if (sEnd) {
-      const r2 = $("ringer2"); const ry = FMT === "v" ? 430 : 170;
+      $("s-end").style.transformOrigin = "50% 45%"; $("s-end").style.transform = `scale(${1 + 0.04 * p01(t, 29, 3)})`;
+      const r2 = $("ringer2"); const ry = FMT === "v" ? 430 : 70;
       box(r2, W / 2 - 150, ry); pop(r2, t, 29.0, "", 0.4);
       const ck = $("chk"); box(ck, W / 2 + 70, ry + 200); pop(ck, t, 29.25, "", 0.4);
-      const wd = $("word"); box(wd, 0, FMT === "v" ? 860 : 520); pop(wd, t, 29.5);
-      const tg = $("tag"); box(tg, 90, FMT === "v" ? 1160 : 780); rise(tg, t, 30.0);
+      const wd = $("word"); box(wd, 0, FMT === "v" ? 860 : 410); pop(wd, t, 29.5);
+      const tg = $("tag"); capPos(tg, FMT === "v" ? 1160 : 790); rise(tg, t, 30.0);
     }
   };
 

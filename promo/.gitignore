@@ -1,2 +1,5 @@
 node_modules/
 film/board-*/
+film/frames-*/
+film/*.mp4
+film/music.wav
