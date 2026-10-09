@@ -2,7 +2,7 @@
 // One order flows: driver loads → customer orders → office sees it assigned → driver delivers → everyone updates.
 // The page is not modified; capture.css only hides the demo chrome (top bar, "demo" labels, helper toasts).
 import { chromium } from "/home/user/genealadin/gazflow/node_modules/playwright/index.mjs";
-import { mkdirSync, readFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import http from "node:http";
 import path from "node:path";
 
@@ -52,6 +52,10 @@ const click = (page, sel) => page.evaluate((s) => document.querySelector(s).clic
 // Fake clock for app timers + a real wait so the browser's view transitions (≈0.4s) finish.
 const settle = async (page, ms = 450) => { await page.clock.runFor(ms); await page.waitForTimeout(700); };
 
+// Where the finger taps, in 390x844 CSS pixels (the film draws a tap ring there).
+const taps = {};
+const box = async (page, sel) => { const b = await page.locator(sel).boundingBox(); return { x: Math.round(b.x + b.width / 2), y: Math.round(b.y + b.height / 2) }; };
+
 // ---------- mobile: each app in a 390x844 phone ----------
 {
   const p = await open({ width: 390, height: 844 }, "");
@@ -70,8 +74,10 @@ const settle = async (page, ms = 450) => { await page.clock.runFor(ms); await pa
   // Customer (Salim, north zone → Samer) orders like last time.
   await at(p, "08:31");
   await snap("c01-customer-idle", "customer");
+  taps.order = await box(p, '[data-act="order"]');
   await click(p, '[data-act="order"]');
   await snap("c02-customer-sheet", "customer");
+  taps.confirm = await box(p, "[data-confirm]");
   await click(p, "[data-confirm]");
   await p.clock.runFor(100); await p.waitForTimeout(600);
   await p.screenshot({ path: `${OUT}/c03-customer-skeleton.png` });
@@ -81,6 +87,7 @@ const settle = async (page, ms = 450) => { await page.clock.runFor(ms); await pa
   await p.screenshot({ path: `${OUT}/c05-customer-ordered.png` });
   await snap("o02-office-new-order", "office", true);
   await snap("d02-driver-stop", "driver");
+  taps.way = await box(p, "[data-way]");
 
   // Driver leaves.
   await at(p, "08:40");
@@ -90,6 +97,8 @@ const settle = async (page, ms = 450) => { await page.clock.runFor(ms); await pa
   await settle(p, 5000);
   await p.screenshot({ path: `${OUT}/c07-customer-ontheway.png` });
   await snap("o03-office-ontheway", "office", true);
+  await snap("d02b-driver-ontheway", "driver");
+  taps.delivered = await box(p, '[data-mode="deliver"]');
 
   // Delivered.
   await at(p, "08:58");
@@ -144,6 +153,7 @@ const settle = async (page, ms = 450) => { await page.clock.runFor(ms); await pa
   await p.context().close();
 }
 
+writeFileSync(path.join(DIR, "taps.json"), JSON.stringify(taps, null, 2));
 await browser.close();
 server.close();
 console.log(errors.length ? "page errors: " + errors.join(" | ") : "no page errors");
