@@ -362,31 +362,31 @@
    {
     "t": 17.0,
     "at": "parking",
-    "zoom": 1.45,
+    "zoom": 1.65,
     "dy": -70
    },
    {
     "t": 17.6,
     "at": "truck",
-    "zoom": 1.4,
+    "zoom": 1.65,
     "dy": -70
    },
    {
     "t": 20.3,
     "at": "truck",
-    "zoom": 1.45,
+    "zoom": 1.65,
     "dy": -70
    },
    {
     "t": 21.0,
     "at": "customer",
-    "zoom": 1.75,
+    "zoom": 2.05,
     "dy": -70
    },
    {
     "t": 23.5,
     "at": "customer",
-    "zoom": 1.85,
+    "zoom": 2.15,
     "dy": -70
    },
    {
