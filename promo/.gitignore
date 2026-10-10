@@ -3,3 +3,7 @@ film/board-*/
 film/frames-*/
 film/*.mp4
 film/*.wav
+v4/board-*
+v4/frames-*/
+v4/*.mp4
+v4/*.wav

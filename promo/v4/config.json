@@ -1,0 +1,371 @@
+{
+  "_note": "GazFlow launch film v4 — every word, time and colour lives here. Edit this file, not the animation code.",
+  "colors": {
+    "bg": "#0B0F15",
+    "emerald": "#10B981",
+    "emeraldDeep": "#00843D",
+    "white": "#F5F7F8",
+    "dim": "rgba(245,247,248,0.55)",
+    "card": "#FFFFFF",
+    "ink": "#11291C",
+    "soft": "#536A5C"
+  },
+  "bpm": 120,
+  "grooveStart": 9.0,
+  "duration": 40,
+  "opening": [
+    {
+      "in": 0.0,
+      "brightUntil": 1.6,
+      "key": "o1"
+    },
+    {
+      "in": 1.6,
+      "brightUntil": 3.0,
+      "key": "o2"
+    },
+    {
+      "in": 3.0,
+      "brightUntil": 4.4,
+      "key": "o3"
+    },
+    {
+      "in": 4.4,
+      "brightUntil": 6.4,
+      "key": "o4"
+    }
+  ],
+  "peak": {
+    "in": 6.4,
+    "out": 9.0,
+    "key": "peak"
+  },
+  "captions": [
+    {
+      "key": "c1",
+      "in": 9.3,
+      "out": 13.8,
+      "focusEnd": 13.8,
+      "element": "order"
+    },
+    {
+      "key": "c2a",
+      "in": 14.3,
+      "out": 17.0,
+      "focusEnd": 20.6,
+      "element": "driver"
+    },
+    {
+      "key": "c2b",
+      "in": 17.0,
+      "out": 20.8,
+      "focusEnd": 20.6,
+      "element": "driver"
+    },
+    {
+      "key": "c3",
+      "in": 21.2,
+      "out": 25.4,
+      "focusEnd": 25.4,
+      "element": "rings"
+    },
+    {
+      "key": "c4",
+      "in": 25.9,
+      "out": 30.5,
+      "focusEnd": 30.5,
+      "element": "stock"
+    },
+    {
+      "key": "end",
+      "in": 33.6,
+      "out": 40.0,
+      "focusEnd": 40.0,
+      "element": "end"
+    }
+  ],
+  "line": {
+    "born": 9.0,
+    "waypoints": {
+      "orderIn": 10.2,
+      "orderOut": 13.6,
+      "driverIn": 15.0,
+      "chipIn": 17.0,
+      "chipOut": 19.0,
+      "driverOut": 20.6,
+      "ring1": 21.8,
+      "ring2": 22.6,
+      "ring3": 23.4,
+      "cylinder": 26.0,
+      "end": 34.0
+    }
+  },
+  "status": {
+    "toOnTheWay": 17.0,
+    "toDelivered": 19.0
+  },
+  "endCard": {
+    "logoIn": 34.6,
+    "ctaIn": 35.4
+  },
+  "camera": [
+    {
+      "t": 0.0,
+      "at": "opening",
+      "zoom": 1.0
+    },
+    {
+      "t": 9.0,
+      "at": "opening",
+      "zoom": 1.0
+    },
+    {
+      "t": 10.6,
+      "at": "order",
+      "zoom": 1.2
+    },
+    {
+      "t": 13.8,
+      "at": "order",
+      "zoom": 1.26
+    },
+    {
+      "t": 15.2,
+      "at": "driver",
+      "zoom": 1.0
+    },
+    {
+      "t": 16.6,
+      "at": "chip",
+      "zoom": 1.04
+    },
+    {
+      "t": 20.6,
+      "at": "chip",
+      "zoom": 1.059
+    },
+    {
+      "t": 21.8,
+      "at": "rings",
+      "zoom": 1.55
+    },
+    {
+      "t": 25.4,
+      "at": "rings",
+      "zoom": 1.612
+    },
+    {
+      "t": 26.6,
+      "at": "stock",
+      "zoom": 1.0
+    },
+    {
+      "t": 30.5,
+      "at": "stock",
+      "zoom": 1.04
+    },
+    {
+      "t": 32.4,
+      "at": "overview",
+      "zoom": 0.255
+    },
+    {
+      "t": 33.0,
+      "at": "overview",
+      "zoom": 0.26
+    },
+    {
+      "t": 34.6,
+      "at": "end",
+      "zoom": 1.0
+    },
+    {
+      "t": 40.0,
+      "at": "end",
+      "zoom": 1.03
+    }
+  ],
+  "data": {
+    "_source": "Demo day captured from the app (promo/capture/capture3.mjs): Samer loaded 10 small + 3 large, Rami 6 small.",
+    "rings": [
+      {
+        "left": 8,
+        "of": 10,
+        "who": "samer",
+        "type": "small"
+      },
+      {
+        "left": 3,
+        "of": 3,
+        "who": "samer",
+        "type": "large"
+      },
+      {
+        "left": 5,
+        "of": 6,
+        "who": "rami",
+        "type": "small"
+      }
+    ],
+    "stock": {
+      "full": {
+        "small": 13,
+        "large": 3
+      },
+      "empty": {
+        "small": 3
+      }
+    }
+  },
+  "cuts": {
+    "main": {
+      "duration": 40.0,
+      "segments": [
+        [
+          0.0,
+          40.0
+        ]
+      ]
+    },
+    "vert15": {
+      "duration": 15.0,
+      "segments": [
+        [
+          6.4,
+          9.0
+        ],
+        [
+          14.0,
+          21.0
+        ],
+        [
+          33.0,
+          38.4
+        ]
+      ]
+    },
+    "bump6": {
+      "duration": 6.0,
+      "segments": [
+        [
+          16.6,
+          20.6
+        ],
+        [
+          35.0,
+          37.0
+        ]
+      ]
+    }
+  },
+  "text": {
+    "he": {
+      "o1": "הלקוחות שלך.",
+      "o2": "הנהגים שלך.",
+      "o3": "הסדר שלך.",
+      "o4": "עכשיו זורם לבד.",
+      "peak": "ומפנה לך זמן.",
+      "c1": "גזפלו משתלב בדרך שבה אתה כבר עובד.",
+      "c2a": "כל הזמנה מגיעה לנהג הנכון.",
+      "c2b": "והסטטוס מתעדכן לבד.",
+      "c3": "מה יצא ומה נשאר — מול העיניים.",
+      "c4": "מלאים וריקים — תמיד מדויקים.",
+      "end": "העסק רץ. <g>אתה מוביל.</g>",
+      "_endPending": "ממתין לאישור רביע",
+      "word": "גזפלו",
+      "cta": "תנסה בעצמך · הקישור בהודעה",
+      "ringWho": {
+        "samer": "סאמר",
+        "rami": "ראמי"
+      },
+      "ringType": {
+        "small": "בלונים קטנים",
+        "large": "בלונים גדולים"
+      }
+    },
+    "ar": {
+      "o1": "زباينك.",
+      "o2": "سوّاقينك.",
+      "o3": "ترتيبك.",
+      "o4": "اسا بمشي لحالو.",
+      "peak": "وبفضّيلك وقت.",
+      "c1": "غازفلو بِركب عَ شغلك متل ما هو.",
+      "c2a": "كل طلبية بتوصل للسوّاق الصح.",
+      "c2b": "والحالة بتتغيّر لحالها.",
+      "c3": "شو طلع وشو ضالل — قدّام عينك.",
+      "c4": "الملان والفاضي — دايماً مزبوط.",
+      "end": "أقل انشغال. <g>وقت اكثر للمصلحة.</g>",
+      "_endPending": "ממתין להחלטה; חלופה: «المصلحة ماشية. وإنت بتقود.»",
+      "word": "غازفلو",
+      "cta": "جرّبها بنفسك · الرابط بالرسالة",
+      "ringWho": {
+        "samer": "سامر",
+        "rami": "رامي"
+      },
+      "ringType": {
+        "small": "جرار صغيرة",
+        "large": "جرار كبيرة"
+      }
+    }
+  },
+  "ui": {
+    "_note": "Strings inside the UI components. Hebrew = the app's office/driver labels. Arabic = the app's own Arabic (src/lib/ops/i18n.ts, cylinder name_ar). The office stock card has no Arabic in the app, so it stays Hebrew in both versions.",
+    "he": {
+      "orderLabel": "הזמנה חדשה",
+      "customer": "סלים חדאד",
+      "zone": "צפון",
+      "ordered": "הוזמן 08:02",
+      "items": [
+        {
+          "n": 2,
+          "label": "קטנים",
+          "kg": "12 ק\"ג"
+        }
+      ],
+      "orderStatus": "התקבלה",
+      "driverDay": "היום שלי",
+      "driver": "סאמר",
+      "address": "רחוב הזיתים 14",
+      "navigate": "ניווט",
+      "call": "התקשר",
+      "status": [
+        "שובצה לנהג",
+        "בדרך",
+        "סופקה"
+      ]
+    },
+    "ar": {
+      "orderLabel": "طلبية جديدة",
+      "customer": "سليم حداد",
+      "zone": "الشمال",
+      "ordered": "08:02",
+      "items": [
+        {
+          "n": 2,
+          "label": "جرة 12 كغ",
+          "kg": ""
+        }
+      ],
+      "orderStatus": "تم الاستلام",
+      "driverDay": "يومي",
+      "driver": "سامر",
+      "address": "شارع الزيتون 14",
+      "navigate": "ملاحة",
+      "call": "اتصل",
+      "status": [
+        "في الدور لليوم",
+        "السائق في الطريق",
+        "تم التوصيل"
+      ]
+    },
+    "stockHe": {
+      "title": "מלאי בחוץ",
+      "full": "מלאים",
+      "empty": "ריקים",
+      "small": "קטנים",
+      "large": "גדולים",
+      "smallKg": "12 ק\"ג",
+      "largeKg": "48 ק\"ג"
+    }
+  }
+}

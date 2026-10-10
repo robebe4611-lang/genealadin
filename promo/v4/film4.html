@@ -1,0 +1,364 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>GazFlow v4 — the line</title>
+<style>
+  @font-face { font-family: "Heebo"; font-weight: 500; src: url(../film/node_modules/@fontsource/heebo/files/heebo-hebrew-500-normal.woff2) format("woff2"); unicode-range: U+0590-05FF; }
+  @font-face { font-family: "Heebo"; font-weight: 700; src: url(../film/node_modules/@fontsource/heebo/files/heebo-hebrew-700-normal.woff2) format("woff2"); unicode-range: U+0590-05FF; }
+  @font-face { font-family: "Heebo"; font-weight: 800; src: url(../film/node_modules/@fontsource/heebo/files/heebo-hebrew-800-normal.woff2) format("woff2"); unicode-range: U+0590-05FF; }
+  @font-face { font-family: "Heebo"; font-weight: 500; src: url(../film/node_modules/@fontsource/heebo/files/heebo-latin-500-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Heebo"; font-weight: 800; src: url(../film/node_modules/@fontsource/heebo/files/heebo-latin-800-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Plex Arabic"; font-weight: 500; src: url(../film/node_modules/@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-500-normal.woff2) format("woff2"); unicode-range: U+0600-06FF, U+0750-077F, U+FB50-FDFF, U+FE70-FEFF; }
+  @font-face { font-family: "Plex Arabic"; font-weight: 700; src: url(../film/node_modules/@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-700-normal.woff2) format("woff2"); unicode-range: U+0600-06FF, U+0750-077F, U+FB50-FDFF, U+FE70-FEFF; }
+  /* the app's own font, for the UI components */
+  @font-face { font-family: "Rubik"; font-weight: 500; src: url(../film/node_modules/@fontsource/rubik/files/rubik-hebrew-500-normal.woff2) format("woff2"); unicode-range: U+0590-05FF; }
+  @font-face { font-family: "Rubik"; font-weight: 700; src: url(../film/node_modules/@fontsource/rubik/files/rubik-hebrew-700-normal.woff2) format("woff2"); unicode-range: U+0590-05FF; }
+  @font-face { font-family: "Rubik"; font-weight: 800; src: url(../film/node_modules/@fontsource/rubik/files/rubik-hebrew-800-normal.woff2) format("woff2"); unicode-range: U+0590-05FF; }
+  @font-face { font-family: "Rubik"; font-weight: 500; src: url(../film/node_modules/@fontsource/rubik/files/rubik-arabic-500-normal.woff2) format("woff2"); unicode-range: U+0600-06FF, U+0750-077F, U+FB50-FDFF, U+FE70-FEFF; }
+  @font-face { font-family: "Rubik"; font-weight: 700; src: url(../film/node_modules/@fontsource/rubik/files/rubik-arabic-700-normal.woff2) format("woff2"); unicode-range: U+0600-06FF, U+0750-077F, U+FB50-FDFF, U+FE70-FEFF; }
+  @font-face { font-family: "Rubik"; font-weight: 500; src: url(../film/node_modules/@fontsource/rubik/files/rubik-latin-500-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Rubik"; font-weight: 800; src: url(../film/node_modules/@fontsource/rubik/files/rubik-latin-800-normal.woff2) format("woff2"); }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { overflow: hidden; }
+  #stage { position: relative; overflow: hidden; direction: rtl; font-family: "Heebo", "Plex Arabic", sans-serif; }
+  #stage.ar { font-family: "Plex Arabic", "Heebo", sans-serif; }
+  .vignette { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(70% 70% at 50% 50%, rgba(16,185,129,.07) 0%, rgba(0,0,0,0) 60%), radial-gradient(120% 90% at 50% 50%, rgba(0,0,0,0) 60%, rgba(0,0,0,.45) 100%); }
+  #world { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+  .w { position: absolute; }
+  .cap { position: absolute; text-align: center; font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; z-index: 10; }
+
+  /* UI components — 1:1 with the app's cards, at focus scale */
+  .ui { font-family: "Rubik", sans-serif; background: #fff; color: var(--ink); border-radius: 44px; box-shadow: 0 50px 120px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.06); }
+  .chip { display: inline-flex; align-items: baseline; gap: 12px; padding: 10px 24px; border-radius: 22px; background: #e1f2e7; color: #006b31; font-weight: 700; white-space: nowrap; }
+  .chip b { font-weight: 800; }
+  .chip small { font-weight: 500; opacity: .75; }
+  .pill { display: inline-flex; align-items: center; gap: 12px; padding: 14px 34px; border-radius: 999px; font-weight: 700; white-space: nowrap; }
+  .btn { display: flex; align-items: center; justify-content: center; border-radius: 26px; font-weight: 700; color: #00843d; background: #fff; box-shadow: inset 0 0 0 4px #00843d; }
+  .muted { color: var(--soft); }
+  .box { border-radius: 30px; padding: 26px 30px; }
+  .lbl { font-weight: 700; }
+
+  .ring .num { position: absolute; left: 0; right: 0; text-align: center; font-family: "Heebo", sans-serif; font-weight: 800; direction: ltr; }
+  .ringlbl { position: absolute; text-align: center; font-weight: 700; }
+  .ringlbl small { display: block; font-weight: 500; opacity: .6; }
+  .word { position: absolute; text-align: center; font-weight: 800; letter-spacing: -0.02em; white-space: nowrap; }
+  .cta { position: absolute; padding: 26px 64px; border-radius: 999px; font-weight: 800; white-space: nowrap; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="world">
+    <svg id="lineSvg" class="w" style="left:0;top:0;overflow:visible" width="1" height="1">
+      <defs><filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+      <path id="trail" fill="none" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+      <path id="tip" fill="none" stroke-linecap="round" vector-effect="non-scaling-stroke" filter="url(#glow)"/>
+      <circle id="head" r="9" filter="url(#glow)"/>
+    </svg>
+    <div class="w" id="openBlock"></div>
+    <div class="w ui" id="order"></div>
+    <div class="w ui" id="driver"></div>
+    <div class="w" id="rings"></div>
+    <div class="w" id="cyl"></div>
+    <div class="w ui" id="stock"></div>
+    <div class="w" id="endBlock"></div>
+  </div>
+  <div class="vignette"></div>
+  <div class="cap" id="cap"></div>
+</div>
+
+<script>
+(async function () {
+  const Q = new URLSearchParams(location.search);
+  const LANG = Q.get("lang") === "ar" ? "ar" : "he";
+  const V = Q.get("fmt") === "v";
+  const CUT = Q.get("cut") || "main";
+  const W = V ? 1080 : 1920, H = V ? 1920 : 1080;
+  const C = await (await fetch("config.json")).json();
+  const TX = C.text[LANG], UI = C.ui[LANG], SH = C.ui.stockHe, COL = C.colors;
+  const cut = C.cuts[CUT];
+
+  const stage = document.getElementById("stage");
+  stage.style.width = W + "px"; stage.style.height = H + "px"; stage.style.background = COL.bg; stage.style.color = COL.white;
+  stage.style.setProperty("--ink", COL.ink); stage.style.setProperty("--soft", COL.soft);
+  if (LANG === "ar") stage.classList.add("ar");
+  const $ = (id) => document.getElementById(id);
+  const g = (s) => s.replace(/<g>(.*?)<\/g>/g, `<span style="color:${COL.emerald}">$1</span>`);
+
+  // ---------- pure motion ----------
+  const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+  const p01 = (t, a, d) => clamp((t - a) / d);
+  const ease = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+  const easeOut = (x) => 1 - Math.pow(1 - x, 3);
+  const spring = (x) => (x <= 0 ? 0 : x >= 1.6 ? 1 : 1 - Math.exp(-6.5 * x) * Math.cos(9 * x));
+  const box = (el, x, y, w, h) => { el.style.left = x + "px"; el.style.top = y + "px"; if (w != null) el.style.width = w + "px"; if (h != null) el.style.height = h + "px"; };
+  const words = (s) => s.replace(/<[^>]+>/g, "").split(/\s+/).filter((w) => w && w !== "—").length;
+
+  // ---------- world layout (design = focus scale, right → left) ----------
+  const P = {
+    opening: [6500, 540], order: [4950, 540], driver: [3450, 560], chip: [3450, 790],
+    rings: [2000, 540], stock: [720, 540], overview: [2900, 560], end: [-700, 560],
+  };
+  // opening + peak
+  const ob = $("openBlock"); box(ob, P.opening[0] - 900, 0, 1800, 1080);
+  ob.innerHTML = C.opening.map((o, i) => `<div class="w op" id="op${i}" style="left:0;right:0;text-align:center;font-weight:800;font-size:96px;top:${300 + i * 125}px">${TX[o.key]}</div>`).join("") +
+    `<div class="w" id="peak" style="left:0;right:0;text-align:center;font-weight:800;font-size:150px;top:450px;color:${COL.emerald};text-shadow:0 0 70px rgba(16,185,129,.5)"><span id="peakSpan">${TX.peak}</span></div>`;
+
+  // order card (office "all orders" row, enlarged)
+  const OW = 900, OH = 470, ord = $("order");
+  box(ord, P.order[0] - OW / 2, P.order[1] - OH / 2, OW, OH);
+  const chipsHtml = UI.items.map((it) => `<span class="chip" style="font-size:42px"><b style="font-size:58px">${it.n}</b>${it.label}${it.kg ? `<small style="font-size:30px">${it.kg}</small>` : ""}</span>`).join("");
+  ord.innerHTML = `<div style="padding:60px 66px;display:flex;flex-direction:column;gap:26px;height:100%">
+      <div style="display:flex;justify-content:space-between;align-items:center"><div style="font-size:76px;font-weight:800">${UI.customer}</div>
+      <span class="pill" style="font-size:40px;background:#e2eef7;color:#1d5f8a">${UI.orderStatus}</span></div>
+      <div>${chipsHtml}</div>
+      <div class="muted" style="font-size:40px">${UI.ordered} · ${UI.zone}</div></div>`;
+
+  // driver card (driver app stop card) with the status pill sitting on its bottom edge
+  const DW = 820, DH = 640, drv = $("driver");
+  box(drv, P.driver[0] - DW / 2, P.driver[1] - DH / 2 - 60, DW, DH);
+  drv.innerHTML = `<div style="padding:46px 56px">
+      <div class="muted" style="font-size:34px">${UI.driverDay} · <b style="color:var(--ink)">${UI.driver}</b></div>
+      <div style="font-size:72px;font-weight:800;margin-top:22px">${UI.address}</div>
+      <div class="muted" style="font-size:38px;margin:12px 0 22px">${UI.customer} · ${UI.zone}</div>
+      <div>${chipsHtml}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:34px">
+        <div class="btn" style="height:96px;font-size:38px">${UI.navigate}</div><div class="btn" style="height:96px;font-size:38px">${UI.call}</div></div></div>
+    <div id="pill" class="pill" style="position:absolute;left:50%;bottom:-46px;font-size:46px;height:92px;padding:0 54px;box-shadow:0 18px 40px rgba(0,0,0,.35)"><span id="pillTxt"></span></div>`;
+  const chipY = P.driver[1] - DH / 2 - 60 + DH;           // the card's bottom edge = the line's track
+  P.chip = [P.driver[0], P.driver[1] - 20];
+
+  // rings: real truck numbers (left on truck / loaded)
+  const RD = 300, ringX = [P.rings[0] + 380, P.rings[0], P.rings[0] - 380], ringY = P.rings[1] - 40;
+  const rC = 2 * Math.PI * 128;
+  $("rings").innerHTML = C.data.rings.map((r, i) => `
+    <div class="w ring" style="left:${ringX[i] - RD / 2}px;top:${ringY - RD / 2}px;width:${RD}px;height:${RD}px">
+      <svg viewBox="-150 -150 300 300" width="${RD}" height="${RD}"><circle r="146" fill="${COL.bg}"/><circle r="128" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="24"/>
+      <circle class="arc" r="128" fill="none" stroke="${COL.emerald}" stroke-width="24" stroke-linecap="round" transform="rotate(-90)" stroke-dasharray="${rC}" stroke-dashoffset="${rC}"/></svg>
+      <div class="num" style="top:${RD / 2 - 52}px;font-size:92px"></div></div>
+    <div class="w ringlbl" style="left:${ringX[i] - 200}px;width:400px;top:${ringY + RD / 2 + 26}px;font-size:46px">${TX.ringWho[r.who]}<small style="font-size:34px">${TX.ringType[r.type]}</small></div>`).join("");
+
+  // the cylinder (designed) + the office stock card (Hebrew: the office has no Arabic in the app)
+  const CY = { x: P.stock[0] + 380, top: P.stock[1] - 330, w: 260, h: 660 };
+  $("cyl").innerHTML = `<svg viewBox="0 0 260 660" width="260" height="660" style="overflow:visible">
+      <defs><clipPath id="body"><path d="M40 170 Q40 120 130 110 Q220 120 220 170 L220 600 Q220 630 190 630 L70 630 Q40 630 40 600 Z"/></clipPath>
+      <linearGradient id="liq" x1="0" x2="1"><stop offset="0" stop-color="#0E9F6E"/><stop offset=".5" stop-color="#34D399"/><stop offset="1" stop-color="#0E9F6E"/></linearGradient></defs>
+      <rect x="104" y="40" width="52" height="56" rx="10" fill="none" stroke="#F5F7F8" stroke-width="6"/>
+      <path d="M86 40 Q130 0 174 40" fill="none" stroke="#F5F7F8" stroke-width="6" stroke-linecap="round"/>
+      <rect id="liquid" x="40" y="630" width="180" height="520" fill="url(#liq)" clip-path="url(#body)"/>
+      <path d="M40 170 Q40 120 130 110 Q220 120 220 170 L220 600 Q220 630 190 630 L70 630 Q40 630 40 600 Z" fill="none" stroke="#F5F7F8" stroke-width="6"/>
+      <rect x="60" y="630" width="140" height="22" rx="6" fill="none" stroke="#F5F7F8" stroke-width="6"/>
+      <path d="M70 200 L70 560" stroke="rgba(255,255,255,.35)" stroke-width="10" stroke-linecap="round"/></svg>`;
+  box($("cyl"), CY.x - CY.w / 2, CY.top, CY.w, CY.h);
+  const SW = 860, st = $("stock");
+  box(st, P.stock[0] - 400 - SW / 2 + 60, P.stock[1] - 230, SW);
+  const sChip = (n, l, kg, bg, fg) => `<span class="chip" style="font-size:40px;background:${bg};color:${fg}"><b style="font-size:58px">${n}</b>${l}<small style="font-size:28px">${kg}</small></span>`;
+  st.innerHTML = `<div style="padding:44px 50px;direction:rtl;font-family:Rubik">
+      <div style="font-size:48px;font-weight:800;margin-bottom:26px">${SH.title}</div>
+      <div style="display:grid;grid-template-columns:1.25fr 1fr;gap:22px">
+        <div class="box" style="background:#e1f2e7"><div class="lbl" style="font-size:38px;color:#006b31;margin-bottom:16px">${SH.full}</div>
+          <div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start">${sChip(C.data.stock.full.small, SH.small, SH.smallKg, "#fff", "#006b31")}${sChip(C.data.stock.full.large, SH.large, SH.largeKg, "#f6eedb", "#7a5a12")}</div></div>
+        <div class="box" style="background:#eef0ef"><div class="lbl" style="font-size:38px;color:#536a5c;margin-bottom:16px">${SH.empty}</div>
+          ${sChip(C.data.stock.empty.small, SH.small, SH.smallKg, "#fff", "#536a5c")}</div></div></div>`;
+
+  // end card
+  const eb = $("endBlock"); box(eb, P.end[0] - 950, P.end[1] - 540, 1900, 1080);
+  eb.innerHTML = `<div class="w" id="endLine" style="left:0;right:0;text-align:center;font-weight:800;font-size:${V ? 92 : 104}px;top:250px;line-height:1.15">${g(TX.end)}</div>
+    <div class="w word" id="word" style="left:0;right:0;font-size:150px;top:470px"><span id="dot" style="display:inline-block;width:56px;height:56px;border-radius:50%;background:${COL.emerald};margin-inline-end:24px;vertical-align:8px;box-shadow:0 0 50px ${COL.emerald}"></span><span id="wordTxt">${TX.word}</span></div>
+    <div class="cta" id="cta" style="left:50%;top:740px;font-size:${V ? 46 : 48}px;background:${COL.emerald};color:#04120B;box-shadow:0 0 60px rgba(16,185,129,.5)">${TX.cta}</div>`;
+
+  $("pillTxt").textContent = UI.status[0];
+  await document.fonts.ready;
+  await Promise.all(["800 96px Heebo", "700 64px Heebo", "800 96px 'Plex Arabic'", "700 64px 'Plex Arabic'", "800 60px Rubik", "700 40px Rubik", "500 30px Rubik"].map((f) => document.fonts.load(f, LANG === "ar" ? "عربي" : "עברית")));
+
+  // ---------- the line: one path through every element, right → left ----------
+  const wr = $("world").getBoundingClientRect();
+  const rectW = (el) => { const r = el.getBoundingClientRect(); return { l: r.left - wr.left, r: r.right - wr.left, t: r.top - wr.top, b: r.bottom - wr.top, cx: (r.left + r.right) / 2 - wr.left, cy: (r.top + r.bottom) / 2 - wr.top }; };
+  const peakR = rectW($("peakSpan")), ordR = rectW(ord), drvR = rectW(drv), pillR = rectW($("pill"));
+  const dotR = rectW($("dot"));
+  const oy = ordR.b, dy = chipY;
+  const S = [peakR.l - 24, peakR.b - 40];
+  const segs = [
+    ["start", `M ${S[0]} ${S[1]}`],
+    ["orderIn", `C ${S[0] - 260} ${S[1] + 40} ${ordR.r + 220} ${oy} ${ordR.r - 40} ${oy}`],
+    ["orderOut", `L ${ordR.l + 40} ${oy}`],
+    ["driverIn", `C ${ordR.l - 240} ${oy} ${drvR.r + 220} ${dy} ${drvR.r - 40} ${dy}`],
+    ["chipIn", `L ${pillR.r} ${dy}`],
+    ["chipOut", `L ${pillR.l} ${dy}`],
+    ["driverOut", `L ${drvR.l + 40} ${dy}`],
+    ["ring1", `C ${drvR.l - 260} ${dy} ${ringX[0] + 320} ${ringY} ${ringX[0]} ${ringY}`],
+    ["ring2", `L ${ringX[1]} ${ringY}`],
+    ["ring3", `L ${ringX[2]} ${ringY}`],
+    ["cylinder", `C ${ringX[2] - 260} ${ringY} ${CY.x + 40} ${CY.top - 120} ${CY.x} ${CY.top + 70}`],
+    ["cylBottom", `L ${CY.x} ${CY.top + CY.h - 40}`],
+    ["end", `C ${CY.x} ${CY.top + CY.h + 300} ${dotR.cx + 1500} ${dotR.cy} ${dotR.cx + 30} ${dotR.cy}`],
+  ];
+  const d = segs.map((s) => s[1]).join(" ");
+  const tmp = document.createElementNS("http://www.w3.org/2000/svg", "path"); $("lineSvg").appendChild(tmp);
+  const LEN = {}; let acc = "";
+  segs.forEach(([k, s]) => { acc += " " + s; tmp.setAttribute("d", acc); LEN[k] = tmp.getTotalLength(); });
+  tmp.remove();
+  const TOTAL = LEN.end;
+  ["trail", "tip"].forEach((id) => $(id).setAttribute("d", d));
+  $("trail").setAttribute("stroke", COL.emerald); $("trail").setAttribute("stroke-width", 3.5); $("trail").setAttribute("stroke-opacity", .55);
+  $("tip").setAttribute("stroke", "#6EE7B7"); $("tip").setAttribute("stroke-width", 4);
+  $("head").setAttribute("fill", "#D1FAE5");
+  // head position over time: piecewise between waypoints (eased inside each leg)
+  const WP = C.line.waypoints;
+  const legs = [["start", C.line.born], ["orderIn", WP.orderIn], ["orderOut", WP.orderOut], ["driverIn", WP.driverIn], ["chipIn", WP.chipIn], ["chipOut", WP.chipOut],
+    ["driverOut", WP.driverOut], ["ring1", WP.ring1], ["ring2", WP.ring2], ["ring3", WP.ring3], ["cylinder", WP.cylinder], ["cylBottom", WP.cylinder + 1.2], ["end", WP.end]];
+  LEN.start = 0;
+  function headLen(t) {
+    if (t <= legs[0][1]) return 0;
+    for (let i = 1; i < legs.length; i++) {
+      const [k, tt] = legs[i], [pk, pt] = legs[i - 1];
+      if (t <= tt) { const x = (t - pt) / (tt - pt); return LEN[pk] + (LEN[k] - LEN[pk]) * ease(x); }
+    }
+    return TOTAL;
+  }
+  const PL = $("trail");
+
+  // ---------- camera ----------
+  const zf = V ? 0.95 : 1;
+  const camAt = (k) => (k === "chip" ? P.chip : P[k]);
+  function camera(t) {
+    const K = C.camera;
+    let i = K.findIndex((k) => k.t > t); if (i === -1) i = K.length;
+    const a = K[Math.max(0, i - 1)], b = K[Math.min(K.length - 1, i)];
+    const x = a === b ? 0 : ease(clamp((t - a.t) / (b.t - a.t)));
+    const A = camAt(a.at), B = camAt(b.at);
+    const z = Math.exp(Math.log(a.zoom) + (Math.log(b.zoom) - Math.log(a.zoom)) * x) * zf;
+    return [A[0] + (B[0] - A[0]) * x, A[1] + (B[1] - A[1]) * x, z];
+  }
+
+  // focus: one element at full strength, the rest at 25 % with a light blur (or not yet there)
+  const FOCUS = { order: [9.6, 13.8], driver: [14.4, 20.8], rings: [21.0, 25.4], stock: [25.7, 30.5] };
+  const APPEAR = { order: 9.6, driver: 14.2, rings: 20.8, cyl: 25.4, stock: 26.3 };
+  function focusStyle(el, t, key, appear) {
+    const [a, b] = FOCUS[key];
+    const inF = t >= a - 0.35 && t <= b;
+    const over = t >= 30.5 && t < 33.4;
+    let o = t < appear ? 0 : inF ? 1 : 0.25;
+    if (t >= appear && t < appear + 0.4) o = Math.min(o, (t - appear) / 0.4);
+    if (over) o = 0.42;
+    if (t >= 33.4) o = 0.42 * (1 - p01(t, 33.4, 0.5));
+    el.style.opacity = o;
+    el.style.filter = o < 0.9 ? `blur(${o < 0.3 ? 3 : 1.5}px)` : "none";
+    const k = spring(p01(t, appear, 1.4) * 1.6);
+    return k;
+  }
+
+  // ---------- timing check: required = words/3 + 0.5; element holds 1.5 s after reading ----------
+  const report = C.captions.map((c) => {
+    const req = words(TX[c.key]) / 3 + 0.5, act = c.out - c.in, hold = c.focusEnd - (c.in + req);
+    return { key: c.key, words: words(TX[c.key]), required: +req.toFixed(2), actual: +act.toFixed(2), holdAfter: +hold.toFixed(2), ok: act >= req && hold >= 1.5 - 1e-9 };
+  });
+  C.opening.forEach((o, i) => { const req = words(TX[o.key]) / 3 + 0.5, act = o.brightUntil - o.in; report.push({ key: o.key, words: words(TX[o.key]), required: +req.toFixed(2), actual: +act.toFixed(2), holdAfter: null, ok: act >= req }); });
+  { const req = words(TX.peak) / 3 + 0.5, act = C.peak.out - C.peak.in; report.push({ key: "peak", words: words(TX.peak), required: +req.toFixed(2), actual: +act.toFixed(2), holdAfter: null, ok: act >= req }); }
+  window.timingReport = report;
+
+  // ---------- cut: output time → master time, soft 0.35 s dip at joins ----------
+  function master(t) {
+    let acc2 = 0;
+    for (let i = 0; i < cut.segments.length; i++) {
+      const [a, b] = cut.segments[i], len = b - a;
+      if (t < acc2 + len || i === cut.segments.length - 1) {
+        const local = t - acc2, mt = a + local;
+        let dip = 1;
+        if (i > 0 && local < 0.18) dip = 0.55 + 0.45 * (local / 0.18);
+        if (i < cut.segments.length - 1 && len - local < 0.18) dip = 0.55 + 0.45 * ((len - local) / 0.18);
+        return [mt, dip];
+      }
+      acc2 += len;
+    }
+  }
+
+  // ---------- render ----------
+  window.renderAt = function (tOut) {
+    const [t, dip] = master(tOut);
+    const [cx, cy, z] = camera(t);
+    const drift = 6 * Math.sin(t * 0.5);
+    $("world").style.transform = `translate(${W / 2 - cx * z}px, ${H / 2 - cy * z + drift}px) scale(${z})`;
+    $("world").style.opacity = dip;
+
+    // opening: lines stack, the previous dims; the peak in emerald
+    C.opening.forEach((o, i) => {
+      const el = $("op" + i), k = easeOut(p01(t, o.in, 0.4));
+      const bright = t < o.brightUntil;
+      let op = t < o.in ? 0 : bright ? k : 0.3;
+      if (t >= C.peak.in) op *= 1 - p01(t, C.peak.in, 0.35);
+      el.style.opacity = op; el.style.transform = `translateY(${(1 - k) * 30}px)`;
+    });
+    const pk = $("peak"), kp = spring(p01(t, C.peak.in, 1.2) * 1.6);
+    let po = t < C.peak.in ? 0 : clamp((t - C.peak.in) / 0.35);
+    if (t > 9.6) po = Math.max(0.25, 1 - p01(t, 9.6, 0.6) * 0.75);
+    if (t >= 30.5 && t < 33.4) po = 0.42; if (t >= 33.4) po = 0.42 * (1 - p01(t, 33.4, 0.5));
+    pk.style.opacity = po; pk.style.transform = `scale(${0.92 + 0.08 * kp})`;
+
+    // the line
+    const hl = headLen(t);
+    PL.setAttribute("stroke-dasharray", `${hl} ${TOTAL + 10}`);
+    const tipLen = Math.min(hl, 520);
+    $("tip").setAttribute("stroke-dasharray", `0 ${hl - tipLen} ${tipLen} ${TOTAL + 10}`);
+    const hp = PL.getPointAtLength(Math.max(0.01, hl));
+    $("head").setAttribute("cx", hp.x); $("head").setAttribute("cy", hp.y);
+    $("head").style.opacity = t >= C.line.born && t < WP.end + 0.05 ? 1 : 0;
+    $("lineSvg").style.opacity = t < C.line.born ? 0 : 1;
+
+    // order card
+    { const k = focusStyle(ord, t, "order", APPEAR.order); ord.style.transform = `translateY(${(1 - k) * 50}px) scale(${0.94 + 0.06 * k})`; }
+    // driver card + the status pill (the key moment)
+    { const k = focusStyle(drv, t, "driver", APPEAR.driver); drv.style.transform = `translateY(${(1 - k) * 50}px) scale(${0.94 + 0.06 * k})`;
+      const s = t < C.status.toOnTheWay ? 0 : t < C.status.toDelivered ? 1 : 2;
+      const sw = s === 0 ? null : s === 1 ? C.status.toOnTheWay : C.status.toDelivered;
+      $("pillTxt").textContent = UI.status[s];
+      const pill = $("pill");
+      const colors = [["#efebe4", "#11291c"], ["#e1f2e7", "#00843d"], ["#00843d", "#ffffff"]];
+      pill.style.background = colors[s][0]; pill.style.color = colors[s][1];
+      let ps = 1; if (sw != null) { const x = p01(t, sw, 0.5); ps = 1 + 0.06 * Math.sin(Math.PI * x); }
+      const fade = sw != null ? 0.6 + 0.4 * easeOut(p01(t, sw, 0.3)) : 1;
+      pill.style.transform = `translateX(-50%) scale(${ps})`; $("pillTxt").style.opacity = fade;
+      pill.style.boxShadow = s === 2 ? "0 0 0 6px rgba(16,185,129,.35), 0 18px 40px rgba(0,0,0,.35)" : "0 18px 40px rgba(0,0,0,.35)";
+    }
+    // rings fill as the head passes through
+    { const el = $("rings"); focusStyle(el, t, "rings", APPEAR.rings);
+      el.querySelectorAll(".ring").forEach((r, i) => {
+        const tt = [WP.ring1, WP.ring2, WP.ring3][i], k = easeOut(p01(t, tt - 0.35, 1.1)), R = C.data.rings[i];
+        r.querySelector(".arc").setAttribute("stroke-dashoffset", rC * (1 - (R.left / R.of) * k));
+        r.querySelector(".num").textContent = `${Math.round(R.left * k)}/${R.of}`;
+      }); }
+    // cylinder fills, stock card arrives
+    { const el = $("cyl"); focusStyle(el, t, "stock", APPEAR.cyl);
+      const lv = easeOut(p01(t, WP.cylinder, 2.2)) * 0.82;
+      const liq = el.querySelector("#liquid"); liq.setAttribute("y", 630 - 520 * lv);
+      const k = focusStyle(st, t, "stock", APPEAR.stock); st.style.transform = `translateY(${(1 - k) * 50}px)`; }
+
+    // end card
+    { const el = $("endLine"), kl = easeOut(p01(t, 33.6, 0.5));
+      el.style.opacity = t < 33.6 ? 0 : kl; el.style.transform = `translateY(${(1 - kl) * 36}px)`;
+      const wd = $("wordTxt"), kw = easeOut(p01(t, C.endCard.logoIn, 0.5));
+      wd.style.opacity = t < C.endCard.logoIn ? 0 : kw;
+      const dot = $("dot"); dot.style.opacity = t >= WP.end - 0.1 ? 1 : 0;
+      dot.style.transform = `scale(${t >= WP.end ? 1 + 0.18 * Math.sin(Math.PI * p01(t, WP.end, 0.5)) : 1})`;
+      const ct = $("cta"), kc = spring(p01(t, C.endCard.ctaIn, 1.2) * 1.6);
+      ct.style.opacity = t < C.endCard.ctaIn ? 0 : clamp((t - C.endCard.ctaIn) / 0.3); ct.style.transform = `translateX(-50%) scale(${0.9 + 0.1 * kc})`; }
+
+    // caption (screen space, top)
+    const cap = $("cap");
+    const c = C.captions.find((x) => x.key !== "end" && t >= x.in && t < x.out);
+    if (c) {
+      cap.innerHTML = g(TX[c.key]); cap.style.fontSize = (V ? 64 : 62) + "px";
+      cap.style.left = (V ? 60 : 160) + "px"; cap.style.right = (V ? 60 : 160) + "px"; cap.style.top = (V ? 230 : 64) + "px";
+      const k = easeOut(p01(t, c.in, 0.4)), out = 1 - p01(t, c.out - 0.35, 0.35);
+      cap.style.opacity = k * out; cap.style.transform = `translateY(${(1 - k) * 24}px)`;
+    } else cap.style.opacity = 0;
+  };
+
+  window.DURATION = cut.duration;
+  renderAt(Number(Q.get("t") || 0));
+  window.ready = true;
+})();
+</script>
+</body>
+</html>

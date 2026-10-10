@@ -15,7 +15,7 @@ cut = diff spike >18 and >3x local median, librosa beat_track) and replace this 
 | Tempo | 120–136 BPM |
 
 ## Tone (Rabea, binding)
-Positive only. We join the owner's success and give hours back; we never "save" them from disorder. No pain openings, no chaos imagery, no "there is another way". See gazflow/docs/design-winners.md.
+Positive only. We join the owner's success and free up time ("מפנים זמן", never "giving hours back"); we never "save" them from disorder. No pain openings, no chaos imagery, no "there is another way". See gazflow/docs/design-winners.md.
 
 ## Rules for this film
 - **Length 32 s**, no voice-over. On-screen text only, readable with the sound off.
@@ -30,3 +30,10 @@ Positive only. We join the owner's success and give hours back; we never "save" 
 - **Colour**: neutral studio base (#F6F8F7 → #EEF2F0). Navy text #0F172A. Green #00843D only for "live / done" (tap ring, line, checkmarks). No red as the primary colour; red appears only on the debt word in the pain section.
 - **Type**: IBM Plex Sans Arabic (AR) and Heebo (HE), weights 500/700/800, from local @fontsource files.
 - **Honesty**: say "מתעדכן לבד / بيتحدّث لحاله", never "real-time / instant". No numbers, logos, reviews or maps that the product doesn't have. The UI inside the frames is unretouched capture.
+
+## v4 rules (binding from v4 on)
+- **One element in focus.** At any moment one real UI component fills 60–70 % of the frame height; everything else sits at 20–30 % opacity with a light blur, or is not on screen. No device frames, no full dashboards, no collages, no tilted 3D, no decorative particles. No text under 28 px at 1080p.
+- **Reading time.** A caption stays on screen at least (words ÷ 3) + 0.5 s. After the caption has finished, the element stays at least another 1.5 s (reading is not understanding).
+- **Soft transitions only.** 0.3–0.4 s with easing; never an empty or dead frame, no flashes, no zoom-punch. The camera follows one continuous emerald line (SVG path, 3–4 px at 1080p, glowing head, fading tail), flowing right → left.
+- **Check before render.** The film script prints a table of required vs. actual time for every caption; the render is blocked if any caption is short.
+- **Sound.** Major key, one soft tick when the status changes, no whooshes, about −14 LUFS integrated, 1.5 s fade-out.
