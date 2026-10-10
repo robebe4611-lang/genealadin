@@ -1,5 +1,5 @@
 {
-  "_note": "GazFlow launch film v4 — every word, time and colour lives here. Edit this file, not the animation code.",
+  "_note": "GazFlow launch film v4.1 — three experiences on one line: customer → dashboard → driver (a truck rides the line) → stock per truck → end. Every word, time and colour lives here.",
   "colors": {
     "bg": "#0B0F15",
     "emerald": "#10B981",
@@ -42,43 +42,43 @@
   },
   "captions": [
     {
+      "key": "cust",
+      "in": 9.4,
+      "out": 14.4,
+      "focusEnd": 14.6,
+      "element": "customer"
+    },
+    {
       "key": "c1",
-      "in": 9.3,
-      "out": 13.8,
-      "focusEnd": 13.8,
-      "element": "order"
+      "in": 14.9,
+      "out": 18.0,
+      "focusEnd": 21.8,
+      "element": "dashboard"
     },
     {
       "key": "c2a",
-      "in": 14.3,
-      "out": 17.0,
-      "focusEnd": 20.6,
-      "element": "driver"
+      "in": 18.0,
+      "out": 21.6,
+      "focusEnd": 21.8,
+      "element": "dashboard"
     },
     {
       "key": "c2b",
-      "in": 17.0,
-      "out": 20.8,
-      "focusEnd": 20.6,
+      "in": 22.1,
+      "out": 26.4,
+      "focusEnd": 28.0,
       "element": "driver"
     },
     {
-      "key": "c3",
-      "in": 21.2,
-      "out": 25.4,
-      "focusEnd": 25.4,
-      "element": "rings"
-    },
-    {
       "key": "c4",
-      "in": 25.9,
-      "out": 30.5,
-      "focusEnd": 30.5,
-      "element": "stock"
+      "in": 28.3,
+      "out": 32.4,
+      "focusEnd": 32.6,
+      "element": "trucks"
     },
     {
       "key": "end",
-      "in": 33.6,
+      "in": 34.8,
       "out": 40.0,
       "focusEnd": 40.0,
       "element": "end"
@@ -87,26 +87,27 @@
   "line": {
     "born": 9.0,
     "waypoints": {
-      "orderIn": 10.2,
-      "orderOut": 13.6,
-      "driverIn": 15.0,
-      "chipIn": 17.0,
-      "chipOut": 19.0,
-      "driverOut": 20.6,
-      "ring1": 21.8,
-      "ring2": 22.6,
-      "ring3": 23.4,
-      "cylinder": 26.0,
-      "end": 34.0
+      "custBtn": 10.6,
+      "custOut": 12.8,
+      "dashIn": 15.4,
+      "rowOut": 18.4,
+      "driverIn": 21.9,
+      "chipIn": 23.0,
+      "chipOut": 25.0,
+      "driverOut": 26.6,
+      "truck1": 28.4,
+      "truck2": 29.4,
+      "end": 35.4
     }
   },
   "status": {
-    "toOnTheWay": 17.0,
-    "toDelivered": 19.0
+    "toOnTheWay": 23.0,
+    "toDelivered": 25.0
   },
   "endCard": {
-    "logoIn": 34.6,
-    "ctaIn": 35.4
+    "lineIn": 34.8,
+    "logoIn": 35.8,
+    "ctaIn": 36.4
   },
   "camera": [
     {
@@ -120,62 +121,57 @@
       "zoom": 1.0
     },
     {
-      "t": 10.6,
-      "at": "order",
-      "zoom": 1.2
+      "t": 10.4,
+      "at": "customer",
+      "zoom": 0.74
     },
     {
-      "t": 13.8,
-      "at": "order",
-      "zoom": 1.26
+      "t": 14.6,
+      "at": "customer",
+      "zoom": 0.77
     },
     {
-      "t": 15.2,
-      "at": "driver",
+      "t": 15.8,
+      "at": "dashboard",
       "zoom": 1.0
-    },
-    {
-      "t": 16.6,
-      "at": "chip",
-      "zoom": 1.04
-    },
-    {
-      "t": 20.6,
-      "at": "chip",
-      "zoom": 1.059
     },
     {
       "t": 21.8,
-      "at": "rings",
-      "zoom": 1.55
-    },
-    {
-      "t": 25.4,
-      "at": "rings",
-      "zoom": 1.612
-    },
-    {
-      "t": 26.6,
-      "at": "stock",
-      "zoom": 1.0
-    },
-    {
-      "t": 30.5,
-      "at": "stock",
+      "at": "dashboard",
       "zoom": 1.04
     },
     {
-      "t": 32.4,
-      "at": "overview",
-      "zoom": 0.255
+      "t": 22.8,
+      "at": "driver",
+      "zoom": 1.04
     },
     {
-      "t": 33.0,
-      "at": "overview",
-      "zoom": 0.26
+      "t": 28.0,
+      "at": "driver",
+      "zoom": 1.08
     },
     {
-      "t": 34.6,
+      "t": 28.9,
+      "at": "trucks",
+      "zoom": 1.15
+    },
+    {
+      "t": 32.6,
+      "at": "trucks",
+      "zoom": 1.19
+    },
+    {
+      "t": 34.0,
+      "at": "overview",
+      "zoom": 0.215
+    },
+    {
+      "t": 34.4,
+      "at": "overview",
+      "zoom": 0.22
+    },
+    {
+      "t": 35.6,
       "at": "end",
       "zoom": 1.0
     },
@@ -186,35 +182,38 @@
     }
   ],
   "data": {
-    "_source": "Demo day captured from the app (promo/capture/capture3.mjs): Samer loaded 10 small + 3 large, Rami 6 small.",
-    "rings": [
+    "_source": "Demo day captured from the app (promo/capture/capture3.mjs): Samer loaded 10 small + 3 large, has 11 full left and 2 empties; Rami loaded 6, has 5 full left and 1 empty. Office tiles before/after the new order.",
+    "trucks": [
       {
-        "left": 8,
-        "of": 10,
         "who": "samer",
-        "type": "small"
+        "full": 11,
+        "loaded": 13,
+        "empty": 2
       },
       {
-        "left": 3,
-        "of": 3,
-        "who": "samer",
-        "type": "large"
-      },
-      {
-        "left": 5,
-        "of": 6,
         "who": "rami",
-        "type": "small"
+        "full": 5,
+        "loaded": 6,
+        "empty": 1
       }
     ],
-    "stock": {
-      "full": {
-        "small": 13,
-        "large": 3
-      },
-      "empty": {
-        "small": 3
-      }
+    "tiles": {
+      "today": [
+        3,
+        4
+      ],
+      "remaining": [
+        1,
+        2
+      ],
+      "delivered": [
+        2,
+        2
+      ],
+      "needsYou": [
+        0,
+        0
+      ]
     }
   },
   "cuts": {
@@ -235,12 +234,12 @@
           9.0
         ],
         [
-          14.0,
-          21.0
+          18.4,
+          25.8
         ],
         [
-          33.0,
-          38.4
+          35.0,
+          40.0
         ]
       ]
     },
@@ -248,12 +247,12 @@
       "duration": 6.0,
       "segments": [
         [
-          16.6,
-          20.6
+          22.4,
+          26.4
         ],
         [
-          35.0,
-          37.0
+          36.0,
+          38.0
         ]
       ]
     }
@@ -278,10 +277,11 @@
         "samer": "סאמר",
         "rami": "ראמי"
       },
-      "ringType": {
-        "small": "בלונים קטנים",
-        "large": "בלונים גדולים"
-      }
+      "cust": "הלקוח מזמין בלחיצה.",
+      "_custPending": "שורה חדשה בעקבות הבקשה להראות את חוויית הלקוח — ממתינה לאישור רביע",
+      "truckSub": "מלאים על המשאית",
+      "empty1": "ריק",
+      "emptyN": "ריקים"
     },
     "ar": {
       "o1": "زباينك.",
@@ -302,19 +302,85 @@
         "samer": "سامر",
         "rami": "رامي"
       },
-      "ringType": {
-        "small": "جرار صغيرة",
-        "large": "جرار كبيرة"
-      }
+      "cust": "الزبون بيطلب بكبسة.",
+      "_custPending": "שורה חדשה — ממתינה לאישור רביע (ניב גלילי)",
+      "truckSub": "ملان عالسيارة",
+      "empty1": "فاضي",
+      "emptyN": "فاضي"
     }
   },
   "ui": {
-    "_note": "Strings inside the UI components. Hebrew = the app's office/driver labels. Arabic = the app's own Arabic (src/lib/ops/i18n.ts, cylinder name_ar). The office stock card has no Arabic in the app, so it stays Hebrew in both versions.",
+    "_note": "Strings inside the UI components, taken from the app: Hebrew = demo/app labels; Arabic = the app's own Arabic (src/lib/ops/i18n.ts + cylinder name_ar). Names/addresses are demo data.",
     "he": {
-      "orderLabel": "הזמנה חדשה",
+      "hello": "שלום, סלים",
+      "orderBtn": "הזמן גז",
+      "orderSub": "2 קטנים · כמו בפעם הקודמת",
+      "predict": "לפי הקצב שלך, הגז ייגמר בערך מחר",
+      "sent": "ההזמנה התקבלה",
+      "steps": [
+        "התקבלה",
+        "שובצה",
+        "בדרך",
+        "סופקה"
+      ],
+      "tiles": {
+        "today": "היום",
+        "remaining": "נשארו",
+        "delivered": "סופקו",
+        "needsYou": "מחכה לך"
+      },
+      "allOrders": "כל ההזמנות היום",
+      "rows": [
+        {
+          "name": "סלים חדאד",
+          "meta": "08:31 · צפון",
+          "items": [
+            {
+              "n": 2,
+              "label": "קטנים",
+              "kg": "12 ק\"ג"
+            }
+          ]
+        },
+        {
+          "name": "נור חטיב",
+          "meta": "08:06 · מרכז · סאמר",
+          "items": [
+            {
+              "n": 1,
+              "label": "קטן",
+              "kg": "12 ק\"ג"
+            }
+          ],
+          "pill": "בדרך",
+          "tone": "on"
+        },
+        {
+          "name": "מרים עודה",
+          "meta": "08:12 · דרום · ראמי",
+          "items": [
+            {
+              "n": 1,
+              "label": "קטן",
+              "kg": "12 ק\"ג"
+            }
+          ],
+          "pill": "סופקה",
+          "tone": "done"
+        }
+      ],
+      "newPill": [
+        "התקבלה",
+        "שובצה לנהג"
+      ],
+      "assignedTo": "סאמר",
+      "driverDay": "היום שלי",
+      "driver": "סאמר",
+      "address": "רחוב הזיתים 14",
       "customer": "סלים חדאד",
       "zone": "צפון",
-      "ordered": "הוזמן 08:02",
+      "navigate": "ניווט",
+      "call": "התקשר",
       "items": [
         {
           "n": 2,
@@ -322,12 +388,6 @@
           "kg": "12 ק\"ג"
         }
       ],
-      "orderStatus": "התקבלה",
-      "driverDay": "היום שלי",
-      "driver": "סאמר",
-      "address": "רחוב הזיתים 14",
-      "navigate": "ניווט",
-      "call": "התקשר",
       "status": [
         "שובצה לנהג",
         "בדרך",
@@ -335,10 +395,75 @@
       ]
     },
     "ar": {
-      "orderLabel": "طلبية جديدة",
+      "hello": "سليم",
+      "orderBtn": "اطلب مثل المرة السابقة",
+      "orderSub": "2 × جرة 12 كغ",
+      "predict": "حسب استهلاكك، الغاز على وشك أن ينفد",
+      "sent": "تم استلام الطلب",
+      "steps": [
+        "تم الاستلام",
+        "في الدور",
+        "في الطريق",
+        "تم التوصيل"
+      ],
+      "tiles": {
+        "today": "اليوم",
+        "remaining": "متبقي",
+        "delivered": "تم التوصيل",
+        "needsYou": "بانتظارك"
+      },
+      "allOrders": "كل طلبات اليوم",
+      "rows": [
+        {
+          "name": "سليم حداد",
+          "meta": "08:31 · الشمال",
+          "items": [
+            {
+              "n": 2,
+              "label": "جرة 12 كغ",
+              "kg": ""
+            }
+          ]
+        },
+        {
+          "name": "نور خطيب",
+          "meta": "08:06 · الوسط · سامر",
+          "items": [
+            {
+              "n": 1,
+              "label": "جرة 12 كغ",
+              "kg": ""
+            }
+          ],
+          "pill": "السائق في الطريق",
+          "tone": "on"
+        },
+        {
+          "name": "مريم عودة",
+          "meta": "08:12 · الجنوب · رامي",
+          "items": [
+            {
+              "n": 1,
+              "label": "جرة 12 كغ",
+              "kg": ""
+            }
+          ],
+          "pill": "تم التوصيل",
+          "tone": "done"
+        }
+      ],
+      "newPill": [
+        "تم الاستلام",
+        "في الدور لليوم"
+      ],
+      "assignedTo": "سامر",
+      "driverDay": "يومي",
+      "driver": "سامر",
+      "address": "شارع الزيتون 14",
       "customer": "سليم حداد",
       "zone": "الشمال",
-      "ordered": "08:02",
+      "navigate": "ملاحة",
+      "call": "اتصل",
       "items": [
         {
           "n": 2,
@@ -346,26 +471,21 @@
           "kg": ""
         }
       ],
-      "orderStatus": "تم الاستلام",
-      "driverDay": "يومي",
-      "driver": "سامر",
-      "address": "شارع الزيتون 14",
-      "navigate": "ملاحة",
-      "call": "اتصل",
       "status": [
         "في الدور لليوم",
         "السائق في الطريق",
         "تم التوصيل"
       ]
-    },
-    "stockHe": {
-      "title": "מלאי בחוץ",
-      "full": "מלאים",
-      "empty": "ריקים",
-      "small": "קטנים",
-      "large": "גדולים",
-      "smallKg": "12 ק\"ג",
-      "largeKg": "48 ק\"ג"
     }
-  }
+  },
+  "events": {
+    "tap": 11.0,
+    "assigned": 19.0,
+    "truckOn": 19.0,
+    "truckOff": 28.6
+  },
+  "breath": [
+    32.6,
+    34.4
+  ]
 }

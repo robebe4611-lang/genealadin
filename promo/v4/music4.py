@@ -91,8 +91,11 @@ for o, m in zip(C["opening"], [72, 74, 76, 79]):
 add(pad([60, 64, 67, 72], G0 - C["peak"]["in"] + 0.6, att=0.4), C["peak"]["in"], 0.13)
 add(pluck(84, 2.4), C["peak"]["in"], 0.26)
 
+# the customer's tap: one bright pluck on the downbeat
+add(pluck(79, 1.2), C["events"]["tap"], 0.2, pan=-0.1)
+
 # groove from the line's birth to the breath; bars on G0, G0+2, …
-breath0, end0 = 30.5, 33.0
+breath0, end0 = C["breath"][0], C["endCard"]["lineIn"]
 prog = [I, V, vi, IV]
 bar = 0
 t0 = G0
@@ -110,7 +113,8 @@ while t0 < breath0 - 0.01:
     bar += 1
     t0 += 2.0
 
-# the only sound effect: a soft tick as the status pill changes
+# the only sound effect: a soft tick as the order is assigned and as the status pill changes
+add(tick(), C["events"]["assigned"], 0.28)
 add(tick(), C["status"]["toOnTheWay"], 0.32)
 add(tick(), C["status"]["toDelivered"], 0.32)
 
