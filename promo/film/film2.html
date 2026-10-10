@@ -1,0 +1,372 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>GazFlow promo v2 — the owner's morning</title>
+<style>
+  @font-face { font-family: "Plex Arabic"; font-weight: 500; src: url(node_modules/@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-500-normal.woff2) format("woff2"); unicode-range: U+0600-06FF, U+0750-077F, U+FB50-FDFF, U+FE70-FEFF; }
+  @font-face { font-family: "Plex Arabic"; font-weight: 700; src: url(node_modules/@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-700-normal.woff2) format("woff2"); unicode-range: U+0600-06FF, U+0750-077F, U+FB50-FDFF, U+FE70-FEFF; }
+  @font-face { font-family: "Heebo"; font-weight: 500; src: url(node_modules/@fontsource/heebo/files/heebo-hebrew-500-normal.woff2) format("woff2"); unicode-range: U+0590-05FF; }
+  @font-face { font-family: "Heebo"; font-weight: 700; src: url(node_modules/@fontsource/heebo/files/heebo-hebrew-700-normal.woff2) format("woff2"); unicode-range: U+0590-05FF; }
+  @font-face { font-family: "Heebo"; font-weight: 800; src: url(node_modules/@fontsource/heebo/files/heebo-hebrew-800-normal.woff2) format("woff2"); unicode-range: U+0590-05FF; }
+  @font-face { font-family: "Heebo"; font-weight: 500; src: url(node_modules/@fontsource/heebo/files/heebo-latin-500-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Heebo"; font-weight: 800; src: url(node_modules/@fontsource/heebo/files/heebo-latin-800-normal.woff2) format("woff2"); }
+
+  :root { --navy: #0F172A; --soft: #475569; --green: #00843D; --gold: #C9A24B; --red: #9B2C1C; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #F6F8F7; overflow: hidden; }
+  #stage { position: relative; overflow: hidden; direction: rtl; color: var(--navy); font-family: "Plex Arabic", "Heebo", sans-serif; }
+  #stage.he { font-family: "Heebo", "Plex Arabic", sans-serif; }
+  .bg { position: absolute; inset: 0; background: radial-gradient(90% 60% at 50% 38%, #FFFFFF 0%, #F3F6F4 55%, #E6ECE8 100%); }
+  .pain { position: absolute; inset: 0; background: radial-gradient(80% 60% at 50% 45%, #EEF0F2 0%, #D9DDE2 70%, #C8CDD3 100%); }
+  .layer { position: absolute; inset: 0; }
+  .abs { position: absolute; }
+  .cam { transform-origin: 0 0; }
+
+  .cap { position: absolute; text-align: center; font-weight: 700; line-height: 1.15; letter-spacing: -0.01em; z-index: 5; }
+  .cap.huge { font-size: 118px; }
+  .cap.big { font-size: 88px; }
+  .cap.mid { font-size: 70px; }
+  .cap .g { color: var(--green); }
+  .cap.pill { background: rgba(255,255,255,.92); border-radius: 32px; padding: 14px 24px; box-shadow: 0 16px 40px rgba(15,23,42,.12); }
+
+  .uicard { position: absolute; border-radius: 40px; overflow: hidden; background: #fff;
+    box-shadow: 0 0 0 2px rgba(15,23,42,.05), 0 50px 100px rgba(15,23,42,.16), 0 10px 24px rgba(15,23,42,.08); }
+  .uicard img { display: block; width: 100%; }
+
+  .dev { position: absolute; padding: 14px; background: linear-gradient(160deg, #FFFFFF, #E4EAE6);
+    box-shadow: 0 0 0 2px rgba(15,23,42,.06), 0 50px 90px rgba(15,23,42,.18), 0 8px 18px rgba(15,23,42,.08); }
+  .scr { position: relative; overflow: hidden; background: #FBFDFB; }
+  .scr img { position: absolute; left: 0; top: 0; width: 100%; display: block; }
+  .glow { position: absolute; inset: -6px; border-radius: 80px; box-shadow: 0 0 0 6px var(--green), 0 0 60px rgba(0,132,61,.55); opacity: 0; }
+  .tap { position: absolute; width: 120px; height: 120px; margin: -60px 0 0 -60px; border-radius: 50%; border: 7px solid var(--green); background: rgba(0,132,61,.16); opacity: 0; }
+  .hl { position: absolute; border-radius: 22px; border: 6px solid var(--green); box-shadow: 0 0 40px rgba(0,132,61,.45); opacity: 0; }
+
+  .bubble { position: absolute; padding: 28px 42px; border-radius: 44px; background: #fff; font-size: 60px; font-weight: 700;
+    box-shadow: 0 30px 60px rgba(15,23,42,.16); white-space: nowrap; }
+  .bubble::after { content: ""; position: absolute; bottom: -22px; width: 44px; height: 44px; background: #fff; transform: rotate(45deg); }
+  .bubble.r::after { right: 70px; } .bubble.l::after { left: 70px; }
+  .bubble .r { color: var(--red); }
+  .note { position: absolute; width: 480px; height: 600px; border-radius: 18px; background:
+    linear-gradient(90deg, transparent 70px, rgba(196,60,40,.35) 70px, rgba(196,60,40,.35) 73px, transparent 73px),
+    repeating-linear-gradient(#FFFDF4 0 58px, #C9D6E6 58px 60px); box-shadow: 0 30px 60px rgba(15,23,42,.18); }
+  .ringer { position: absolute; width: 260px; height: 260px; border-radius: 50%; background: #fff; display: grid; place-items: center; box-shadow: 0 30px 70px rgba(15,23,42,.18); }
+  .ringer svg { width: 130px; height: 130px; stroke: var(--navy); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .wave { position: absolute; border-radius: 50%; border: 6px solid rgba(15,23,42,.35); }
+  .check { position: absolute; width: 110px; height: 110px; border-radius: 50%; background: var(--green); display: grid; place-items: center; }
+  .check svg { width: 64px; height: 64px; stroke: #fff; fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+  .step { position: absolute; width: 74px; height: 74px; border-radius: 50%; background: var(--green); color: #fff; display: grid; place-items: center; font-size: 42px; font-weight: 700; z-index: 6; }
+
+  .word { position: absolute; left: 0; right: 0; text-align: center; font-weight: 700; font-size: 150px; letter-spacing: -0.02em; }
+  .word .stars { display: block; font-size: 60px; color: var(--gold); letter-spacing: 18px; margin-bottom: 4px; }
+  .tag { position: absolute; text-align: center; font-size: 58px; font-weight: 500; color: var(--soft); line-height: 1.3; }
+  .cta { position: absolute; left: 50%; padding: 26px 56px; border-radius: 999px; background: var(--green); color: #fff; font-size: 54px; font-weight: 700; white-space: nowrap; box-shadow: 0 24px 50px rgba(0,132,61,.3); }
+  .label { position: absolute; text-align: center; font-size: 40px; font-weight: 700; color: var(--soft); }
+  svg.lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="bg"></div>
+  <div class="pain" id="pain"></div>
+
+  <div class="layer" id="s-pain">
+    <div class="note" id="note"><svg class="lines" viewBox="0 0 480 600" id="scrib"></svg></div>
+    <div class="wave" id="w1"></div><div class="wave" id="w2"></div>
+    <div class="ringer" id="ringer"><svg viewBox="0 0 24 24"><path id="phonePath" d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+    <div class="cap huge" id="hook"></div>
+    <div class="bubble r" id="q1"></div><div class="bubble l" id="q2"></div><div class="bubble r" id="q3"></div>
+  </div>
+
+  <div class="layer" id="s-turn"><div class="cap big" id="turn"></div></div>
+
+  <div class="layer" id="s-answers">
+    <div class="cap big" id="ans"></div>
+    <div class="layer cam" id="camA">
+      <div class="uicard" id="k1"><img src="../capture/shots2/k01-needs-gas.png"></div>
+      <div class="uicard" id="k2"><img src="../capture/shots2/k03-stock-home.png"></div>
+      <div class="uicard" id="k3"><img src="../capture/shots2/k02-money.png"></div>
+      <div class="uicard" id="k4"><img src="../capture/shots2/k06-debts.png"></div>
+    </div>
+    <div class="step" id="stepN"></div>
+  </div>
+
+  <div class="layer" id="s-flow">
+    <div class="cap mid" id="flowCap"></div>
+    <div class="layer cam" id="camF">
+      <div class="dev" id="dev"><div class="scr" id="scr"></div><div class="tap" id="tap"></div><div class="hl" id="hl"></div></div>
+    </div>
+  </div>
+
+  <div class="layer" id="s-trio">
+    <div class="cap mid" id="c7"></div>
+    <div class="layer cam" id="cam3">
+      <svg class="lines" id="loop"><path id="loopPath" fill="none" stroke="#00843D" stroke-width="10" stroke-linecap="round"/><circle id="spark" r="18" fill="#fff" stroke="#00843D" stroke-width="8"/></svg>
+      <div class="dev" id="t0"><div class="scr"></div><div class="glow"></div></div>
+      <div class="dev" id="t1"><div class="scr"></div><div class="glow"></div></div>
+      <div class="dev" id="t2"><div class="scr"></div><div class="glow"></div></div>
+      <div class="label" id="lb0"></div><div class="label" id="lb1"></div><div class="label" id="lb2"></div>
+    </div>
+    <div class="cap mid" id="x1"></div><div class="cap mid" id="x2"></div>
+  </div>
+
+  <div class="layer" id="s-end">
+    <div class="ringer" id="ringer2"><svg viewBox="0 0 24 24"><use href="#phonePath"/></svg></div>
+    <div class="check" id="chk"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></div>
+    <div class="word" id="word"></div>
+    <div class="tag" id="tag"></div>
+    <div class="cta" id="cta"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const Q = new URLSearchParams(location.search);
+  const LANG = Q.get("lang") === "he" ? "he" : "ar";
+  const FMT = Q.get("fmt") === "h" ? "h" : "v";
+  const V = FMT === "v";
+  const W = V ? 1080 : 1920, H = V ? 1920 : 1080;
+  const SHOT = "../capture/shots/";
+
+  // Every word on screen. Arabic: Galilee spoken register — Rabea checks it.
+  const T = {
+    ar: {
+      hook: "قدّيش تلفون<br>إجاك اليوم؟",
+      q1: '<span class="r">مين مديون قدّيش؟</span>', q2: "شو ضايل عالسيارة؟", q3: "مين بدّه غاز هالجمعة؟",
+      turn: 'وإذا الأجوبة<br><span class="g">قدّامك؟</span>',
+      a1: "مين بدّه غاز — <span class=\"g\">قبل ما يتّصل.</span>", a2: "شو في على <span class=\"g\">كل سيارة.</span>",
+      a3: "قدّيش <span class=\"g\">انجبى اليوم.</span>", a4: "ومين مديون: <span class=\"g\">دين أو تحويل.</span>",
+      f1: "الزبون بيطلب بكبسة.", f2: "بيتعيّن للسوّاق <span class=\"g\">لحاله.</span>", f3: "السوّاق بيسلّم.", f4: "والزبون <span class=\"g\">بيشوف.</span>",
+      c7: 'كل إشي <span class="g">بيتحدّث لحاله.</span>', x1: "بلا تلفونات.", x2: "بلا أوراق.",
+      lb: ["الزبون", "المكتب", "السوّاق"],
+      word: "غازفلو", tag: "الطلبات، السوّاقين والمصاري<br>بمكان واحد.", cta: "جرّبها بنفسك · الرابط بالرسالة",
+    },
+    he: {
+      hook: "כמה טלפונים<br>קיבלת היום?",
+      q1: '<span class="r">מי חייב כמה?</span>', q2: "מה נשאר על המשאית?", q3: "מי צריך גז השבוע?",
+      turn: 'ומה אם התשובות<br><span class="g">כבר מולך?</span>',
+      a1: "מי צריך גז — <span class=\"g\">לפני שהתקשר.</span>", a2: "מה יש על <span class=\"g\">כל משאית.</span>",
+      a3: "כמה <span class=\"g\">נגבה היום.</span>", a4: "ומי חייב: <span class=\"g\">חוב או העברה.</span>",
+      f1: "הלקוח מזמין בלחיצה.", f2: "משובץ לנהג <span class=\"g\">לבד.</span>", f3: "הנהג מוסר.", f4: "והלקוח <span class=\"g\">רואה.</span>",
+      c7: 'הכול <span class="g">מתעדכן לבד.</span>', x1: "בלי טלפונים.", x2: "בלי פתקים.",
+      lb: ["לקוח", "משרד", "נהג"],
+      word: "גזפלו", tag: "הזמנות, נהגים וכסף<br>במקום אחד.", cta: "תנסה בעצמך · הקישור בהודעה",
+    },
+  }[LANG];
+  const TAP = { order: [195, 391], delivered: [195, 682] };
+
+  const stage = document.getElementById("stage");
+  stage.style.width = W + "px"; stage.style.height = H + "px";
+  if (LANG === "he") stage.classList.add("he");
+  const $ = (id) => document.getElementById(id);
+
+  // ---------- pure motion helpers ----------
+  const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+  const p01 = (t, a, d) => clamp((t - a) / d);
+  const easeOutExpo = (x) => (x >= 1 ? 1 : 1 - Math.pow(2, -10 * x));
+  const easeOutBack = (x) => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
+  const easeInOut = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+  const show = (el, on) => { el.style.display = on ? "" : "none"; };
+  function rise(el, t, t0) {
+    const k = easeOutExpo(p01(t, t0, 0.5));
+    el.style.opacity = t < t0 ? 0 : k; el.style.transform = `translateY(${(1 - k) * 60}px)`; el.style.filter = `blur(${(1 - k) * 14}px)`;
+  }
+  function pop(el, t, t0, extra = "", dur = 0.5) {
+    const x = p01(t, t0, dur);
+    el.style.opacity = t < t0 ? 0 : clamp(x * 3); el.style.transform = `${extra} scale(${0.86 + 0.14 * easeOutBack(x)})`;
+  }
+  function box(el, x, y, w, h) { el.style.left = x + "px"; el.style.top = y + "px"; if (w != null) el.style.width = w + "px"; if (h != null) el.style.height = h + "px"; }
+  function capPos(el, y, half) {
+    el.style.top = y + "px";
+    if (!V && half) { el.style.left = "1090px"; el.style.right = "70px"; } else { el.style.left = "70px"; el.style.right = "70px"; }
+  }
+  // slow push-in over a shot, the focus point holds still
+  function push(el, t, t0, t1, fx, fy, amt = 0.07) {
+    const z = 1 + amt * easeInOut(p01(t, t0, t1 - t0));
+    el.style.transform = `translate(${fx - fx * z}px, ${fy - fy * z}px) scale(${z})`;
+  }
+  const PH = (w) => w * (1688 / 780);
+  const K = (w) => w / 390;
+  function layoutDev(dev, scr, w, x, y) {
+    box(dev, x, y); scr.style.width = w + "px"; scr.style.height = PH(w) + "px";
+    scr.style.borderRadius = Math.round(w * 0.1) + "px"; dev.style.borderRadius = Math.round(w * 0.1 + 14) + "px";
+  }
+
+  // ---------- static content ----------
+  $("hook").innerHTML = T.hook; $("q1").innerHTML = T.q1; $("q2").textContent = T.q2; $("q3").textContent = T.q3;
+  $("turn").innerHTML = T.turn; $("c7").innerHTML = T.c7; $("x1").textContent = T.x1; $("x2").textContent = T.x2;
+  $("word").innerHTML = '<span class="stars">★★</span>' + T.word; $("tag").innerHTML = T.tag; $("cta").textContent = T.cta;
+  (function () {
+    let d = "";
+    for (let i = 0; i < 8; i++) {
+      const y = 92 + i * 60; d += `M${430 - (i % 3) * 30} ${y} `;
+      const len = 170 + ((i * 73) % 190);
+      for (let s = 0; s < len; s += 18) d += `q -9 ${i % 2 ? -14 : 12} -18 ${((s * 7) % 5) - 2} `;
+    }
+    $("scrib").innerHTML = `<path d="${d}" fill="none" stroke="#2B3A55" stroke-width="5" stroke-linecap="round" opacity=".75"/>
+      <path d="M140 300 l130 -20 M160 330 l110 40" stroke="#9B2C1C" stroke-width="7" stroke-linecap="round"/>
+      <ellipse cx="230" cy="500" rx="130" ry="44" fill="none" stroke="#9B2C1C" stroke-width="6" transform="rotate(-6 230 500)"/>`;
+  })();
+
+  // answer cards: big, centred (9:16) or on the left half (16:9). Sizes keep each card's real aspect.
+  const cards = [["k1", 1098, 603], ["k2", 1098, 672], ["k3", 1098, 591], ["k4", 1170, 1692]];
+  const cardBox = {};
+  cards.forEach(([id, iw, ih]) => {
+    const tall = ih > iw;
+    const w = V ? (tall ? 820 : 1000) : (tall ? 560 : 900);
+    const h = w * ih / iw;
+    const x = V ? (W - w) / 2 : 120 + (900 - w) / 2;
+    const y = V ? (tall ? 560 : 1100 - h / 2) : (H - h) / 2;
+    box($(id), x, y, w); cardBox[id] = { x, y, w, h };
+  });
+
+  // flow phone
+  const L = V ? { phoneW: 620, phoneX: (W - 648) / 2, phoneY: 450, capY: 200 } : { phoneW: 380, phoneX: 300, phoneY: 115, capY: 420 };
+  layoutDev($("dev"), $("scr"), L.phoneW, L.phoneX, L.phoneY);
+  const flowFiles = ["c01-customer-idle", "c05-customer-ordered", "o02-office-new-order", "d02b-driver-ontheway", "d04-driver-done", "c09-customer-delivered"];
+  $("scr").innerHTML = flowFiles.map((f) => `<img src="${SHOT}${f}.png" data-f="${f}">`).join("");
+  function setScreen(name, scrollY = 0) {
+    for (const img of $("scr").children) { const on = img.dataset.f === name; img.style.display = on ? "" : "none"; if (on) img.style.transform = `translateY(${-scrollY}px)`; }
+  }
+
+  // trio
+  const TR = V ? { w: 252, y: 540, gap: 26, c7Y: 220, xY: [1470, 1580] } : { w: 230, y: 250, gap: 60, c7Y: 30, xY: [930, 930] };
+  const trio = [["t0", "d04-driver-done"], ["t1", "o04-office-delivered"], ["t2", "c09-customer-delivered"]];
+  const trioPos = [];
+  trio.forEach(([id, f], i) => {
+    $(id).querySelector(".scr").innerHTML = `<img src="${SHOT}${f}.png">`;
+    const w = i === 1 ? TR.w + 30 : TR.w;
+    const total = TR.w * 3 + 30 + TR.gap * 2 + 28 * 3;
+    const x = (W - total) / 2 + i * (TR.w + 28 + TR.gap) + (i === 2 ? 30 : 0);
+    const y = TR.y + (i === 1 ? -40 : 0);
+    layoutDev($(id), $(id).querySelector(".scr"), w, x, y);
+    trioPos.push({ x, y, w: w + 28, h: PH(w) + 28 });
+    const lb = $("lb" + i); lb.textContent = T.lb[2 - i]; box(lb, x, TR.y + PH(TR.w + 30) - 40 + 28 + (V ? 70 : 52), w + 28);
+  });
+  (function () {
+    const a = trioPos[2], b = trioPos[1], c = trioPos[0], pad = 34;
+    const top = Math.min(a.y, b.y, c.y) - pad, bot = Math.max(a.y + a.h, b.y + b.h, c.y + c.h) + pad;
+    const right = a.x + a.w + pad, left = c.x - pad, r = 60;
+    $("loopPath").setAttribute("d", `M ${right - r} ${top} L ${left + r} ${top} Q ${left} ${top} ${left} ${top + r} L ${left} ${bot - r} Q ${left} ${bot} ${left + r} ${bot} L ${right - r} ${bot} Q ${right} ${bot} ${right} ${bot - r} L ${right} ${top + r} Q ${right} ${top} ${right - r} ${top} Z`);
+    $("loop").setAttribute("viewBox", `0 0 ${W} ${H}`);
+  })();
+  const loopLen = $("loopPath").getTotalLength();
+
+  function tapRing(t, t0, pt) {
+    const el = $("tap"); const k = K(L.phoneW);
+    if (t < t0 - 0.3 || t > t0 + 0.45) { el.style.opacity = 0; return; }
+    box(el, 14 + pt[0] * k, 14 + pt[1] * k);
+    if (t < t0) { const a = p01(t, t0 - 0.3, 0.3); el.style.opacity = a; el.style.transform = `scale(${1.15 - 0.25 * a})`; }
+    else { const r = p01(t, t0, 0.45); el.style.opacity = 1 - r; el.style.transform = `scale(${0.9 + 1.4 * easeOutExpo(r)})`; }
+  }
+
+  // ---------- timeline: 120 BPM, beat 0.5 s, bar 2 s ----------
+  const DUR = 32;
+  window.renderAt = function (t) {
+    $("pain").style.opacity = 1 - p01(t, 5.5, 1.0);
+
+    // 0–5.5 hook + the owner's three questions
+    const sPain = t < 5.75; show($("s-pain"), sPain);
+    if (sPain) {
+      const z = 1 + 0.05 * p01(t, 0, 5.5); $("s-pain").style.transformOrigin = "50% 45%"; $("s-pain").style.transform = `scale(${z})`;
+      const ringOn = (t % 1.5) < 0.9;
+      const rx = V ? W / 2 - 130 : W / 2 - 130, ry = V ? (t < 2 ? 330 : 760) : (t < 2 ? 120 : 300);
+      box($("ringer"), rx, ry); $("ringer").style.opacity = 1;
+      $("ringer").style.transform = `rotate(${ringOn ? Math.sin(t * 60) * 9 : 0}deg)`;
+      ["w1", "w2"].forEach((id, i) => {
+        const ph = ((t + i * 0.45) % 0.9) / 0.9, s = 260 + ph * 230, el = $(id);
+        box(el, rx + 130 - s / 2, ry + 130 - s / 2, s, s); el.style.opacity = ringOn ? (1 - ph) * 0.8 : 0;
+      });
+      // the hook is on screen from the very first frame
+      const hk = $("hook"); capPos(hk, V ? 760 : 520); hk.style.opacity = t < 2 ? 1 : 0;
+      hk.style.transform = `scale(${1 + 0.03 * p01(t, 0, 2)})`;
+      const nt = $("note"); box(nt, V ? 520 : 400, V ? 1180 : 240); show(nt, t >= 2); pop(nt, t, 2.0, "rotate(-5deg)");
+      const qp = V ? [[380, 310], [70, 560], [300, 1060]] : [[1180, 120], [1240, 470], [1160, 820]];
+      ["q1", "q2", "q3"].forEach((id, i) => { const el = $(id); box(el, qp[i][0], qp[i][1]); show(el, t >= 2.5 + i); pop(el, t, 2.5 + i); });
+    }
+
+    // 5.5–7 turn
+    const sTurn = t >= 5.5 && t < 7.05; show($("s-turn"), sTurn);
+    if (sTurn) { capPos($("turn"), V ? 800 : 380); rise($("turn"), t, 5.5); }
+
+    // 7–15 the answers: one real card per bar
+    const sAns = t >= 7 && t < 15; show($("s-answers"), sAns);
+    if (sAns) {
+      const i = Math.min(3, Math.floor((t - 7) / 2)), t0 = 7 + i * 2;
+      cards.forEach(([id], j) => { show($(id), j === i); });
+      const id = cards[i][0], b = cardBox[id];
+      pop($(id), t, t0, "", 0.45);
+      push($("camA"), t, t0, t0 + 2, b.x + b.w / 2, b.y + b.h / 2, 0.06);
+      const a = $("ans"); a.innerHTML = T["a" + (i + 1)]; capPos(a, V ? (i === 3 ? 260 : 330) : 400, true);
+      if (!V) a.classList.add("big"); rise(a, t, t0 + 0.25);
+      const st = $("stepN"); st.textContent = i + 1;
+      box(st, V ? W / 2 - 37 : 1460, V ? 200 : 290); pop(st, t, t0, "", 0.35);
+      if (i === 3) st.style.display = "none"; else st.style.display = "";
+    }
+
+    // 15–23 one order, compressed: customer → office → driver → customer
+    const sFlow = t >= 15 && t < 23; show($("s-flow"), sFlow);
+    if (sFlow) {
+      const seg = t < 17 ? 0 : t < 19 ? 1 : t < 21 ? 2 : 3, t0 = 15 + seg * 2;
+      pop($("dev"), t, t0, `translateY(${Math.sin(t * 1.3) * 12}px)`, 0.45);
+      let scr = "c01-customer-idle", sc = 0;
+      if (seg === 0 && t >= 16.0) scr = "c05-customer-ordered";
+      if (seg === 1) { scr = "o02-office-new-order"; sc = 570 * K(L.phoneW); }
+      if (seg === 2) scr = t < 20.0 ? "d02b-driver-ontheway" : "d04-driver-done";
+      if (seg === 3) scr = "c09-customer-delivered";
+      setScreen(scr, sc);
+      if (seg === 0) tapRing(t, 16.0, TAP.order); else if (seg === 2) tapRing(t, 20.0, TAP.delivered); else $("tap").style.opacity = 0;
+      const hl = $("hl");
+      if (seg === 1) { const k = K(L.phoneW); box(hl, 14 + 10 * k, 14 + (862 - 570) * k, 370 * k, 100 * k); hl.style.opacity = easeOutExpo(p01(t, 17.5, 0.3)); }
+      else hl.style.opacity = 0;
+      push($("camF"), t, t0, t0 + 2, L.phoneX + 324, L.phoneY + 600, 0.08);
+      const c = $("flowCap"); c.innerHTML = T["f" + (seg + 1)]; capPos(c, L.capY, true); rise(c, t, t0 + 0.2);
+    }
+
+    // 23–27.5 signature: the three screens, the loop closes
+    const sTrio = t >= 23 && t < 27.5; show($("s-trio"), sTrio);
+    if (sTrio) {
+      trio.forEach(([id], i) => {
+        const el = $(id), order = 2 - i;
+        pop(el, t, 23.0 + order * 0.25, `translateY(${Math.sin(t * 2.2 + i * 1.3) * 14}px)`);
+        el.querySelector(".glow").style.opacity = t >= 24.0 + order * 0.25 ? 1 - 0.55 * p01(t, 24.6 + order * 0.25, 0.8) : 0;
+        rise($("lb" + i), t, 23.5);
+      });
+      push($("cam3"), t, 23, 27.5, W / 2, H * 0.45, 0.03);
+      const drawn = easeInOut(p01(t, 23.5, 1.25)), lp = $("loopPath");
+      lp.setAttribute("stroke-dasharray", loopLen); lp.setAttribute("stroke-dashoffset", loopLen * (1 - drawn));
+      const u = t < 24.75 ? drawn : (p01(t, 24.75, 1.5) + Math.floor((t - 24.75) / 1.5)) % 1;
+      const pt = lp.getPointAtLength(loopLen * u); $("spark").setAttribute("cx", pt.x); $("spark").setAttribute("cy", pt.y);
+      $("spark").style.opacity = t >= 23.5 ? 1 : 0;
+      capPos($("c7"), TR.c7Y); rise($("c7"), t, 24.0);
+      ["x1", "x2"].forEach((id, i) => {
+        const el = $(id);
+        if (V) capPos(el, TR.xY[i]); else { el.style.top = TR.xY[i] + "px"; el.style.right = 300 + i * 700 + "px"; el.style.left = "auto"; el.style.width = "620px"; }
+        rise(el, t, 25.5 + i);
+      });
+    }
+
+    // 27.5–32 callback + end card + call to action
+    const sEnd = t >= 27.5; show($("s-end"), sEnd);
+    if (sEnd) {
+      $("s-end").style.transformOrigin = "50% 45%"; $("s-end").style.transform = `scale(${1 + 0.04 * p01(t, 27.5, 4.5)})`;
+      const ry = V ? 380 : 50;
+      box($("ringer2"), W / 2 - 130, ry); pop($("ringer2"), t, 27.5, "", 0.4);
+      box($("chk"), W / 2 + 60, ry + 170); pop($("chk"), t, 27.75, "", 0.4);
+      box($("word"), 0, V ? 760 : 330); pop($("word"), t, 28.0);
+      const tg = $("tag"); capPos(tg, V ? 1060 : 650); rise(tg, t, 28.5);
+      const ct = $("cta"); ct.style.top = (V ? 1330 : 860) + "px";
+      const k = easeOutBack(p01(t, 29.0, 0.5)); ct.style.opacity = t < 29 ? 0 : clamp(p01(t, 29, 0.5) * 3);
+      ct.style.transform = `translateX(-50%) scale(${0.86 + 0.14 * k})`;
+    }
+  };
+
+  window.DURATION = DUR;
+  Promise.all([document.fonts.ready,
+    document.fonts.load('700 60px "Plex Arabic"', "عربي"), document.fonts.load('500 60px "Plex Arabic"', "عربي"),
+    document.fonts.load('700 60px "Heebo"', "עברית"), document.fonts.load('800 60px "Heebo"', "עברית"), document.fonts.load('500 60px "Heebo"', "עברית"),
+    ...[...document.images].map((i) => i.decode().catch(() => {}))]).then(() => { renderAt(Number(Q.get("t") || 0)); window.ready = true; });
+})();
+</script>
+</body>
+</html>
