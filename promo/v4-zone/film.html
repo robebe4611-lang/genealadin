@@ -416,9 +416,11 @@
       pillEl.style.background = PILL[s][0]; pillEl.style.color = PILL[s][1];
       const big = 1 + 0.25 * ease(p01(t, 20.6, 0.6)) * (1 - p01(t, 23.2, 0.4));
       const sc2 = (sw != null ? pulse(t, sw, 0.6, 0.06) : 1) * big;
-      const pw = pillEl.offsetWidth, lift = 64;
-      pillEl.style.left = rx - pw / 2 + "px"; pillEl.style.top = ry - lift - 62 + "px";
-      pillEl.style.opacity = o; pillEl.style.transform = `scale(${sc2})`;
+      // scaled through its real size, not a transform (a scaled layer left ghost copies in sequential renders)
+      pillEl.style.fontSize = 30 * sc2 + "px"; pillEl.style.height = 62 * sc2 + "px"; pillEl.style.padding = `0 ${34 * sc2}px`;
+      const pw = pillEl.offsetWidth, ph = 62 * sc2, lift = 64;
+      pillEl.style.left = rx - pw / 2 + "px"; pillEl.style.top = ry - lift - ph + "px";
+      pillEl.style.opacity = o;
       pillEl.style.boxShadow = s === 2 ? "0 0 0 5px rgba(16,185,129,.35), 0 16px 36px rgba(0,0,0,.45)" : "0 16px 36px rgba(0,0,0,.45)";
       pillAn.style.left = rx - 1 + "px"; pillAn.style.top = ry - lift + "px"; pillAn.style.height = lift - 6 + "px"; pillAn.style.opacity = o; }
 
