@@ -398,7 +398,8 @@
       c.an.style.transform = `scaleY(${easeOut(p01(t, w[0], 0.4))})`;
       return o;
     };
-    showCard("order", C.cards.order); showCard("driver", C.cards.driver); showCard("rings", C.cards.rings); showCard("stock", C.cards.stock); showCard("quiet", C.cards.quiet);
+    showCard("order", C.cards.order); showCard("driver", C.cards.driver); showCard("rings", C.cards.rings); showCard("stock", C.cards.stock);
+    if (!V) showCard("quiet", C.cards.quiet); else { CARD.quiet.el.style.opacity = 0; CARD.quiet.an.style.opacity = 0; }  // the vertical path never frames the office card
     // ring fill + stock count-up as their cards land
     { const k = easeOut(p01(t, C.cards.rings[0] + 0.4, 1.2));
       CARD.rings.el.querySelectorAll(".arc").forEach((a, i) => { const R = C.data.trucks[i]; a.setAttribute("stroke-dashoffset", rC * (1 - (R.full / R.loaded) * k)); });
