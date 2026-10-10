@@ -23,8 +23,8 @@ Positive only. We join the owner's success and give hours back; we never "save" 
 - **A new scene every 2–3 s** (4–6 beats). Nothing holds longer than 3 s without micro-motion.
 - **Hit, then hold.** An element enters in one beat (rise or pop, ≤0.5 s), then rests. While it rests, add micro-motion (slow 2–3% device drift, the ETA ticking, the green line crawling) to keep motion at 40–60 % without extra cuts.
 - **Anticipation ≈0.25 s** before every hit: the tap ring appears and squeezes (scale 1 → 0.92) one half-beat before the screen changes.
-- **Pain section (0–8 s)**: music out, clock ticks on each beat and a phone ring. Desaturated base. Cuts on beats, but faster (≈1.5 s), because chaos.
-- **Turn (6–8 s)**: a riser for 1 bar, then silence for half a beat, then the kick enters on the first tap.
+- **Opening (0–5 s)**: positive kinetic type — the owner's own business ("your customers, your drivers, your order"), one word per beat, ending on the benefit (hours back). No pain, no chaos imagery. (Versions 1–2 opened with pain and are superseded.)
+- **Into the product (≈5 s)**: a short riser, then the kick enters with the system's entrance.
 - **One signature moment (24–27 s)**: the three screens side by side, and the green order line closes a loop through all three. This gets the only big move (scale plus glow). Everything else stays calm.
 - **Text**: one line per scene, max 6 words, 72–96 px at 1080 wide. Enters with rise (translateY 60 → 0, blur 14 → 0, 0.5 s easeOutExpo). Leaves by cut, never by fade-out.
 - **Colour**: neutral studio base (#F6F8F7 → #EEF2F0). Navy text #0F172A. Green #00843D only for "live / done" (tap ring, line, checkmarks). No red as the primary colour; red appears only on the debt word in the pain section.
