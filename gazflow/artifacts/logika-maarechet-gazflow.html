@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>לוגיקת מערכת — גזפלו</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&family=Frank+Ruhl+Libre:wght@500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #1a1612; --ink-soft: #3d342c; --muted: #6b5e52; --line: #e4d8c8;
+      --paper: #f7f1e8; --card: #fffdf8; --flame: #c45c12; --flame-deep: #9a3f08;
+      --navy: #1c2a38; --good: #1f6b4a; --wait: #8a5a12; --bad: #8b2e1a; --info: #2c4a6e;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: #d9cfc2; color: var(--ink); font-family: Heebo, Arial, sans-serif; }
+    body { padding: 24px 12px 48px; }
+    .page { width: 210mm; max-width: 100%; margin: 0 auto 18px; background: var(--paper); box-shadow: 0 18px 50px rgba(28,22,16,.18); overflow: hidden; page-break-after: always; }
+    .page:last-child { page-break-after: auto; }
+    .cover {
+      min-height: 297mm; padding: 42px 48px 36px; color: #f4ece3;
+      display: flex; flex-direction: column; justify-content: space-between;
+      background: radial-gradient(1100px 480px at 100% 0%, rgba(196,92,18,.18), transparent 55%),
+                  linear-gradient(165deg, #141c24 0%, #1c2a38 52%, #243445 100%);
+    }
+    .brand { display: flex; justify-content: space-between; gap: 16px; }
+    .logo { display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 22px; }
+    .mark { width: 42px; height: 42px; border-radius: 10px; background: linear-gradient(145deg, #f08a2a, #c45c12); display: grid; place-items: center; }
+    .mark svg { width: 24px; height: 24px; }
+    .meta { text-align: left; font-size: 12px; color: #c9b9a6; line-height: 1.7; }
+    .meta strong { color: #f4ece3; }
+    .eyebrow { margin-top: 70px; color: #f08a2a; font-weight: 700; font-size: 13px; letter-spacing: .18em; }
+    h1 { font-family: "Frank Ruhl Libre", serif; font-size: 44px; line-height: 1.15; margin: 14px 0 16px; max-width: 16ch; }
+    .lede { font-size: 17px; line-height: 1.7; color: #d7cbbb; max-width: 38em; }
+    .cover-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 36px; }
+    .stat { border: 1px solid rgba(244,236,227,.12); background: rgba(255,255,255,.04); padding: 14px 16px; border-radius: 12px; }
+    .stat b { display: block; font-size: 15px; color: #fff; margin-bottom: 4px; }
+    .stat span { font-size: 12.5px; color: #c9b9a6; }
+    .cover-foot { display: flex; justify-content: space-between; gap: 16px; border-top: 1px solid rgba(244,236,227,.12); padding-top: 18px; font-size: 12px; color: #c9b9a6; }
+    .inner { padding: 38px 48px 44px; }
+    h2 { font-family: "Frank Ruhl Libre", serif; font-size: 26px; margin: 0 0 8px; color: var(--navy); }
+    h3 { font-size: 15px; margin: 18px 0 6px; color: var(--navy); }
+    p, li { font-size: 13.5px; line-height: 1.7; color: var(--ink-soft); }
+    .kicker { color: var(--flame); font-weight: 800; font-size: 12px; letter-spacing: .12em; margin-bottom: 6px; }
+    .rule { height: 1px; background: var(--line); margin: 16px 0; }
+    table { width: 100%; border-collapse: collapse; margin: 10px 0 4px; }
+    th, td { text-align: right; padding: 8px 10px; font-size: 12.5px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { color: var(--muted); font-weight: 700; font-size: 11px; letter-spacing: .04em; }
+    td code, p code, li code { font-family: Heebo, Arial, sans-serif; font-weight: 700; color: var(--navy); }
+    .note { font-size: 12px; color: var(--muted); margin-top: 8px; }
+    .callout { background: #1c2a38; color: #f4ece3; border-radius: 14px; padding: 14px 18px; margin: 12px 0; }
+    .callout p { color: #d7cbbb; } .callout strong { color: #f08a2a; }
+    .warn { background: #fff4ea; border: 1px solid #efd3b3; border-radius: 12px; padding: 12px 14px; margin: 12px 0; }
+    .ok { background: #eef6f1; border: 1px solid #cfe0d6; border-radius: 12px; padding: 12px 14px; margin: 12px 0; }
+    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .three { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+    .card { border: 1px solid var(--line); background: var(--card); border-radius: 12px; padding: 12px 14px; }
+    .card h3 { margin: 0 0 6px; }
+    ul.clean { margin: 6px 0 0 18px; } ul.clean li { margin: 3px 0; }
+    .steps p { margin: 8px 0; padding-right: 12px; border-right: 3px solid var(--flame); }
+    .flow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 10px 0 12px; }
+    .chip { background: var(--navy); color: #fff; border-radius: 999px; padding: 6px 12px; font-size: 12px; font-weight: 700; }
+    .chip.g { background: var(--good); } .chip.w { background: var(--wait); } .chip.b { background: var(--bad); }
+    .chip.i { background: var(--info); } .chip.f { background: var(--flame); }
+    .arrow { color: var(--muted); font-weight: 800; }
+    .inv { font-family: Heebo, sans-serif; background: #fff; border: 1px dashed #cbbba8; border-radius: 10px; padding: 10px 12px; font-size: 12.5px; margin: 8px 0; color: var(--navy); }
+    @media print { body { background: #fff; padding: 0; } .page { box-shadow: none; margin: 0; width: auto; } .cover { min-height: 100vh; } }
+    @page { size: A4; margin: 0; }
+  </style>
+</head>
+<body>
+  <section class="page cover">
+    <div>
+      <div class="brand">
+        <div class="logo">
+          <div class="mark"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3c2.8 3.2 6 6.7 6 10.2A6 6 0 1 1 6 13.2C6 9.7 9.2 6.2 12 3Z" fill="#fff"/></svg></div>
+          גזפלו
+        </div>
+        <div class="meta">
+          <div><strong>מסמך:</strong> לוגיקת מערכת GF-LOGIC-01</div>
+          <div><strong>תאריך:</strong> 7 באוקטובר 2026</div>
+          <div><strong>סטטוס:</strong> אפיון לביצוע</div>
+          <div><strong>סליקה:</strong> מחוץ להיקף</div>
+        </div>
+      </div>
+      <div class="eyebrow">מסמך לוגיקה תפעולית</div>
+      <h1>איך המערכת חושבת, מחליטה ומזיזה בלון</h1>
+      <p class="lede">
+        לא מסכי «ניהול». זה חוזה ההתנהגות: מי רשאי לעשות מה, מתי הזמנה זזה, איך נבנה מסלול,
+        מתי נשלחת הודעה, ואיך סופרים מלאים וריקים בלי לסטות מהמציאות בשטח.
+      </p>
+      <div class="cover-grid">
+        <div class="stat"><b>לולאה אחת</b><span>קליטה → שיבוץ → מסלול → אספקה → מלאי → הודעה → חידוש</span></div>
+        <div class="stat"><b>בלי אשראי</b><span>מזומן / העברה / חוב ידני. אין סליקה, אין קישור תשלום, אין טוקן כרטיס</span></div>
+        <div class="stat"><b>וואטסאפ הוא הערוץ</b><span>הלקוח לא חייב אפליקציה. הפורטל הוא רשות להזמנה חוזרת</span></div>
+        <div class="stat"><b>אמת אחת למלאי</b><span>מחסן + רכב + הזמנות פתוחות חייבים להסתכם כל הזמן</span></div>
+      </div>
+    </div>
+    <div class="cover-foot">
+      <div>מסמך פנימי לביצוע · נלווה להצעת מחיר GF-2026-041</div>
+      <div>חבילה מומלצת ליישום ראשון: B</div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="inner">
+      <div class="kicker">01 · גבולות</div>
+      <h2>מה המערכת כן ומה היא לא</h2>
+      <div class="two">
+        <div class="ok">
+          <h3>כן — מקור האמת התפעולי</h3>
+          <ul class="clean">
+            <li>כל הזמנה, לקוח, כתובת והערת כניסה</li>
+            <li>מלאי מלא/ריק במחסן וברכב</li>
+            <li>לוח יום, מסלול, סטטוס נהג</li>
+            <li>הודעות סטטוס ותזכורת חידוש</li>
+            <li>רישום תשלום ידני ויתרת חוב</li>
+            <li>אזור אישי להזמנה חוזרת (חבילה C)</li>
+          </ul>
+        </div>
+        <div class="warn">
+          <h3>לא — מחוץ להיקף עכשיו</h3>
+          <ul class="clean">
+            <li>סליקת אשראי / ביט / קישור תשלום</li>
+            <li>שמירת מספר כרטיס או טוקן</li>
+            <li>רישוי חלוקת גז, ביטוח, נהלי בטיחות</li>
+            <li>בוט שעונה לכל שאלה במקום אדם</li>
+            <li>אופטימיזציית ציים ברמת UPS</li>
+            <li>חשבוניות מס רשמיות לרשות המסים</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout">
+        <p><strong>כלל זהב:</strong> המערכת לא ממציאה מלאי ולא «סוגרת» הזמנה בלי אירוע שטח. אם הנהג לא סימן סופק — זה לא סופק, גם אם נשלחה הודעה «בדרך».</p>
+      </div>
+
+      <div class="kicker" style="margin-top:8px">02 · שחקנים והרשאות</div>
+      <h2>מי לוחץ על מה</h2>
+      <table>
+        <thead><tr><th>תפקיד</th><th>רואה</th><th>רשאי</th><th>אסור</th></tr></thead>
+        <tbody>
+          <tr><td><strong>משרד / בעלים</strong></td><td>הכול</td><td>הזמנות, שיבוץ, מלאי מחסן, חוב, הודעות, סגירת יום, ביטול</td><td>—</td></tr>
+          <tr><td><strong>נהג</strong></td><td>רק מסלול היום שלו</td><td>סימון הגעתי/סופק, כמות בפועל, גבייה במזומן, הערה מהשטח, חיוג ללקוח</td><td>לשנות מחיר מחירון, למחוק לקוח, לראות נהג אחר</td></tr>
+          <tr><td><strong>לקוח</strong></td><td>ההזמנות שלו בלבד</td><td>הזמנה חדשה/חוזרת, עדכון הערת כניסה, צפייה בסטטוס וביתרת חוב</td><td>לשנות מסלול, מלאי, מחיר, הזמנות של אחרים</td></tr>
+        </tbody>
+      </table>
+      <p class="note">זיהוי לקוח: טלפון + קוד חד-פעמי ל־10 דקות, או קישור קבוע אישי. אין סיסמה חובה בשלב הראשון.</p>
+
+      <div class="kicker" style="margin-top:16px">03 · אובייקטי הליבה</div>
+      <h2>הישויות שהמערכת חיה עליהן</h2>
+      <table>
+        <thead><tr><th>יישות</th><th>מפתח</th><th>שדות קריטיים</th><th>כלל</th></tr></thead>
+        <tbody>
+          <tr><td>לקוח</td><td>טלפון ייחודי</td><td>שם, כתובות, אזור, מחזור ימים, יתרת חוב, האם קבוע, הערות בטיחות/כניסה</td><td>טלפון אחד = לקוח אחד. כתובת שנייה היא כתובת, לא לקוח חדש</td></tr>
+          <tr><td>כתובת</td><td>לקוח + עיר/רחוב/מס׳</td><td>עיר, רחוב, כניסה, קומה, קוד, חניה, נקודת ציון אם יש, אזור חלוקה</td><td>כל הזמנה מחוברת לכתובת אחת פעילה</td></tr>
+          <tr><td>סוג בלון</td><td>קוד (12 / 48…)</td><td>שם, משקל, פעיל/לא, דורש החלפה</td><td>מחיר לא נשמר בסוג — נשמר בהזמנה (מחיר יום ההזמנה)</td></tr>
+          <tr><td>הזמנה</td><td>מס׳ רץ יומי + שנתי</td><td>לקוח, כתובת, שורות, מקור, מועד מבוקש, נהג, סטטוס, תשלום</td><td>לא נמחקת. רק מבוטלת עם סיבה</td></tr>
+          <tr><td>שורת הזמנה</td><td>הזמנה + סוג</td><td>כמות מלאים לספק, כמות ריקים לאסוף, כמות בפועל</td><td>בפועל יכולה לסטות מהמתוכנן, עם סיבה</td></tr>
+          <tr><td>רכב-יום</td><td>נהג + תאריך</td><td>קיבולת מלאים, קיבולת ריקים, טעינת בוקר, יתרות סגירה</td><td>אי אפשר לפתוח שני רכב-יום לאותו נהג באותו תאריך</td></tr>
+          <tr><td>עצירת מסלול</td><td>רכב-יום + סדר</td><td>הזמנה, חלון זמן, סטטוס עצירה, זמן הגעה בפועל</td><td>סדר עצירות הוא מה שנשלח לנהג, לא סדר ההזמנות במשרד</td></tr>
+        </tbody>
+      </table>
+      <footer class="page-foot"><span>גזפלו · GF-LOGIC-01</span><span>עמוד 2</span></footer>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="inner">
+      <div class="kicker">04 · מחזור חיי הזמנה</div>
+      <h2>המכונה המרכזית</h2>
+      <div class="flow">
+        <span class="chip i">טיוטה</span><span class="arrow">←</span>
+        <span class="chip">חדשה</span><span class="arrow">←</span>
+        <span class="chip w">אושרה להיום</span><span class="arrow">←</span>
+        <span class="chip f">שובצה לנהג</span><span class="arrow">←</span>
+        <span class="chip">בדרך</span><span class="arrow">←</span>
+        <span class="chip g">סופקה</span>
+      </div>
+      <div class="flow">
+        <span class="chip b">בוטלה</span>
+        <span class="chip w">נדחתה למחר</span>
+        <span class="chip b">נכשל ניסיון</span>
+        <span class="chip i">טיוטת לקוח</span>
+      </div>
+
+      <table>
+        <thead><tr><th>סטטוס</th><th>מי מעביר אליו</th><th>מה חייב להיות נכון</th><th>מה המערכת עושה</th></tr></thead>
+        <tbody>
+          <tr><td>טיוטה</td><td>לקוח בפורטל שעדיין לא שלח</td><td>טלפון + כתובת + לפחות שורה אחת</td><td>לא תופסת מלאי, נמחקת אחרי 24 שעות</td></tr>
+          <tr><td>חדשה</td><td>משרד / לקוח שלח / רישום משיחה</td><td>לקוח מזוהה או נוצר, כתובת, סוג וכמות, מקור (טלפון/וואטסאפ/אתר)</td><td>תופסת מלאי מלא שמור (רזרבה). הודעת «התקבלה»</td></tr>
+          <tr><td>אושרה להיום</td><td>משרד, או כלל אוטומטי «הזמנות עד 10:00 להיום»</td><td>יש מלאי מלא פנוי ליום, כתובת באזור פעיל</td><td>נכנסת ללוח היום. אם אין מלאי — נשארת חדשה + התראת מלאי</td></tr>
+          <tr><td>שובצה לנהג</td><td>משרד / בניית מסלול</td><td>קיים רכב-יום, יש מקום בקיבולת המלאים, יש סדר עצירה</td><td>יורדת מהרזרבה הכללית אל הקצאת הרכב. נשלח חלון זמן ללקוח</td></tr>
+          <tr><td>בדרך</td><td>נהג לוחץ «יצאתי לעצירה» או «התחלת יום» לפי הגדרה</td><td>הנהג התחיל משמרת, העצירה הבאה ידועה</td><td>הודעת «בדרך / כ־X דקות» פעם אחת לעצירה</td></tr>
+          <tr><td>סופקה</td><td>נהג, עם כמות בפועל</td><td>כמות מלאים שנמסרו ≥ 1 או נאסף ריק; חתימת סטטוס תשלום (כולל חוב)</td><td>מלאי רכב מתעדכן. הודעת «סופק». מתעדכן תאריך אספקה אחרון ומחזור</td></tr>
+          <tr><td>נכשל ניסיון</td><td>נהג: אין איש בבית / כתובת שגויה / סירוב</td><td>חובה סיבה מרשימה</td><td>לא משחררת רזרבה אוטומטית. משרד מחליט: דחייה / ביטול / ניסיון חוזר היום</td></tr>
+          <tr><td>נדחתה למחר</td><td>משרד</td><td>תאריך יעד חדש</td><td>יורדת ממסלול היום, נשארת ברזרמת מלאי לתאריך החדש</td></tr>
+          <tr><td>בוטלה</td><td>משרד או לקוח כל עוד לא «בדרך»</td><td>סיבת ביטול. אחרי «בדרך» — רק משרד</td><td>משחררת רזרמת מלאי. הודעת ביטול. לא מוחקים היסטוריה</td></tr>
+        </tbody>
+      </table>
+
+      <h3>מעברים אסורים</h3>
+      <ul class="clean">
+        <li>סופקה → חדשה. תיקון טעות: «ביטול אספקה» ייעודי שמחזיר מלאי ופותח ניסיון מחדש, עם לוג.</li>
+        <li>בוטלה → סופקה. צריך הזמנה חדשה.</li>
+        <li>דילוג מחדשה לסופקה בלי נהג — אסור, גם אם המשרד «כבר סיפק». חובה עצירה, כדי שהמלאי ברכב יזוז.</li>
+        <li>שתי הזמנות פתוחות לאותו לקוח+כתובת+סוג+יום מתמזגות לשורה, לא לכפילות, אלא אם סומן «משלוח נפרד».</li>
+      </ul>
+      <footer class="page-foot"><span>גזפלו · GF-LOGIC-01</span><span>עמוד 3</span></footer>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="inner">
+      <div class="kicker">05 · סוגי הזמנה</div>
+      <h2>מה הלקוח בעצם מבקש</h2>
+      <p>כל שורה בהזמנה היא אחד מארבעה סוגים. ברירת המחדל ללקוח קבוע: החלפה.</p>
+      <table>
+        <thead><tr><th>סוג</th><th>מלאים יוצאים מהרכב</th><th>ריקים נכנסים לרכב</th><th>מתי משתמשים</th></tr></thead>
+        <tbody>
+          <tr><td><strong>החלפה</strong></td><td>N</td><td>N</td><td>המקרה הרגיל. בלון מלא תמורת ריק</td></tr>
+          <tr><td><strong>התקנה / ראשון</strong></td><td>N</td><td>0</td><td>לקוח חדש, או תוספת נקודה בבית בלי ריק</td></tr>
+          <tr><td><strong>איסוף ריק בלבד</strong></td><td>0</td><td>N</td><td>סגירת נקודה, או ריק שנשאר מאספקה קודמת</td></tr>
+          <tr><td><strong>החלפה חלקית</strong></td><td>N</td><td>M ≠ N</td><td>למשל הביאו 2 מלאים ואספו 1 ריק. דורש סיבת נהג</td></tr>
+        </tbody>
+      </table>
+      <div class="inv">כלל: אחרי סימון סופק, מלאי_רכב.מלאים -= מלאים_בפועל ; מלאי_רכב.ריקים += ריקים_בפועל. אם הנהג דיווח החלפה חלקית — חובה הערה, והמשרד רואה דגל צהוב בסיכום היום.</div>
+
+      <h3>קליטת הזמנה — סדר החלטה</h3>
+      <ol class="clean" style="margin-right:18px">
+        <li>יש טלפון במערכת? כן → טוענים לקוח, כתובת אחרונה, סוג בלון אחרון, מחזור. לא → יצירת לקוח חדש במצב «חסר כתובת» עד שתושלם.</li>
+        <li>אם חסר רחוב/עיר — ההזמנה נשמרת כחדשה אבל לא ניתנת לשיבוץ. דגל «חסר מיקום».</li>
+        <li>אם הלקוח עם יתרת חוב מעל סף שהמשרד קבע (ברירת מחדל ₪400) — ההזמנה נכנסת, אבל דורשת אישור ידני לפני שיבוץ. לא חוסמים אוטומטית; גז ביתי הוא שירות רגיש.</li>
+        <li>אם כבר יש הזמנה פתוחה לאותו יום — ממזגים, אלא אם ביקשו משלוח שני.</li>
+        <li>מחיר השורה = מחירון נוכחי × כמות מלאים. נעול ברגע האישור להיום. שינוי מחיר אחרי שיבוץ דורש הרשאת משרד + לוג.</li>
+      </ol>
+
+      <div class="kicker" style="margin-top:16px">06 · מלאי — האמת הכפולה</div>
+      <h2>מחסן, רכב, רזרבה</h2>
+      <p>שלושה דליים לכל סוג בלון. אם הם לא מסתכמים — המערכת צועקת, לא «מתקנת בשקט».</p>
+      <div class="three">
+        <div class="card"><h3>מחסן.מלאים</h3><p>פיזיים על המדף עכשיו. יורדים בטעינת בוקר. עולים בהחזרת עודפים בערב.</p></div>
+        <div class="card"><h3>רכב.מלאים / רכב.ריקים</h3><p>מה שעל המשאית הזו היום. זזים רק בטעינה, בפריקה, ובסימון סופק/איסוף.</p></div>
+        <div class="card"><h3>רזרבה</h3><p>מלאים שמורים להזמנות בסטטוס חדשה/אושרה/שובצה ועדיין לא סופקו. לא יושבים פיזית בנפרד — זה מנעול חשבונאי.</p></div>
+      </div>
+      <div class="inv">
+        מלאים_זמינים_לשיבוץ = מחסן.מלאים + סכום(רכב.מלאים שטרם יצאו) − רזרבה_פתוחה_שעוד לא הועמסה<br/>
+        אסור לשבץ נהג אם אחרי השיבוץ: סכום המלאים במסלולו > קיבולת_רכב או > מלאים_זמינים.
+      </div>
+      <h3>טעינת בוקר</h3>
+      <ul class="clean">
+        <li>המערכת מציעה לטעון = סכום המלאים בהזמנות ששובצו + רזרבת ביטחון (ברירת מחדל +2 לכל סוג).</li>
+        <li>המשרד מאשר מספר בפועל. אי אפשר לאשר מעל מחסן.מלאים.</li>
+        <li>אחרי אישור: מחסן.מלאים -= טעינה ; רכב.מלאים += טעינה. רזרבת ההזמנות עוברת ל«הועמסה».</li>
+        <li>בלי טעינת בוקר חתומה הנהג יכול לראות מסלול, אבל לא לסמן «בדרך». חוסם דיווח שקרי.</li>
+      </ul>
+      <h3>סגירת ערב</h3>
+      <ul class="clean">
+        <li>נהג מדווח יתרת מלאים וריקים על הרכב. אם זה לא תואם את מה שהמערכת חישבה מאירועי היום — היום לא נסגר, דגל אדום למשרד.</li>
+        <li>החזרה למחסן: מחסן.מלאים += יתרת מלאים ; מחסן.ריקים += יתרת ריקים ; רכב מתאפס.</li>
+        <li>ריקים במחסן הם מלאי יציאה לספק הגז / המילוי. זה לא «כסף», אבל זה נכס. חריגה של ריקים שלא נאספו נרשמת על הלקוח.</li>
+      </ul>
+      <footer class="page-foot"><span>גזפלו · GF-LOGIC-01</span><span>עמוד 4</span></footer>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="inner">
+      <div class="kicker">07 · בניית מסלול</div>
+      <h2>לא GPS קסם — סדר עבודה לאזור</h2>
+      <p>
+        בחבילה B המסלול הוא סידור עצירות לפי אזור, חלון זמן וקיבולת. הנהג/משרד יכולים לגרור סדר.
+        בחבילה C נוספת מפה והצעת סדר לפי מרחק. האדם תמיד מאשר לפני יציאה.
+      </p>
+      <h3>קלט ליום</h3>
+      <ul class="clean">
+        <li>כל הזמנה בסטטוס אושרה להיום או שובצה, לא בוטלה.</li>
+        <li>נהגים פעילים, לכל אחד אזורי בית + קיבולת מלאים/ריקים.</li>
+        <li>חלונות זמן שביקש הלקוח (בוקר / צהריים / אחה״כ / מדויק אם הוזן).</li>
+      </ul>
+      <h3>אלגוריתם השיבוץ (B)</h3>
+      <ol class="clean" style="margin-right:18px">
+        <li>קבץ הזמנות לפי אזור חלוקה (השדה על הכתובת, לא לפי «קרוב במפה» בשלב B).</li>
+        <li>שייך אזור לנהג שאזור הבית שלו תואם. אם כמה נהגים — לנהג עם פחות עומס מלאים.</li>
+        <li>אם אזור בלי נהג בית — נשאר ב«לא משובץ» למשרד. אין השמה אוטומטית לעיר אחרת.</li>
+        <li>בתוך אזור, מיין: חלון זמן (בוקר קודם) → רחוב אלפביתי → מספר בית. זה יציב וצפוי לנהג שמכיר את השכונה.</li>
+        <li>בדוק קיבולת. אם חריגה — השאר את העצירות האחרונות בלי שיבוץ, עם סיבה «חריגת קיבולת», אל תדחוס בשקט.</li>
+        <li>הצע רזרבת ביטחון +2 מלאים בטעינה. אל תשבץ את הרזרבה כלקוח פיקטיבי.</li>
+        <li>המשרד לוחץ «נעל מסלול». אחרי נעילה הנהג רואה סדר קבוע. שינוי סדר אחרי נעילה דורש משרד, או נהג שמסמן «דילגתי» עם סיבה.</li>
+      </ol>
+      <div class="inv">
+        ציון עצירה למיון בחבילה C (כשתיכנס מפה): score = 4×אזור_בית + 3×חלון_זמן + 2×מרחק_מהקודם + 1×ותק_המתנה.<br/>
+        ותק המתנה = שעות מאז «חדשה». הזמנה מאתמול קופצת קדימה בתוך אותו אזור, לא שוברת אזור.
+      </div>
+      <h3>לוגיקת דילוג בשטח</h3>
+      <ul class="clean">
+        <li>נהג לוחץ דילוג → עצירה יורדת לסוף המסלול של אותו יום, סטטוס «נכשל ניסיון» או «נדחה בתוך היום».</li>
+        <li>שני דילוגים לאותה הזמנה באותו יום → יורדת אוטומטית ל«נדחתה למחר» + הודעה למשרד. לא נעלמת.</li>
+        <li>אם נשארו ברכב 0 מלאים והמסלול עוד פתוח — שאר העצירות מסוג החלפה/התקנה נחסמות עם «אין מלאי על הרכב». איסוף ריק עדיין מותר.</li>
+      </ul>
+
+      <div class="kicker" style="margin-top:14px">08 · תשלום בלי אשראי</div>
+      <h2>כסף נרשם, לא נגבה בכרטיס</h2>
+      <table>
+        <thead><tr><th>מצב תשלום</th><th>מי מסמן</th><th>השפעה</th></tr></thead>
+        <tbody>
+          <tr><td>ממתין</td><td>ברירת מחדל בהזמנה חדשה</td><td>לא חוסם שיבוץ. חוסם סגירת יום רק אם המשרד הפעיל «חובה סטטוס לכל עצירה» (ברירת מחדל: דלוק)</td></tr>
+          <tr><td>שולם מזומן</td><td>נהג בעצירה, סכום בפועל</td><td>נכנס לקופת היום של הנהג. חייב להתאים לסכום סגירת ערב ± סטייה שאושרה</td></tr>
+          <tr><td>העברה / ביט שסומנה ידנית</td><td>משרד בלבד, אחרי שראה בחשבון</td><td>לא הנהג. מונע «הלקוח אמר שהעביר»</td></tr>
+          <tr><td>חוב / על החשבון</td><td>נהג או משרד</td><td>יתרת הלקוח += סכום ההזמנה. מופיע בכרטיס ובאזור האישי כמידע, בלי כפתור תשלום</td></tr>
+          <tr><td>זיכוי / ביטול חיוב</td><td>משרד</td><td>לוג חובה. אם כבר סומן מזומן — לא מוחקים, יוצרים שורת קיזוז</td></tr>
+        </tbody>
+      </table>
+      <p class="note">אין מסך הכנסת כרטיס, אין שמירת אמצעי תשלום, אין חשבונית סליקה. סיכום יום = מזומן שנספר + העברות שאושרו במשרד + חובות חדשים.</p>
+      <footer class="page-foot"><span>גזפלו · GF-LOGIC-01</span><span>עמוד 5</span></footer>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="inner">
+      <div class="kicker">09 · הודעות</div>
+      <h2>אירוע → תבנית. לא שיחה חופשית</h2>
+      <p>כל הודעה נשלחת פעם אחת לכל אירוע, אלא אם סומן «שלח שוב». כשל בשליחה לא משנה סטטוס הזמנה.</p>
+      <table>
+        <thead><tr><th>טריגר</th><th>תבנית</th><th>מתי לא שולחים</th></tr></thead>
+        <tbody>
+          <tr><td>חדשה נוצרה</td><td>«התקבלה, נאשר משלוח בהודעה נפרדת»</td><td>מקור=טלפון והמשרד סימן «נאמר בעל פה»</td></tr>
+          <tr><td>שובצה + נעילת מסלול</td><td>«נגיע היום, חלון {בוקר/12–16/…}»</td><td>אין חלון — שולחים «במהלך היום», לא ממציאים שעה</td></tr>
+          <tr><td>נהג בדרך לעצירה</td><td>«הנהג בדרך, כ־{דקות} דקות» אם יש הערכת זמן, אחרת בלי דקות</td><td>הודעת בדרך כבר נשלחה לעצירה הזו</td></tr>
+          <tr><td>סופקה</td><td>«סופק. תודה. להזמנה הבאה {קישור}»</td><td>לקוח סומן «לא לשלוח פרסום» — בלי קישור, רק אישור אספקה</td></tr>
+          <tr><td>נכשל ניסיון</td><td>«לא הצלחנו היום, ניצור קשר לתיאום»</td><td>—</td></tr>
+          <tr><td>בוטלה</td><td>«ההזמנה בוטלה»</td><td>ביטול פנימי לפני שנודע ללקוח (עדיין טיוטה משרדית)</td></tr>
+          <tr><td>תזכורת חידוש</td><td>«לפי המחזור שלך הגיע הזמן. להזמין {קישור}»</td><td>יש הזמנה פתוחה, או לקוח «לא פעיל», או opt-out</td></tr>
+        </tbody>
+      </table>
+      <div class="warn">
+        <strong>אין בוט שעונה לשאלות.</strong> הודעה נכנסת מלקוח נרשמת בתיבת «נכנס» על הלקוח. אם זו ההודעה הראשונה מהמספר — נוצר לקוח + הזמנה טיוטה למשרד. אדם מחליט. המערכת לא מבטיחה אספקה מצ׳אט.
+      </div>
+
+      <div class="kicker" style="margin-top:12px">10 · אזור אישי</div>
+      <h2>הזמנה חוזרת, לא רשת חברתית</h2>
+      <ul class="clean">
+        <li>מסך בית: כפתור אחד «הזמן כמו בפעם הקודמת» (אותו סוג, אותה כתובת, החלפה).</li>
+        <li>שינוי כמות / סוג / כתובת אחרת — מסך שני, קצר.</li>
+        <li>סטטוס הזמנה פתוחה בזמן אמת, בלי מיקום GPS חי של הנהג בשלב B (רק בחבילה C, ורק אחרי «בדרך»).</li>
+        <li>היסטוריית 12 החודשים האחרונים.</li>
+        <li>יתרת חוב לקריאה בלבד. בלי כפתור «שלם עכשיו».</li>
+        <li>עדכון קוד כניסה / הערת חניה נשמר לכתובת, לא רק להזמנה.</li>
+        <li>לקוח לא יכול לבטל אחרי «בדרך». רואה «חייגו למשרד» עם מספר.</li>
+      </ul>
+
+      <div class="kicker" style="margin-top:12px">11 · אוטומציות</div>
+      <h2>שעון + אירוע, עם בלם יד</h2>
+      <table>
+        <thead><tr><th>שם</th><th>תנאי</th><th>פעולה</th><th>בלם</th></tr></thead>
+        <tbody>
+          <tr><td>חידוש לפי מחזור</td><td>היום ≥ תאריך_אספקה_אחרון + מחזור_ימים − 2</td><td>הודעת תזכורת אחת. אם אין מחזור — 28 יום ל־12 ק״ג, 21 ל־48 ק״ג</td><td>לא נשלח אם יש פתוחה / opt-out / נשלח ב־10 הימים האחרונים</td></tr>
+          <tr><td>לקוח נרדם</td><td>עברו 2×מחזור בלי הזמנה</td><td>דגל במשרד «שווה שיחה», לא הודעה שיווקית שנייה</td><td>לקוח לא פעיל ידנית</td></tr>
+          <tr><td>מלאי נמוך</td><td>מלאים_זמינים < סכום אושר_להיום + רף (ברירת מחדל 5)</td><td>התראה למשרד בבוקר ובכל שיבוץ כושל</td><td>—</td></tr>
+          <tr><td>סיכום יום</td><td>20:30 או לחיצת סגירה</td><td>למשרד: סופק / נכשל / מזומן / חוב / מלאים / ריקים / הפרשי מלאי</td><td>לא נשלח ללקוחות</td></tr>
+          <tr><td>הזמנות עד שעה חתוכה</td><td>הזמנה חדשה לפני 10:00 לאזור פעיל היום</td><td>מועמדת אוטומטית ל«אושרה להיום»</td><td>חוב מעל סף / חסר מיקום / מלאי לא מספיק</td></tr>
+          <tr><td>אחרי 10:00</td><td>הזמנה חדשה מאוחרת</td><td>נשארת חדשה ל«ניסיון לשבץ אם הנהג באזור» או למחר</td><td>המשרד בלבד משבץ ליום הנוכחי אחרי נעילת מסלול</td></tr>
+        </tbody>
+      </table>
+      <footer class="page-foot"><span>גזפלו · GF-LOGIC-01</span><span>עמוד 6</span></footer>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="inner">
+      <div class="kicker">12 · יום עבודה מקצה לקצה</div>
+      <h2>הרצף הקבוע</h2>
+      <div class="steps">
+        <p><strong>20:00 אתמול / בוקר מוקדם.</strong> משרד רואה הזמנות חדשות + נדחו מאתמול. מאשר להיום. בודק התראת מלאי.</p>
+        <p><strong>טעינה.</strong> המערכת מציעה כמויות. מאשרים טעינה לרכב. מחסן זז. מסלול ננעל. הודעות חלון זמן יוצאות.</p>
+        <p><strong>בשטח.</strong> נהג רואה עצירה הבאה. «בדרך» → הודעה. הגעה. מוסר מלאים, אוסף ריקים, מסמן תשלום (מזומן/חוב). אם אין איש — דילוג עם סיבה.</p>
+        <p><strong>הזמנה שנכנסת בצהריים.</strong> לא נכנסת למסלול נעול לבד. המשרד יכול «להוסיף לנהג באזור» אם יש מלאי על הרכב; אחרת מחר.</p>
+        <p><strong>ערב.</strong> נהג מדווח יתרות. משרד סופר מזומן מול קופת נהג. אם מלאי או קופה לא תואמים — היום נשאר פתוח. אחרי התאמה: החזרה למחסן, סיכום יום.</p>
+      </div>
+
+      <div class="kicker" style="margin-top:14px">13 · מחזור לקוח</div>
+      <h2>איך יודעים מתי נגמר הגז</h2>
+      <div class="inv">
+        מחזור_ימים = ממוצע המרווחים בין 3 האספקות האחרונות שהושלמו, אחרי זריקת מרווח חריג (>60 יום או <5).<br/>
+        אם יש פחות מ־3 אספקות: ברירת מחדל לפי סוג בלון (28 / 21). המשרד יכול לנעול מחזור ידני על הלקוח.<br/>
+        תאריך_תזכורת = אספקה_אחרונה + מחזור − 2 ימים. רצה פעם ביום ב־09:00.
+      </div>
+
+      <div class="kicker" style="margin-top:14px">14 · מצבי קצה</div>
+      <h2>מה קורה כשהשטח לא יפה</h2>
+      <table>
+        <thead><tr><th>מצב</th><th>לוגיקה</th></tr></thead>
+        <tbody>
+          <tr><td>לקוח ביקש 2, על הרכב נשאר 1</td><td>נהג מסמן כמות בפועל 1. שורת המשך נפתחת אוטומטית למחר, מקושרת להזמנת האב. הודעה: «סופק חלקי, נשלים מחר».</td></tr>
+          <tr><td>אין ריק בבית בהחלפה</td><td>סוג השורה הופך להתקנה + דגל «ריק חסר». יתרת ריקים על הלקוח += 1. לא חוסם אספקה.</td></tr>
+          <tr><td>כתובת לא נמצאת</td><td>נכשל ניסיון / כתובת שגויה. המשרד מתקן כתובת. אם תוקן היום — חוזר לסוף המסלול. אחרת מחר.</td></tr>
+          <tr><td>שני אנשים הזמינו מאותו טלפון</td><td>טלפון ייחודי. כתובת שנייה על אותו לקוח. אם זה באמת בית אחר עם אותו מספר — המשרד מפצל ידנית ללקוח חדש, עם לוג.</td></tr>
+          <tr><td>נהג סימן סופק בטעות</td><td>«ביטול אספקה» תוך 2 שעות: מחזיר מלאי רכב, מחזיר סטטוס לשובצה, מבטל הודעת סופק בהודעת תיקון. אחרי סגירת יום — רק משרד, עם התאמת מלאי ידנית.</td></tr>
+          <tr><td>הודעת וואטסאפ נכשלה</td><td>ההזמנה נשארת. ניסיון חוזר אחד אחרי 5 דקות. אחר כך דגל במשרד. אין שינוי סטטוס.</td></tr>
+          <tr><td>כפילות הזמנה מאתר ומשיחה</td><td>מיזוג אם אותו לקוח+יום+סוג בתוך 6 שעות. אחרת המשרד רואה התראת כפילות ולא ממזג לבד.</td></tr>
+        </tbody>
+      </table>
+      <footer class="page-foot"><span>גזפלו · GF-LOGIC-01</span><span>עמוד 7</span></footer>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="inner">
+      <div class="kicker">15 · כללי נתונים</div>
+      <h2>מה נשמר ואיך לא משקרים</h2>
+      <ul class="clean">
+        <li>כל שינוי סטטוס, מלאי, מחיר וחוב נכתב ליומן: מי, מתי, לפני, אחרי, סיבה.</li>
+        <li>מחיקה פיזית אין. ביטול / לא פעיל / הוסתר.</li>
+        <li>שעה במערכת: שעון ישראל, כולל מעבר קיץ.</li>
+        <li>«היום» לענייני שיבוץ נחתך ב־00:00, לא בסגירת המשמרת. הזמנה ב־00:10 היא מחר עד שהמשרד אומר אחרת.</li>
+        <li>מספר הזמנה: GF-שנה-מספר רץ, לא מתאפס באזור.</li>
+        <li>הודעות שומרות עותק מדויק של מה שנשלח (לא רק «נשלחה תבנית 3»).</li>
+      </ul>
+
+      <div class="kicker" style="margin-top:14px">16 · מסכים לפי תפקיד — לוגיקת שימוש</div>
+      <h2>מה כל אחד עושה בפועל</h2>
+      <div class="two">
+        <div class="card">
+          <h3>משרד — לוח ראשי</h3>
+          <ul class="clean">
+            <li>עמודה: חדשות / היום / בשטח / חריגים</li>
+            <li>חריג = חוב גבוה, חסר מיקום, מלאי חסר, כפילות, דילוג כפול, הפרש סגירה</li>
+            <li>פעולה ראשית אחת: «שבץ את היום»</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>נהג — עצירה נוכחית</h3>
+          <ul class="clean">
+            <li>שם, כתובת, הערת כניסה, חיוג, ניווט</li>
+            <li>כמות מלא/ריק לעריכה לפני סופק</li>
+            <li>מזומן / חוב / לא נגבה עדיין</li>
+            <li>אין גישה למחירון הכללי או ללקוחות אחרים</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="kicker" style="margin-top:16px">17 · מה מיישמים קודם</div>
+      <h2>סדר הלוגיקה = סדר הבנייה</h2>
+      <table>
+        <thead><tr><th>#</th><th>לבנות</th><th>בלי זה אי אפשר</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>לקוח, כתובת, סוג בלון, הזמנה + סטטוסים</td><td>שום דבר אחר</td></tr>
+          <tr><td>2</td><td>רזרמת מלאי + מחסן</td><td>שיבוץ אמיתי</td></tr>
+          <tr><td>3</td><td>רכב-יום, עצירות, נעילת מסלול, תצוגת נהג</td><td>אספקה בשטח</td></tr>
+          <tr><td>4</td><td>טעינת בוקר / סגירת ערב / קופת מזומן וחוב</td><td>לישון בשקט</td></tr>
+          <tr><td>5</td><td>תבניות הודעות על אירועים</td><td>להוריד שיחות</td></tr>
+          <tr><td>6</td><td>מחזור + תזכורת חידוש</td><td>אוטומציה אמיתית</td></tr>
+          <tr><td>7</td><td>אזור אישי «הזמן כמו בפעם הקודמת»</td><td>רק אחרי 1–5 חיים</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout">
+        <p>
+          <strong>החלטה סגורה במסמך הזה:</strong> אין חיבור אשראי, אין שמירת כרטיס, אין כפתור תשלום בפורטל.
+          כסף = מזומן שנספר + העברה שהמשרד אישר + חוב על הלקוח. אפשר להוסיף סליקה אחר כך בלי לשבור הזמנות, כי מחיר ויתרה כבר קיימים כשדות נפרדים מאמצעי הגבייה.
+        </p>
+      </div>
+      <p class="note" style="margin-top:16px">מסמך זה הוא מקור האמת ללוגיקה. שינוי כלל אחרי אפיון חתום = שינוי היקף. חריג בשטח שלא מופיע כאן עולה למשרד ולא «מסתדר לבד».</p>
+      <footer class="page-foot"><span>גזפלו · GF-LOGIC-01 · בלי סליקת אשראי</span><span>עמוד 8</span></footer>
+    </div>
+  </section>
+</body>
+</html>

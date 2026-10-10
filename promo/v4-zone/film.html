@@ -1,0 +1,465 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>GazFlow v4 — the zone</title>
+<style>
+  @font-face { font-family: "Heebo"; font-weight: 500; src: url(../film/node_modules/@fontsource/heebo/files/heebo-hebrew-500-normal.woff2) format("woff2"); unicode-range: U+0590-05FF; }
+  @font-face { font-family: "Heebo"; font-weight: 700; src: url(../film/node_modules/@fontsource/heebo/files/heebo-hebrew-700-normal.woff2) format("woff2"); unicode-range: U+0590-05FF; }
+  @font-face { font-family: "Heebo"; font-weight: 800; src: url(../film/node_modules/@fontsource/heebo/files/heebo-hebrew-800-normal.woff2) format("woff2"); unicode-range: U+0590-05FF; }
+  @font-face { font-family: "Heebo"; font-weight: 500; src: url(../film/node_modules/@fontsource/heebo/files/heebo-latin-500-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Heebo"; font-weight: 800; src: url(../film/node_modules/@fontsource/heebo/files/heebo-latin-800-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Plex Arabic"; font-weight: 500; src: url(../film/node_modules/@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-500-normal.woff2) format("woff2"); unicode-range: U+0600-06FF, U+0750-077F, U+FB50-FDFF, U+FE70-FEFF; }
+  @font-face { font-family: "Plex Arabic"; font-weight: 700; src: url(../film/node_modules/@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-700-normal.woff2) format("woff2"); unicode-range: U+0600-06FF, U+0750-077F, U+FB50-FDFF, U+FE70-FEFF; }
+  /* the app's own font, for the UI components */
+  @font-face { font-family: "Rubik"; font-weight: 500; src: url(../film/node_modules/@fontsource/rubik/files/rubik-hebrew-500-normal.woff2) format("woff2"); unicode-range: U+0590-05FF; }
+  @font-face { font-family: "Rubik"; font-weight: 700; src: url(../film/node_modules/@fontsource/rubik/files/rubik-hebrew-700-normal.woff2) format("woff2"); unicode-range: U+0590-05FF; }
+  @font-face { font-family: "Rubik"; font-weight: 800; src: url(../film/node_modules/@fontsource/rubik/files/rubik-hebrew-800-normal.woff2) format("woff2"); unicode-range: U+0590-05FF; }
+  @font-face { font-family: "Rubik"; font-weight: 500; src: url(../film/node_modules/@fontsource/rubik/files/rubik-arabic-500-normal.woff2) format("woff2"); unicode-range: U+0600-06FF, U+0750-077F, U+FB50-FDFF, U+FE70-FEFF; }
+  @font-face { font-family: "Rubik"; font-weight: 700; src: url(../film/node_modules/@fontsource/rubik/files/rubik-arabic-700-normal.woff2) format("woff2"); unicode-range: U+0600-06FF, U+0750-077F, U+FB50-FDFF, U+FE70-FEFF; }
+  @font-face { font-family: "Rubik"; font-weight: 500; src: url(../film/node_modules/@fontsource/rubik/files/rubik-latin-500-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Rubik"; font-weight: 800; src: url(../film/node_modules/@fontsource/rubik/files/rubik-latin-800-normal.woff2) format("woff2"); }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { overflow: hidden; }
+  #stage { position: relative; overflow: hidden; direction: rtl; font-family: "Heebo", "Plex Arabic", sans-serif; }
+  #stage.ar { font-family: "Plex Arabic", "Heebo", sans-serif; }
+  .vignette { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(120% 90% at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,.5) 100%); }
+  #world { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+  #scene { position: absolute; left: 0; top: 0; overflow: visible; }
+  .w { position: absolute; }
+  .cap { position: absolute; text-align: center; font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; z-index: 10; }
+  .scr { position: absolute; left: 0; right: 0; text-align: center; font-weight: 800; z-index: 9; }
+
+  /* place labels (world, sized for the overview) */
+  .plabel { position: absolute; transform: translate(-50%, -100%); display: flex; align-items: center; gap: 12px; padding: 8px 22px 8px 20px; border-radius: 999px; background: rgba(11,15,21,.82); box-shadow: 0 0 0 1.5px rgba(245,247,248,.14); font-weight: 700; font-size: 30px; white-space: nowrap; }
+  .plabel i { width: 14px; height: 14px; border-radius: 50%; background: rgba(245,247,248,.35); }
+
+  /* real UI cards, 1:1 with the app's cards, floating over their place (world units) */
+  .card { position: absolute; font-family: "Rubik", sans-serif; color: var(--ink); background: #fff; border-radius: 26px; box-shadow: 0 30px 70px rgba(0,0,0,.55); transform-origin: 50% 100%; }
+  .anchor { position: absolute; width: 2px; background: linear-gradient(rgba(245,247,248,.7), rgba(245,247,248,0)); transform-origin: 50% 0; }
+  .chip { display: inline-flex; align-items: baseline; gap: 7px; padding: 5px 14px; border-radius: 14px; background: #e1f2e7; color: #006b31; font-weight: 700; white-space: nowrap; }
+  .chip b { font-weight: 800; }
+  .chip small { font-weight: 500; opacity: .75; }
+  .pill { display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; font-weight: 700; white-space: nowrap; }
+  .muted { color: var(--soft); }
+  .btn { display: flex; align-items: center; justify-content: center; border-radius: 16px; font-weight: 700; color: #00843d; box-shadow: inset 0 0 0 2.5px #00843d; }
+  .num { font-family: "Heebo", sans-serif; font-weight: 800; direction: ltr; }
+  .word { position: absolute; left: 0; right: 0; text-align: center; font-weight: 800; letter-spacing: -0.02em; white-space: nowrap; }
+  .cta { position: absolute; left: 50%; padding: 26px 64px; border-radius: 999px; font-weight: 800; white-space: nowrap; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="world">
+    <svg id="scene" width="1" height="1"></svg>
+    <div id="labels"></div>
+    <div id="cards"></div>
+  </div>
+  <div class="vignette"></div>
+  <div id="screen"></div>
+  <div class="cap" id="cap"></div>
+</div>
+
+<script>
+(async function () {
+  const Q = new URLSearchParams(location.search);
+  const LANG = Q.get("lang") === "ar" ? "ar" : "he";
+  const V = Q.get("fmt") === "v";
+  const CUT = Q.get("cut") || "main";
+  const W = V ? 1080 : 1920, H = V ? 1920 : 1080;
+  const C = await (await fetch("config.json")).json();
+  const TX = C.text[LANG], UI = C.ui[LANG], COL = C.colors, cut = C.cuts[CUT];
+  const stage = document.getElementById("stage");
+  stage.style.width = W + "px"; stage.style.height = H + "px"; stage.style.background = COL.bg; stage.style.color = COL.white;
+  stage.style.setProperty("--ink", COL.ink); stage.style.setProperty("--soft", COL.soft);
+  if (LANG === "ar") stage.classList.add("ar");
+  const $ = (id) => document.getElementById(id);
+  const g = (s) => s.replace(/<g>(.*?)<\/g>/g, `<span style="color:${COL.emerald}">$1</span>`);
+  const NS = "http://www.w3.org/2000/svg";
+
+  // ---------- pure motion ----------
+  const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+  const p01 = (t, a, d) => clamp((t - a) / d);
+  const ease = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+  const easeOut = (x) => 1 - Math.pow(1 - x, 3);
+  const back = (x) => { const c = 1.6; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+  const pulse = (t, at, d = 0.6, a = 0.06) => (t >= at ? 1 + a * Math.sin(Math.PI * p01(t, at, d)) : 1);
+  const words = (s) => s.replace(/<[^>]+>/g, "").split(/\s+/).filter((w) => w && w !== "—").length;
+  const win = (t, [a, b], fi = 0.35, fo = 0.3) => (t < a || t > b ? 0 : Math.min(easeOut(p01(t, a, fi)), 1 - p01(t, b - fo, fo)));
+
+  // ---------- isometric projection, 2:1 ----------
+  const U = 60;
+  const proj = (gx, gy, gz = 0) => [(gx - gy) * U, ((gx + gy) * U) / 2 - gz * U];
+  const pts = (arr) => arr.map((p) => proj(...p).map((v) => v.toFixed(1)).join(",")).join(" ");
+  // an axis-aligned box: top + the two faces that face the viewer (+gy = left, +gx = right)
+  function isoBox(x, y, z, w, d, h, top, left, right) {
+    return `<polygon points="${pts([[x, y + d, z], [x + w, y + d, z], [x + w, y + d, z + h], [x, y + d, z + h]])}" fill="${left}"/>` +
+      `<polygon points="${pts([[x + w, y, z], [x + w, y + d, z], [x + w, y + d, z + h], [x + w, y, z + h]])}" fill="${right}"/>` +
+      `<polygon points="${pts([[x, y, z + h], [x + w, y, z + h], [x + w, y + d, z + h], [x, y + d, z + h]])}" fill="${top}"/>`;
+  }
+  const flat = (x, y, w, d, fill, z = 0) => `<polygon points="${pts([[x, y, z], [x + w, y, z], [x + w, y + d, z], [x, y + d, z]])}" fill="${fill}"/>`;
+  // an upright cylinder (a gas bottle): body + top ellipse
+  function bottle(cx, cy, z, r, h, full, s = 1) {
+    const [bx, by] = proj(cx, cy, z), [, ty] = proj(cx, cy, z + h), rx = Math.SQRT2 * U * r, ry = (U * r) / Math.SQRT2;
+    if (full) return `<g opacity="${s}"><path d="M ${bx - rx} ${ty} L ${bx - rx} ${by} A ${rx} ${ry} 0 0 0 ${bx + rx} ${by} L ${bx + rx} ${ty} Z" fill="#0e9f6e"/><ellipse cx="${bx}" cy="${ty}" rx="${rx}" ry="${ry}" fill="#34d399"/></g>`;
+    return `<g opacity="${s}" fill="none" stroke="${COL.emerald}" stroke-width="1.6"><path d="M ${bx - rx} ${ty} L ${bx - rx} ${by} A ${rx} ${ry} 0 0 0 ${bx + rx} ${by} L ${bx + rx} ${ty}"/><ellipse cx="${bx}" cy="${ty}" rx="${rx}" ry="${ry}"/></g>`;
+  }
+
+  // ---------- the zone (one scene, built once) ----------
+  const PL = {   // places: footprint + where their card/label anchors
+    factory: { x: 2, y: 1.6, w: 4.6, d: 4.0, roof: [4.2, 3.4, 2.6] },
+    office: { x: 9.6, y: 2.4, w: 2.6, d: 2.6, roof: [10.9, 3.7, 1.9] },
+    parking: { x: 9.6, y: 8.4, w: 3.0, d: 2.6, roof: [11.1, 9.7, 0.7] },
+    customer: { x: 3.0, y: 12.9, w: 1.4, d: 1.4, roof: [3.7, 13.6, 1.6] },
+  };
+  const ROADS = [[[0, 7], [14, 7]], [[8, 0], [8, 14.6]], [[1.5, 12], [8, 12]], [[1.5, 7], [1.5, 12]]];
+  const RW = 0.6;   // half road width
+  const sc = $("scene");
+  let base = "";
+  // ground
+  base += flat(-0.6, -0.6, 15.2, 15.6, COL.ground);
+  [[2, 1.6, 4.6, 4.6], [9.6, 2.4, 2.6, 3.0], [9.6, 8.4, 3.0, 2.6], [2.6, 12.8, 2.2, 1.8], [5.2, 12.8, 1.8, 1.8], [9.4, 12.6, 1.8, 1.8], [2.4, 8.2, 4.6, 3.0]].forEach(([x, y, w, d]) => (base += flat(x, y, w, d, COL.plot)));
+  // roads
+  ROADS.forEach(([[x1, y1], [x2, y2]]) => {
+    const hz = y1 === y2;
+    base += hz ? flat(Math.min(x1, x2) - RW, y1 - RW, Math.abs(x2 - x1) + 2 * RW, 2 * RW, COL.road) : flat(x1 - RW, Math.min(y1, y2) - RW, 2 * RW, Math.abs(y2 - y1) + 2 * RW, COL.road);
+  });
+  ROADS.forEach(([a, b]) => (base += `<polyline points="${pts([[...a, 0], [...b, 0]])}" fill="none" stroke="rgba(245,247,248,.10)" stroke-width="2" stroke-dasharray="10 14"/>`));
+  // parking stalls
+  for (let i = 0; i <= 3; i++) base += `<polyline points="${pts([[9.9 + i * 0.75, 9.2, 0], [9.9 + i * 0.75, 10.8, 0]])}" stroke="rgba(245,247,248,.18)" stroke-width="2" fill="none"/>`;
+  sc.innerHTML = `<defs><filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      <radialGradient id="sph" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#5b6878"/><stop offset=".55" stop-color="#3b4756"/><stop offset="1" stop-color="#252e39"/></radialGradient>
+      <radialGradient id="warm" r="60%"><stop offset="0" stop-color="${COL.amber}" stop-opacity=".55"/><stop offset="1" stop-color="${COL.amber}" stop-opacity="0"/></radialGradient></defs>
+    <g id="zone"><g id="base">${base}</g><g id="glows"></g><g id="things"></g></g>`;
+
+  // the buildings (sorted far → near so nearer ones paint over)
+  const B = COL;
+  const things = [];
+  // factory: a filling shed with a loading ramp + one spherical tank on legs
+  things.push({ k: "factory", d: 2 + 2.4, svg: (() => {
+    const [cx, cy] = proj(3.1, 2.8, 1.55), r = 1.15 * U;
+    let s = "";
+    [[2.5, 2.4], [3.7, 2.4], [2.5, 3.4], [3.7, 3.4]].forEach(([x, y]) => (s += isoBox(x, y, 0, 0.12, 0.12, 1.0, B.bldTop, B.bldLeft, B.bldRight)));
+    s += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#sph)"/><ellipse cx="${cx}" cy="${cy}" rx="${r}" ry="${r * 0.18}" fill="none" stroke="rgba(245,247,248,.12)" stroke-width="2"/>`;
+    return s; })() });
+  things.push({ k: "factory", d: 4.6 + 4.6, svg: isoBox(4.3, 3.9, 0, 2.3, 1.7, 1.1, B.bldTop, B.bldLeft, B.bldRight) + isoBox(4.3, 5.6, 0, 2.3, 0.55, 0.28, "#46525f", B.bldLeft, B.bldRight) });
+  // office: two storeys, one warm lit window
+  things.push({ k: "office", d: 9.6 + 2.4 + 2.6, svg: (() => {
+    let s = isoBox(9.9, 2.7, 0, 2.0, 2.0, 1.6, B.bldTop, B.bldLeft, B.bldRight);
+    const [wx, wy] = proj(11.0, 4.7, 0.95);
+    s += `<circle cx="${wx}" cy="${wy}" r="70" fill="url(#warm)"/><polygon points="${pts([[10.5, 4.7, 0.7], [11.5, 4.7, 0.7], [11.5, 4.7, 1.2], [10.5, 4.7, 1.2]])}" fill="${COL.amber}" opacity=".9"/>`;
+    s += `<polygon points="${pts([[11.9, 3.0, 0.7], [11.9, 3.8, 0.7], [11.9, 3.8, 1.2], [11.9, 3.0, 1.2]])}" fill="#1a212b"/>`;
+    return s; })() });
+  // houses: the customer + three dim ones (no action)
+  const house = (x, y, dim) => isoBox(x, y, 0, 1.2, 1.2, 0.9, dim ? "#2c3540" : B.houseTop, dim ? "#20272f" : B.bldLeft, dim ? "#1a2028" : B.bldRight) +
+    `<polygon points="${pts([[x, y, 0.9], [x + 1.2, y, 0.9], [x + 1.2, y + 0.6, 1.5], [x, y + 0.6, 1.5]])}" fill="${dim ? "#333d49" : "#56636f"}"/>` +
+    `<polygon points="${pts([[x + 1.2, y, 0.9], [x + 1.2, y + 1.2, 0.9], [x + 1.2, y + 0.6, 1.5]])}" fill="${dim ? "#1d242c" : B.bldRight}"/>` +
+    `<polygon points="${pts([[x, y + 1.2, 0.9], [x + 1.2, y + 1.2, 0.9], [x + 1.2, y + 0.6, 1.5], [x, y + 0.6, 1.5]])}" fill="${dim ? "#262e37" : "#46525f"}"/>`;
+  things.push({ k: "customer", d: 3.1 + 13.0 + 1.2, svg: house(3.1, 13.0, false) + (() => { const [wx, wy] = proj(3.7, 14.2, 0.45); return `<polygon points="${pts([[3.45, 14.2, 0.3], [3.95, 14.2, 0.3], [3.95, 14.2, 0.62], [3.45, 14.2, 0.62]])}" fill="${COL.amber}" opacity=".75"/>`; })() });
+  [[5.5, 13.0], [9.7, 12.9], [3.0, 8.6], [5.0, 8.9]].forEach(([x, y]) => things.push({ k: "dim", d: x + y + 1.2, svg: house(x, y, true) }));
+  things.sort((a, b) => a.d - b.d);
+  $("things").innerHTML = things.map((o) => `<g class="th" data-k="${o.k}">${o.svg}</g>`).join("") + `<g id="trucks"></g>`;
+
+  // ---------- trucks ----------
+  // drawn from boxes along their heading; the bed carries six bottle slots (full = solid emerald, empty = outline)
+  function truckSvg(gx, gy, hx, hy, slots, lit) {
+    const L = 1.15, Wd = 0.56, prims = [];
+    // local (f along heading, r to the right) → grid
+    const at = (f, r) => [gx + hx * f - hy * r, gy + hy * f + hx * r];
+    const boxL = (f0, f1, r0, r1, z, h, cols) => {
+      const a = at(f0, r0), b = at(f1, r1);
+      const x = Math.min(a[0], b[0]), y = Math.min(a[1], b[1]);
+      prims.push({ d: x + y + Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]), s: isoBox(x, y, z, Math.abs(a[0] - b[0]), Math.abs(a[1] - b[1]), h, ...cols) });
+    };
+    let glow = "";
+    if (lit > 0) { const [ex, ey] = proj(gx, gy); glow = `<ellipse cx="${ex}" cy="${ey}" rx="${80}" ry="${40}" fill="${COL.emerald}" opacity="${0.28 * lit}" filter="url(#glow)"/>`; }
+    [[-0.38, -0.27], [-0.38, 0.27], [0.36, -0.27], [0.36, 0.27]].forEach(([f, r]) => boxL(f - 0.1, f + 0.1, r - 0.04, r + 0.04, 0, 0.12, ["#0b0f15", "#0b0f15", "#0b0f15"]));
+    boxL(-L / 2, L / 2 - 0.36, -Wd / 2, Wd / 2, 0.1, 0.12, ["#56626e", "#3d4752", "#333c46"]);              // bed
+    boxL(L / 2 - 0.34, L / 2, -Wd / 2, Wd / 2, 0.1, 0.46, [COL.truckTop, COL.truckLeft, COL.truckRight]); // cab
+    // bottle slots on the bed
+    const fs = [-0.43, -0.25, -0.07], rs = [-0.12, 0.12];
+    let i = 0;
+    fs.forEach((f) => rs.forEach((r) => { const [bx, by] = at(f, r), s = slots[i++]; if (s) prims.push({ d: bx + by + 0.05, s: bottle(bx, by, 0.22, 0.075, 0.28, s.full, s.o) }); }));
+    prims.sort((a, b) => a.d - b.d);
+    return glow + prims.map((p) => p.s).join("");
+  }
+
+  // ---------- routes & glows ----------
+  const T = C.truck;
+  const legLen = (P) => { let L = 0; for (let i = 1; i < P.length; i++) L += Math.hypot(P[i][0] - P[i - 1][0], P[i][1] - P[i - 1][1]); return L; };
+  function along(P, s) {       // grid point + heading at distance s
+    for (let i = 1; i < P.length; i++) {
+      const dx = P[i][0] - P[i - 1][0], dy = P[i][1] - P[i - 1][1], l = Math.hypot(dx, dy);
+      if (s <= l || i === P.length - 1) { const k = clamp(s / l); return [P[i - 1][0] + dx * k, P[i - 1][1] + dy * k, dx / l, dy / l]; }
+      s -= l;
+    }
+  }
+  function truckPos(t) {
+    const R = T.route;
+    if (t < R[0].t[0]) return { p: [10.5, 9.9, 0, -1], s: [0, 0] };
+    for (let k = 0; k < R.length; k++) {
+      const [a, b] = R[k].t, L = legLen(R[k].pts);
+      if (t <= b) { const x = ease(p01(t, a, b - a)); return { p: along(R[k].pts, x * L), s: [k, x] }; }
+      if (k + 1 < R.length && t < R[k + 1].t[0]) { const P = R[k].pts, e = along(P, L); return { p: e, s: [k, 1] }; }
+    }
+    const P = R[R.length - 1].pts; return { p: along(P, legLen(P)), s: [R.length - 1, 1] };
+  }
+  // road glow paths (screen coords); dash-revealed
+  const gl = $("glows");
+  const mkPath = (P, w, op) => { const p = document.createElementNS(NS, "path"); p.setAttribute("d", "M " + P.map((q) => proj(q[0], q[1]).join(" ")).join(" L ")); p.setAttribute("fill", "none");
+    p.setAttribute("stroke", COL.emerald); p.setAttribute("stroke-width", w); p.setAttribute("stroke-linecap", "round"); p.setAttribute("stroke-linejoin", "round"); p.setAttribute("opacity", op); p.setAttribute("filter", "url(#glow)"); gl.appendChild(p); p.L = p.getTotalLength(); return p; };
+  const gOrder = mkPath([[3.7, 12], [8, 12], [8, 7], [10.9, 7], [10.9, 5.0]], 6, 0.9);
+  const gPark = mkPath([[10.9, 7], [10.9, 8.6]], 6, 0.9);
+  const gTruck = T.route.map((r) => mkPath(r.pts, 6, 0.9));
+  const gFlow = ROADS.map(([a, b]) => mkPath([a, b], 5, 0.75));
+  gFlow.forEach((p) => p.setAttribute("stroke-dasharray", "26 30"));
+
+  // ---------- labels ----------
+  const places = ["factory", "office", "parking", "customer"];
+  $("labels").innerHTML = places.map((k) => { const [x, y] = proj(...PL[k].roof); return `<div class="plabel" id="lb_${k}" style="left:${x}px;top:${y - 26}px"><i></i>${TX.place[k]}</div>`; }).join("");
+  // the transform puts the pill's right edge at x: center it instead
+  places.forEach((k) => { const el = $("lb_" + k); el.style.transform = "translate(-50%, -100%)"; });
+
+  // ---------- cards (world units; sized for the camera's focus zoom) ----------
+  const chip = (it, fs) => `<span class="chip" style="font-size:${fs}px"><b style="font-size:${Math.round(fs * 1.35)}px">${it.n}</b>${it.label}${it.kg ? `<small style="font-size:${Math.round(fs * 0.8)}px">${it.kg}</small>` : ""}</span>`;
+  const check = (s) => `<span style="display:inline-flex;align-items:center;justify-content:center;width:${s}px;height:${s}px;border-radius:50%;background:${COL.emeraldDeep};flex:none"><svg viewBox="0 0 24 24" width="${s * 0.56}" height="${s * 0.56}"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
+  const PILL = [["#efebe4", "#11291c"], ["#e1f2e7", "#00843d"], ["#00843d", "#ffffff"]];
+  const cardsEl = $("cards");
+  const CARD = {};
+  function card(key, place, w, html, lift, dx = 0) {
+    const el = document.createElement("div"); el.className = "card"; el.id = "card_" + key; el.style.width = w + "px"; el.innerHTML = html;
+    const an = document.createElement("div"); an.className = "anchor";
+    cardsEl.appendChild(an); cardsEl.appendChild(el);
+    CARD[key] = { el, an, place, lift, dx };
+  }
+  card("order", "customer", 350, `<div style="padding:28px 28px">
+      <div style="display:flex;align-items:center;gap:12px">${check(40)}<div style="font-size:30px;font-weight:800">${UI.sent}</div></div>
+      <div class="muted" style="font-size:20px;margin:14px 0 14px">${UI.customer} · ${UI.zone}</div>
+      <div>${UI.items.map((it) => chip(it, 19)).join("")}</div></div>`, 70);
+  card("driver", "parking", 360, `<div style="padding:22px 26px 26px">
+      <div class="muted" style="font-size:18px">${UI.driverDay} · <b style="color:var(--ink)">${UI.driver}</b></div>
+      <div style="font-size:31px;font-weight:800;margin-top:8px">${UI.address}</div>
+      <div class="muted" style="font-size:18px;margin:6px 0 12px">${UI.customer} · ${UI.zone}</div>
+      <div>${UI.items.map((it) => chip(it, 18)).join("")}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px"><div class="btn" style="height:46px;font-size:19px">${UI.navigate}</div><div class="btn" style="height:46px;font-size:19px">${UI.call}</div></div>
+      <div style="margin-top:14px;text-align:center"><span class="pill" style="font-size:20px;padding:8px 24px;background:${PILL[0][0]};color:${PILL[0][1]}">${UI.status[0]}</span></div></div>`, 70);
+  // the status pill that rides above the truck (the key moment)
+  const pillEl = document.createElement("div"); pillEl.className = "pill"; pillEl.id = "rider";
+  pillEl.style.cssText = `position:absolute;font-family:Rubik,sans-serif;font-size:30px;height:62px;padding:0 34px;box-shadow:0 16px 36px rgba(0,0,0,.45);transform-origin:50% 100%`;
+  const pillAn = document.createElement("div"); pillAn.className = "anchor";
+  cardsEl.appendChild(pillAn); cardsEl.appendChild(pillEl);
+  // rings over the office
+  const rC = 2 * Math.PI * 52;
+  card("rings", "office", 520, `<div style="padding:26px 30px;display:grid;grid-template-columns:1fr 1fr;gap:20px">${C.data.trucks.map((r, i) => `<div style="text-align:center">
+      <div style="position:relative;width:130px;height:130px;margin:0 auto"><svg viewBox="-65 -65 130 130" width="130" height="130"><circle r="52" fill="none" stroke="#e6ebe8" stroke-width="14"/>
+        <circle class="arc" r="52" fill="none" stroke="${COL.emeraldDeep}" stroke-width="14" stroke-linecap="round" transform="rotate(-90)" stroke-dasharray="${rC}" stroke-dashoffset="${rC}"/></svg>
+        <div class="num rnum" style="position:absolute;left:0;right:0;top:44px;font-size:34px;color:var(--ink)"></div></div>
+      <div style="font-size:26px;font-weight:800;margin-top:10px">${TX.ringWho[r.who]}</div>
+      <div class="muted" style="font-size:18px">${TX.truckSub}</div>
+      <span class="emp" style="display:inline-block;margin-top:10px;padding:5px 16px;border-radius:999px;background:#eef0ef;color:#536a5c;font-size:19px;font-weight:700"><b class="num" style="font-size:21px">${r.empty}</b> ${r.empty === 1 ? TX.empty1 : TX.emptyN}</span></div>`).join("")}</div>`, 70);
+  // stock over the factory (the app's stock screen is Hebrew only)
+  const S = UI.stock, SD = C.data.stock;
+  const sChip = (n, l, kg, bg, fg) => `<span class="chip" style="font-size:20px;background:${bg};color:${fg};direction:rtl"><b class="snum" data-n="${n}" style="font-size:28px">${n}</b>${l}<small style="font-size:15px">${kg}</small></span>`;
+  card("stock", "factory", 470, `<div style="padding:24px 26px;direction:rtl;font-family:Rubik">
+      <div style="font-size:26px;font-weight:800;margin-bottom:14px">${S.title}</div>
+      <div style="display:grid;grid-template-columns:1.25fr 1fr;gap:12px">
+        <div style="background:#e1f2e7;border-radius:18px;padding:14px 16px"><div style="font-size:20px;font-weight:700;color:#006b31;margin-bottom:10px">${S.full}</div>
+          <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start">${sChip(SD.full.small, S.small, S.smallKg, "#fff", "#006b31")}${sChip(SD.full.large, S.large, S.largeKg, "#f6eedb", "#7a5a12")}</div></div>
+        <div style="background:#eef0ef;border-radius:18px;padding:14px 16px"><div style="font-size:20px;font-weight:700;color:#536a5c;margin-bottom:10px">${S.empty}</div>
+          ${sChip(SD.empty.small, S.small, S.smallKg, "#fff", "#536a5c")}</div></div></div>`, 80);
+  // the payoff: the dashboard's own "needs you" card, empty
+  card("quiet", "office", 860, `<div style="padding:42px 48px">
+      <div class="muted" style="font-size:34px;font-weight:700">${UI.quietTitle}</div>
+      <div style="display:flex;align-items:center;gap:26px;margin-top:18px">${check(86)}<div style="font-size:64px;font-weight:800;line-height:1.18">${UI.quiet.replace(/([.。]) /, "$1<br>")}</div></div></div>`, 90, -260);
+
+  // ---------- screen text: opening, peak, end ----------
+  const scr = $("screen");
+  const opTop = V ? 640 : 300, opGap = 125;
+  scr.innerHTML = C.opening.map((o, i) => `<div class="scr op" id="op${i}" style="font-size:96px;top:${opTop + i * opGap}px">${TX[o.key]}</div>`).join("") +
+    `<div class="scr" id="peak" style="font-size:${V ? 128 : 150}px;top:${V ? 820 : 430}px;color:${COL.emerald};text-shadow:0 0 70px rgba(16,185,129,.5)">${TX.peak}</div>` +
+    `<div class="scr" id="endLine" style="font-size:${V ? 92 : 108}px;top:${V ? 560 : 250}px;line-height:1.15">${g(V ? TX.end.replace(" <g>", "<br><g>") : TX.end)}</div>` +
+    `<div class="word" id="word" style="font-size:150px;top:${V ? 900 : 470}px;z-index:9"><span id="dot" style="display:inline-block;width:56px;height:56px;border-radius:50%;background:${COL.emerald};margin-inline-end:24px;vertical-align:8px;box-shadow:0 0 50px ${COL.emerald}"></span><span id="wordTxt">${TX.word}</span></div>` +
+    `<div class="cta" id="cta" style="top:${V ? 1180 : 740}px;font-size:${V ? 46 : 48}px;background:${COL.emerald};color:#04120B;box-shadow:0 0 60px rgba(16,185,129,.5);z-index:9">${TX.cta}</div>`;
+
+  await document.fonts.ready;
+  await Promise.all(["800 96px Heebo", "700 64px Heebo", "800 96px 'Plex Arabic'", "700 64px 'Plex Arabic'", "800 30px Rubik", "700 20px Rubik", "500 18px Rubik"].map((f) => document.fonts.load(f, LANG === "ar" ? "عربي" : "עברית")));
+
+  // card geometry: bottom-centre sits `lift` px above its place's roof
+  for (const k in CARD) { const c = CARD[k], [x, y] = proj(...PL[c.place].roof); c.x = x; c.y = y; c.w = c.el.offsetWidth; c.h = c.el.offsetHeight;
+    c.el.style.left = x + c.dx - c.w / 2 + "px"; c.el.style.top = y - c.lift - c.h + "px"; c.an.style.left = x - 1 + "px"; c.an.style.top = y - c.lift + "px"; c.an.style.height = c.lift - 8 + "px"; }
+
+  // ---------- camera ----------
+  const anchorOf = (k, t) => {
+    if (k === "overview") return proj(7, 7.3);
+    if (k === "truck") { const p = truckPos(t).p; return proj(p[0], p[1]); }
+    const r = PL[k].roof; return proj(r[0], r[1], r[2]);
+  };
+  function camera(t) {
+    const K = C.camera[V ? "v" : "h"];
+    let i = K.findIndex((k) => k.t > t); if (i === -1) i = K.length;
+    const a = K[Math.max(0, i - 1)], b = K[Math.min(K.length - 1, i)];
+    const x = a === b ? 0 : ease(clamp((t - a.t) / (b.t - a.t)));
+    const A = anchorOf(a.at, t), Bp = anchorOf(b.at, t);
+    const ay = A[1] + (a.dy || 0), by = Bp[1] + (b.dy || 0);
+    const z = Math.exp(Math.log(a.zoom) + (Math.log(b.zoom) - Math.log(a.zoom)) * x);
+    return [A[0] + (Bp[0] - A[0]) * x, ay + (by - ay) * x, z];
+  }
+
+  // ---------- timing check: required = words/3 + 0.5; element holds 1.5 s after reading ----------
+  const report = C.captions.map((c) => {
+    const req = words(TX[c.key]) / 3 + 0.5, act = c.out - c.in, hold = c.focusEnd - (c.in + req);
+    return { key: c.key, words: words(TX[c.key]), required: +req.toFixed(2), actual: +act.toFixed(2), holdAfter: +hold.toFixed(2), ok: act >= req && hold >= 1.5 - 1e-9 };
+  });
+  C.opening.forEach((o) => { const req = words(TX[o.key]) / 3 + 0.5, act = o.brightUntil - o.in; report.push({ key: o.key, words: words(TX[o.key]), required: +req.toFixed(2), actual: +act.toFixed(2), holdAfter: null, ok: act >= req }); });
+  { const req = words(TX.peak) / 3 + 0.5, act = C.peak.out - C.peak.in; report.push({ key: "peak", words: words(TX.peak), required: +req.toFixed(2), actual: +act.toFixed(2), holdAfter: null, ok: act >= req }); }
+  { const [a, b] = C.cards.quiet, req = words(UI.quiet) / 3 + 0.5, act = b - a; report.push({ key: "quiet (card)", words: words(UI.quiet), required: +req.toFixed(2), actual: +act.toFixed(2), holdAfter: +(act - req).toFixed(2), ok: act - req >= 1.5 - 1e-9 }); }
+  window.timingReport = report;
+
+  // ---------- cut: output time → master time, soft dip at joins ----------
+  function master(t) {
+    let acc = 0;
+    for (let i = 0; i < cut.segments.length; i++) {
+      const [a, b] = cut.segments[i], len = b - a;
+      if (t < acc + len || i === cut.segments.length - 1) {
+        const local = t - acc; let dip = 1;
+        if (i > 0 && local < 0.18) dip = 0.55 + 0.45 * (local / 0.18);
+        if (i < cut.segments.length - 1 && len - local < 0.18) dip = 0.55 + 0.45 * ((len - local) / 0.18);
+        return [a + local, dip];
+      }
+      acc += len;
+    }
+  }
+
+  const FOCUSPLACE = [["customer", C.cards.order], ["parking", C.cards.driver], ["office", C.cards.rings], ["factory", C.cards.stock]];  // the payoff keeps the whole zone lit
+  const thEls = [...document.querySelectorAll(".th")];
+  const Z = C.zone, E = C.endCard;
+
+  // ---------- render ----------
+  window.renderAt = function (tOut) {
+    const [t, dip] = master(tOut);
+    const [cx, cy, z] = camera(t);
+    $("world").style.transform = `translate(${W / 2 - cx * z}px, ${H / 2 - cy * z}px) scale(${z})`;
+    stage.style.opacity = 1;
+    $("world").style.opacity = dip; $("screen").style.opacity = dip;
+
+    // the zone: dim under the peak, revealed at its end, dimmed again behind the end card
+    let zo = t < Z.dimIn ? 0 : Z.dimLevel * easeOut(p01(t, Z.dimIn, 0.8));
+    if (t >= Z.reveal[0]) zo = Z.dimLevel + (1 - Z.dimLevel) * ease(p01(t, Z.reveal[0], Z.reveal[1] - Z.reveal[0]));
+    if (t >= E.dim) zo = 1 - 0.82 * ease(p01(t, E.dim, 1.0));
+    $("zone").style.opacity = zo;
+    // one card in focus → its place stays bright, the rest of the zone steps back
+    let fp = null, fk = 0;
+    FOCUSPLACE.forEach(([k, w]) => { const v = win(t, w, 0.4, 0.4); if (v > fk) { fk = v; fp = k; } });
+    thEls.forEach((el) => { const k = el.dataset.k; el.style.opacity = fp && k !== fp ? 1 - 0.6 * fk : 1; });
+    $("base").style.opacity = 1 - 0.35 * fk;
+
+    // labels light one after another, then step aside for the cards
+    places.forEach((k) => {
+      const el = $("lb_" + k), on = C.labels[k], k1 = easeOut(p01(t, on, 0.4));
+      const vis = t < 9.2 ? 0 : (t < on ? 0.55 : 1) * (1 - p01(t, C.labels.off, 0.4)) * easeOut(p01(t, 9.2, 0.5));
+      el.style.opacity = vis; el.querySelector("i").style.background = t >= on ? COL.emerald : "rgba(245,247,248,.35)";
+      el.querySelector("i").style.boxShadow = t >= on ? `0 0 14px ${COL.emerald}` : "none";
+      el.style.transform = `translate(-50%, -100%) scale(${t >= on ? pulse(t, on, 0.5, 0.08) : 1})`;
+      el.style.fontSize = 30 / Math.max(1, z / 1.15) + "px";
+    });
+
+    // road glows
+    const rev = (p, a, b) => { const k = ease(p01(t, a, b - a)); p.setAttribute("stroke-dasharray", `${p.L * k} ${p.L + 10}`); };
+    const G = C.glow;
+    rev(gOrder, ...G.orderToOffice); rev(gPark, ...G.officeToParking);
+    const fadeG = 1 - p01(t, 26.0, 1.0);
+    gOrder.style.opacity = t < G.flowAll ? fadeG : 0; gPark.style.opacity = t < G.flowAll ? fadeG : 0;
+    const tp = truckPos(t);
+    gTruck.forEach((p, k) => {
+      const [kk, x] = tp.s, done = kk > k ? 1 : kk === k ? x : 0;
+      p.setAttribute("stroke-dasharray", `${p.L * done} ${p.L + 10}`); p.style.opacity = t < G.flowAll ? fadeG : 0;
+    });
+    const fo = easeOut(p01(t, G.flowAll, 1.0));
+    gFlow.forEach((p) => { p.style.opacity = fo * 0.8; p.setAttribute("stroke-dashoffset", (-t * 70).toFixed(1)); });
+
+    // trucks: Samer (lit, moving) and Rami (parked)
+    const loadK = (i) => p01(t, T.loadAt[0] + i * 0.11, 0.25);
+    const slots = [0, 1, 2, 3, 4, 5].map((i) => {
+      if (t < T.loadAt[0]) return null;
+      const empty = t >= T.emptiesAt && i < 2;
+      return { full: !empty, o: empty ? easeOut(p01(t, T.emptiesAt + i * 0.15, 0.3)) : easeOut(loadK(i)) };
+    });
+    const lit = easeOut(p01(t, G.truckLit, 0.5)) * (1 - p01(t, 26.2, 0.8));
+    const [px, py, hx, hy] = tp.p;
+    const rami = [0, 1, 2, 3, 4].map(() => ({ full: true, o: 1 })).concat([{ full: false, o: 1 }]);
+    $("trucks").innerHTML = [[11.7, 9.9, 0, -1, rami, 0], [px, py, hx, hy, slots, lit]].sort((a, b) => a[0] + a[1] - (b[0] + b[1])).map((a) => truckSvg(...a)).join("");
+
+    // cards
+    const showCard = (key, w) => {
+      const c = CARD[key], o = win(t, w, 0.35, 0.3), k = back(easeOut(p01(t, w[0], 0.5)));
+      c.el.style.opacity = o; c.an.style.opacity = o;
+      c.el.style.transform = `translateY(${(1 - easeOut(p01(t, w[0], 0.5))) * 24}px) scale(${o > 0 ? 0.86 + 0.14 * k : 0.86})`;
+      c.an.style.transform = `scaleY(${easeOut(p01(t, w[0], 0.4))})`;
+      return o;
+    };
+    showCard("order", C.cards.order); showCard("driver", C.cards.driver); showCard("rings", C.cards.rings); showCard("stock", C.cards.stock);
+    if (!V) showCard("quiet", C.cards.quiet); else { CARD.quiet.el.style.opacity = 0; CARD.quiet.an.style.opacity = 0; }  // the vertical path never frames the office card
+    // ring fill + stock count-up as their cards land
+    { const k = easeOut(p01(t, C.cards.rings[0] + 0.4, 1.2));
+      CARD.rings.el.querySelectorAll(".arc").forEach((a, i) => { const R = C.data.trucks[i]; a.setAttribute("stroke-dashoffset", rC * (1 - (R.full / R.loaded) * k)); });
+      CARD.rings.el.querySelectorAll(".rnum").forEach((n, i) => { const R = C.data.trucks[i]; n.textContent = `${Math.round(R.full * k)}/${R.loaded}`; });
+      CARD.rings.el.querySelectorAll(".emp").forEach((e, i) => { const kk = easeOut(p01(t, C.cards.rings[0] + 1.2 + i * 0.2, 0.4)); e.style.opacity = kk; }); }
+    { const k = easeOut(p01(t, C.cards.stock[0] + 0.4, 1.1));
+      CARD.stock.el.querySelectorAll(".snum").forEach((n) => { n.textContent = Math.round(Number(n.dataset.n) * k); }); }
+
+    // the rider pill: follows the truck; the status switches by itself on downbeats
+    { const w = C.cards.pill, o = win(t, w, 0.3, 0.3);
+      const [rx, ry] = proj(px, py, 0.6);
+      const s = t < C.status.toOnTheWay ? 0 : t < C.status.toDelivered ? 1 : 2;
+      const sw = s === 0 ? null : s === 1 ? C.status.toOnTheWay : C.status.toDelivered;
+      pillEl.textContent = UI.status[s];
+      pillEl.style.background = PILL[s][0]; pillEl.style.color = PILL[s][1];
+      const big = 1 + 0.25 * ease(p01(t, 20.6, 0.6)) * (1 - p01(t, 23.2, 0.4));
+      const sc2 = (sw != null ? pulse(t, sw, 0.6, 0.06) : 1) * big;
+      // scaled through its real size, not a transform (a scaled layer left ghost copies in sequential renders)
+      pillEl.style.fontSize = 30 * sc2 + "px"; pillEl.style.height = 62 * sc2 + "px"; pillEl.style.padding = `0 ${34 * sc2}px`;
+      const pw = pillEl.offsetWidth, ph = 62 * sc2, lift = 64;
+      pillEl.style.left = rx - pw / 2 + "px"; pillEl.style.top = ry - lift - ph + "px";
+      pillEl.style.opacity = o;
+      pillEl.style.boxShadow = s === 2 ? "0 0 0 5px rgba(16,185,129,.35), 0 16px 36px rgba(0,0,0,.45)" : "0 16px 36px rgba(0,0,0,.45)";
+      pillAn.style.left = rx - 1 + "px"; pillAn.style.top = ry - lift + "px"; pillAn.style.height = lift - 6 + "px"; pillAn.style.opacity = o; }
+
+    // opening: lines stack, the previous dims; then the peak in emerald
+    C.opening.forEach((o, i) => {
+      const el = $("op" + i), k = easeOut(p01(t, o.in, 0.4));
+      let op = t < o.in ? 0 : t < o.brightUntil ? k : 0.3;
+      if (t >= C.peak.in) op *= 1 - p01(t, C.peak.in, 0.35);
+      el.style.opacity = op; el.style.transform = `translateY(${(1 - k) * 30}px)`;
+    });
+    { const el = $("peak"), k = easeOut(p01(t, C.peak.in, 0.5));
+      const out = 1 - ease(p01(t, C.peak.out - 0.6, 0.6));
+      el.style.opacity = t < C.peak.in ? 0 : k * out; el.style.transform = `translateY(${(1 - k) * 30 - (1 - out) * 40}px) scale(${0.94 + 0.06 * k})`; }
+    // end card
+    { const el = $("endLine"), kl = easeOut(p01(t, E.lineIn, 0.5));
+      el.style.opacity = t < E.lineIn ? 0 : kl; el.style.transform = `translateY(${(1 - kl) * 36}px)`;
+      const kw = easeOut(p01(t, E.logoIn, 0.5));
+      $("word").style.opacity = t < E.logoIn ? 0 : kw; $("word").style.transform = `translateY(${(1 - kw) * 30}px)`;
+      $("dot").style.transform = `scale(${pulse(t, E.logoIn + 0.2, 0.5, 0.18)})`;
+      const ct = $("cta"), kc = back(easeOut(p01(t, E.ctaIn, 0.5)));
+      ct.style.opacity = t < E.ctaIn ? 0 : clamp((t - E.ctaIn) / 0.3); ct.style.transform = `translateX(-50%) scale(${0.86 + 0.14 * kc})`; }
+
+    // caption (screen space, top)
+    const cap = $("cap");
+    const c = C.captions.find((x) => x.key !== "end" && t >= x.in && t < x.out);
+    if (c) {
+      cap.innerHTML = g(TX[c.key]); cap.style.fontSize = (V ? 64 : 62) + "px";
+      cap.style.left = (V ? 60 : 160) + "px"; cap.style.right = (V ? 60 : 160) + "px"; cap.style.top = (V ? 230 : 64) + "px";
+      const k = easeOut(p01(t, c.in, 0.4)), out = 1 - p01(t, c.out - 0.35, 0.35);
+      cap.style.opacity = k * out; cap.style.transform = `translateY(${(1 - k) * 24}px)`;
+      cap.style.textShadow = "0 2px 24px rgba(0,0,0,.7)";
+    } else cap.style.opacity = 0;
+  };
+
+  window.DURATION = cut.duration;
+  renderAt(Number(Q.get("t") || 0));
+  window.ready = true;
+})();
+</script>
+</body>
+</html>

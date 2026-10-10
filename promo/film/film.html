@@ -1,0 +1,445 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>GazFlow promo</title>
+<style>
+  @font-face { font-family: "Plex Arabic"; font-weight: 500; src: url(node_modules/@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-500-normal.woff2) format("woff2"); unicode-range: U+0600-06FF, U+0750-077F, U+FB50-FDFF, U+FE70-FEFF; }
+  @font-face { font-family: "Plex Arabic"; font-weight: 700; src: url(node_modules/@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-700-normal.woff2) format("woff2"); unicode-range: U+0600-06FF, U+0750-077F, U+FB50-FDFF, U+FE70-FEFF; }
+  @font-face { font-family: "Heebo"; font-weight: 500; src: url(node_modules/@fontsource/heebo/files/heebo-hebrew-500-normal.woff2) format("woff2"); unicode-range: U+0590-05FF; }
+  @font-face { font-family: "Heebo"; font-weight: 700; src: url(node_modules/@fontsource/heebo/files/heebo-hebrew-700-normal.woff2) format("woff2"); unicode-range: U+0590-05FF; }
+  @font-face { font-family: "Heebo"; font-weight: 800; src: url(node_modules/@fontsource/heebo/files/heebo-hebrew-800-normal.woff2) format("woff2"); unicode-range: U+0590-05FF; }
+  @font-face { font-family: "Heebo"; font-weight: 500; src: url(node_modules/@fontsource/heebo/files/heebo-latin-500-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Heebo"; font-weight: 800; src: url(node_modules/@fontsource/heebo/files/heebo-latin-800-normal.woff2) format("woff2"); }
+
+  :root { --navy: #0F172A; --soft: #475569; --green: #00843D; --green-soft: #E1F2E7; --gold: #C9A24B; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #F6F8F7; overflow: hidden; }
+  #stage { position: relative; overflow: hidden; direction: rtl; color: var(--navy);
+    font-family: "Plex Arabic", "Heebo", sans-serif; }
+  #stage.he { font-family: "Heebo", "Plex Arabic", sans-serif; }
+  .bg { position: absolute; inset: 0; background: radial-gradient(90% 60% at 50% 38%, #FFFFFF 0%, #F3F6F4 55%, #E6ECE8 100%); }
+  .pain { position: absolute; inset: 0; background: radial-gradient(80% 60% at 50% 45%, #EEF0F2 0%, #D9DDE2 70%, #C8CDD3 100%); }
+  .layer { position: absolute; inset: 0; }
+  .abs { position: absolute; }
+
+  .cap { position: absolute; left: 70px; right: 70px; text-align: center; font-weight: 700; line-height: 1.15; letter-spacing: -0.01em; }
+  .cap.big { font-size: 92px; }
+  .cap.mid { font-size: 70px; }
+  .cap .g { color: var(--green); }
+  .cap.pill { background: rgba(255,255,255,.9); border-radius: 32px; padding: 14px 24px; box-shadow: 0 16px 40px rgba(15,23,42,.12); }
+  .cam { transform-origin: 0 0; }
+  .cap .r { color: #9B2C1C; }
+
+  /* light device frame: no black bezel */
+  .dev { position: absolute; padding: 14px; border-radius: 74px; background: linear-gradient(160deg, #FFFFFF, #E4EAE6);
+    box-shadow: 0 0 0 2px rgba(15,23,42,.06), 0 50px 90px rgba(15,23,42,.18), 0 8px 18px rgba(15,23,42,.08); }
+  .scr { position: relative; overflow: hidden; border-radius: 60px; background: #FBFDFB; }
+  .scr img { position: absolute; left: 0; top: 0; width: 100%; display: block; }
+  .glow { position: absolute; inset: -6px; border-radius: 80px; box-shadow: 0 0 0 6px var(--green), 0 0 60px rgba(0,132,61,.55); opacity: 0; }
+
+  .tap { position: absolute; width: 120px; height: 120px; margin: -60px 0 0 -60px; border-radius: 50%;
+    border: 7px solid var(--green); background: rgba(0,132,61,.16); opacity: 0; }
+  .hl { position: absolute; border-radius: 22px; border: 6px solid var(--green); box-shadow: 0 0 40px rgba(0,132,61,.45); opacity: 0; }
+
+  .bubble { position: absolute; padding: 30px 44px; border-radius: 44px; background: #fff; font-size: 64px; font-weight: 700;
+    box-shadow: 0 30px 60px rgba(15,23,42,.16); white-space: nowrap; }
+  .bubble::after { content: ""; position: absolute; bottom: -22px; width: 44px; height: 44px; background: #fff; transform: rotate(45deg); }
+  .bubble .r { color: #9B2C1C; }
+  .bubble.r::after { right: 70px; } .bubble.l::after { left: 70px; }
+
+  .note { position: absolute; width: 520px; height: 640px; border-radius: 18px; background:
+    linear-gradient(90deg, transparent 70px, rgba(196,60,40,.35) 70px, rgba(196,60,40,.35) 73px, transparent 73px),
+    repeating-linear-gradient(#FFFDF4 0 58px, #C9D6E6 58px 60px); box-shadow: 0 30px 60px rgba(15,23,42,.18); }
+
+  .ringer { position: absolute; width: 300px; height: 300px; border-radius: 50%; background: #fff; display: grid; place-items: center;
+    box-shadow: 0 30px 70px rgba(15,23,42,.18); }
+  .ringer svg { width: 150px; height: 150px; stroke: var(--navy); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .wave { position: absolute; border-radius: 50%; border: 6px solid rgba(15,23,42,.35); }
+  .check { position: absolute; width: 120px; height: 120px; border-radius: 50%; background: var(--green); display: grid; place-items: center; }
+  .check svg { width: 70px; height: 70px; stroke: #fff; fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+
+  .word { position: absolute; left: 0; right: 0; text-align: center; font-weight: 700; font-size: 150px; letter-spacing: -0.02em; }
+  .word .stars { display: block; font-size: 60px; color: var(--gold); letter-spacing: 18px; margin-bottom: 4px; }
+  .tag { position: absolute; left: 90px; right: 90px; text-align: center; font-size: 58px; font-weight: 500; color: var(--soft); line-height: 1.3; }
+  .label { position: absolute; text-align: center; font-size: 40px; font-weight: 700; color: var(--soft); }
+  svg.lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="bg"></div>
+  <div class="pain" id="pain"></div>
+
+  <!-- S1–S2: the pain -->
+  <div class="layer" id="s-pain">
+    <div class="note" id="note">
+      <svg class="lines" viewBox="0 0 520 640" id="scrib"></svg>
+    </div>
+    <div class="wave" id="w1"></div><div class="wave" id="w2"></div>
+    <div class="ringer" id="ringer"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+    <div class="bubble r" id="b1"></div>
+    <div class="bubble l" id="b2"></div>
+    <div class="cap big" id="c1"></div>
+  </div>
+
+  <!-- S3: the turn -->
+  <div class="layer" id="s-turn"><div class="cap big" id="c3"></div><div class="abs" id="dot" style="width:40px;height:40px;border-radius:50%;background:var(--green)"></div></div>
+
+  <!-- S4–S6: one phone at a time -->
+  <div class="layer" id="s-one">
+    <div class="cap mid" id="c4" style="z-index:5"></div>
+    <div class="layer cam" id="cam">
+      <div class="dev" id="dev"><div class="scr" id="scr"></div><div class="tap" id="tap"></div><div class="hl" id="hl"></div></div>
+      <div class="dev" id="mini"><div class="scr" id="miniScr"></div><div class="glow" id="miniGlow"></div></div>
+    </div>
+  </div>
+
+  <!-- S7: all three -->
+  <div class="layer" id="s-trio">
+    <div class="cap mid" id="c7"></div>
+    <div class="layer cam" id="cam3">
+    <svg class="lines" id="loop"><path id="loopPath" fill="none" stroke="#00843D" stroke-width="10" stroke-linecap="round"/><circle id="spark" r="18" fill="#fff" stroke="#00843D" stroke-width="8"/></svg>
+    <div class="dev" id="t0"><div class="scr"></div><div class="glow"></div></div>
+    <div class="dev" id="t1"><div class="scr"></div><div class="glow"></div></div>
+    <div class="dev" id="t2"><div class="scr"></div><div class="glow"></div></div>
+    <div class="label" id="lb0"></div><div class="label" id="lb1"></div><div class="label" id="lb2"></div>
+    </div>
+    <div class="cap mid" id="x1"></div><div class="cap mid" id="x2"></div><div class="cap mid" id="x3"></div>
+  </div>
+
+  <!-- S8: the callback and the end card -->
+  <div class="layer" id="s-end">
+    <div class="ringer" id="ringer2"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+    <div class="check" id="chk"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></div>
+    <div class="word" id="word"></div>
+    <div class="tag" id="tag"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const Q = new URLSearchParams(location.search);
+  const LANG = Q.get("lang") === "he" ? "he" : "ar";
+  const FMT = Q.get("fmt") === "h" ? "h" : "v";
+  const W = FMT === "v" ? 1080 : 1920, H = FMT === "v" ? 1920 : 1080;
+  const SHOT = "../capture/shots/";
+
+  // Every word on screen. Arabic: Galilee/Palestinian spoken register — to be checked by Rabea.
+  const T = {
+    ar: {
+      c1a: "تلفون كمان.", c1b: "ورقة كمان.",
+      b1: "وين طلبيتي؟", b2: '<span class="r">مين مديون قدّيش؟</span>',
+      c3: 'وإذا كل إشي<br><span class="g">بيمشي لحاله؟</span>',
+      c4: "الزبون بيكبس مرّة وحدة.",
+      c5a: "المكتب بيشوف.", c5b: 'السوّاق <span class="g">بيتعيّن لحاله.</span>',
+      c6a: "السوّاق طلع…", c6b: 'السوّاق طلع… <span class="g">وسلّم.</span>',
+      c7: 'كل الشاشات <span class="g">بتتحدّث لحالها.</span>',
+      x1: "بلا تلفونات.", x2: "بلا أوراق.", x3: "بلا ملاحقة ديون.",
+      lb: ["الزبون", "المكتب", "السوّاق"],
+      word: "غازفلو", tag: "الطلبات، السوّاقين والمصاري<br>بمكان واحد.",
+    },
+    he: {
+      c1a: "עוד טלפון.", c1b: "עוד פתק.",
+      b1: "איפה ההזמנה שלי?", b2: '<span class="r">מי חייב כמה?</span>',
+      c3: 'ומה אם הכול<br><span class="g">זורם לבד?</span>',
+      c4: "הלקוח לוחץ פעם אחת.",
+      c5a: "המשרד רואה.", c5b: 'הנהג <span class="g">משובץ לבד.</span>',
+      c6a: "הנהג יצא…", c6b: 'הנהג יצא… <span class="g">ומסר.</span>',
+      c7: 'כל המסכים <span class="g">מתעדכנים לבד.</span>',
+      x1: "בלי טלפונים.", x2: "בלי פתקים.", x3: "בלי לרדוף אחרי חובות.",
+      lb: ["לקוח", "משרד", "נהג"],
+      word: "גזפלו", tag: "הזמנות, נהגים וכסף<br>במקום אחד.",
+    },
+  }[LANG];
+
+  // Tap points measured from the real UI (390x844 CSS px).
+  const TAP = { order: [195, 391], confirm: [195, 731], way: [195, 682], delivered: [195, 682] };
+
+  const stage = document.getElementById("stage");
+  stage.style.width = W + "px"; stage.style.height = H + "px";
+  if (LANG === "he") stage.classList.add("he");
+  const $ = (id) => document.getElementById(id);
+
+  // ---------- helpers: all motion is a pure function of t ----------
+  const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+  const p01 = (t, a, d) => clamp((t - a) / d);
+  const easeOutExpo = (x) => (x >= 1 ? 1 : 1 - Math.pow(2, -10 * x));
+  const easeOutBack = (x) => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
+  const easeInOut = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+  const show = (el, on) => { el.style.display = on ? "" : "none"; };
+  // rise: opacity + translateY(60→0) + blur(14→0), 0.5 s easeOutExpo
+  function rise(el, t, t0, extra = "") {
+    const k = easeOutExpo(p01(t, t0, 0.5));
+    el.style.opacity = t < t0 ? 0 : k;
+    el.style.transform = `translateY(${(1 - k) * 60}px) ${extra}`;
+    el.style.filter = `blur(${(1 - k) * 14}px)`;
+  }
+  // pop: scale 0.86 → 1, easeOutBack
+  function pop(el, t, t0, extra = "", dur = 0.5) {
+    const x = p01(t, t0, dur);
+    const s = 0.86 + 0.14 * easeOutBack(x);
+    el.style.opacity = t < t0 ? 0 : clamp(x * 3);
+    el.style.transform = `${extra} scale(${s})`;
+  }
+  function capPos(el, y, half) {
+    el.style.top = y + "px";
+    if (FMT === "h" && half) { el.style.left = "860px"; el.style.right = "90px"; }
+    else { el.style.left = "70px"; el.style.right = "70px"; }
+  }
+  function box(el, x, y, w, h) { el.style.left = x + "px"; el.style.top = y + "px"; if (w != null) el.style.width = w + "px"; if (h != null) el.style.height = h + "px"; }
+
+  // A device that shows one of several real screenshots, hard-cut on beats.
+  function makeScreens(scr, files) {
+    scr.innerHTML = files.map((f) => `<img src="${SHOT}${f}.png" data-f="${f}">`).join("");
+    return (name, scrollY = 0) => {
+      for (const img of scr.children) {
+        const on = img.dataset.f === name;
+        img.style.display = on ? "" : "none";
+        if (on) img.style.transform = `translateY(${-scrollY}px)`;
+      }
+    };
+  }
+  const oneFiles = ["c01-customer-idle", "c02-customer-sheet", "c04-customer-ordered-notif", "c05-customer-ordered",
+    "o02-office-new-order", "d02-driver-stop", "d02b-driver-ontheway", "d03-driver-deliver-form", "d04-driver-done"];
+  const setOne = makeScreens($("scr"), oneFiles);
+  const setMini = makeScreens($("miniScr"), ["c07-customer-ontheway", "c09-customer-delivered"]);
+  // RTL reading order: customer on the right, office in the middle, driver on the left.
+  const trio = [["t0", "d04-driver-done"], ["t1", "o04-office-delivered"], ["t2", "c09-customer-delivered"]];
+  trio.forEach(([id, f]) => { $(id).querySelector(".scr").innerHTML = `<img src="${SHOT}${f}.png">`; });
+
+  // Notebook scribbles (no real names or numbers).
+  (function () {
+    let d = "";
+    for (let i = 0; i < 8; i++) {
+      const y = 92 + i * 60; let x = 470 - (i % 3) * 30; d += `M${x} ${y} `;
+      const len = 180 + ((i * 73) % 200);
+      for (let s = 0; s < len; s += 18) d += `q -9 ${i % 2 ? -14 : 12} -18 ${((s * 7) % 5) - 2} `;
+    }
+    $("scrib").innerHTML = `<path d="${d}" fill="none" stroke="#2B3A55" stroke-width="5" stroke-linecap="round" opacity=".75"/>
+      <path d="M150 300 l140 -20 M170 330 l120 40" stroke="#9B2C1C" stroke-width="7" stroke-linecap="round"/>
+      <ellipse cx="250" cy="520" rx="140" ry="46" fill="none" stroke="#9B2C1C" stroke-width="6" transform="rotate(-6 250 520)"/>`;
+  })();
+
+  // ---------- layout per format ----------
+  const L = FMT === "v"
+    ? { phoneW: 620, phoneX: (W - 648) / 2, phoneY: 450, capY: 190, capY2: 270,
+        trioW: 268, trioY: 500, trioGap: 26, xY: [1440, 1555, 1670], c7Y: 200 }
+    : { phoneW: 380, phoneX: 300, phoneY: 115, capY: 400, capY2: 470,
+        trioW: 230, trioY: 250, trioGap: 60, xY: [930, 930, 930], c7Y: 30 };
+  const PH = (w) => w * (1688 / 780);           // screen height for a given width
+  const K = (w) => w / 390;                     // CSS px → frame px inside a screen
+
+  function layoutOne(dev, scr, w, x, y) {
+    box(dev, x, y);
+    scr.style.width = w + "px"; scr.style.height = PH(w) + "px";
+    scr.style.borderRadius = Math.round(w * 0.1) + "px";
+    dev.style.borderRadius = Math.round(w * 0.1 + 14) + "px";
+  }
+  layoutOne($("dev"), $("scr"), L.phoneW, L.phoneX, L.phoneY);
+  const miniW = FMT === "v" ? 270 : 260;
+  layoutOne($("mini"), $("miniScr"), FMT === "v" ? miniW : 230, FMT === "v" ? 40 : 60, FMT === "v" ? 1080 : 420);
+  const trioPos = [];
+  trio.forEach(([id], i) => {
+    const w = i === 1 ? L.trioW + 30 : L.trioW;
+    const total = L.trioW * 3 + 30 + L.trioGap * 2 + 28 * 3;
+    const x0 = FMT === "v" ? (W - total) / 2 : (W - total) / 2;
+    const x = x0 + i * (L.trioW + 28 + L.trioGap) + (i === 2 ? 30 : 0);
+    const y = L.trioY + (i === 1 ? -40 : 0);
+    layoutOne($(id), $(id).querySelector(".scr"), w, x, y);
+    trioPos.push({ x, y, w: w + 28, h: PH(w) + 28 });
+    const lb = $("lb" + i); lb.textContent = T.lb[2 - i]; box(lb, x, L.trioY + PH(L.trioW + 30) - 40 + 28 + (FMT === "v" ? 70 : 52), w + 28);
+  });
+  // The order's path: one loop through the three screens.
+  (function () {
+    const a = trioPos[2], b = trioPos[1], c = trioPos[0], pad = 34;
+    const top = Math.min(a.y, b.y, c.y) - pad, bot = Math.max(a.y + a.h, c.y + c.h, b.y + b.h) + pad;
+    const right = a.x + a.w + pad, left = c.x - pad, r = 60;
+    const d = `M ${right - r} ${top} L ${left + r} ${top} Q ${left} ${top} ${left} ${top + r} L ${left} ${bot - r} Q ${left} ${bot} ${left + r} ${bot} L ${right - r} ${bot} Q ${right} ${bot} ${right} ${bot - r} L ${right} ${top + r} Q ${right} ${top} ${right - r} ${top} Z`;
+    $("loopPath").setAttribute("d", d);
+    $("loop").setAttribute("viewBox", `0 0 ${W} ${H}`);
+  })();
+  const loopLen = $("loopPath").getTotalLength();
+
+  // static text
+  $("b1").textContent = T.b1; $("b2").innerHTML = T.b2; $("c3").innerHTML = T.c3; $("c4").innerHTML = T.c4;
+  $("c7").innerHTML = T.c7; $("x1").textContent = T.x1; $("x2").textContent = T.x2; $("x3").textContent = T.x3;
+  $("word").innerHTML = '<span class="stars">★★</span>' + T.word; $("tag").innerHTML = T.tag;
+
+  // ---------- camera: slow push-in on every hold, hard-cut close-ups on beats ----------
+  // A shot = [start, end, zoom, focusX, focusY] in stage px; the focus point stays put while zoom grows 4 % over the shot.
+  function cam(el, t, shots) {
+    const sh = shots.find((x) => t >= x[0] && t < x[1]) || shots[shots.length - 1];
+    const p = clamp((t - sh[0]) / (sh[1] - sh[0]));
+    const z = sh[2] * (1 + 0.08 * easeInOut(p));
+    const fx = sh[3], fy = sh[4];
+    // keep the focus point at the same screen spot it would have at zoom 1 (centered for close-ups)
+    const tx = sh[2] > 1.05 ? (FMT === "v" ? W / 2 : 520) - fx * z : fx - fx * z;
+    const ty = sh[2] > 1.05 ? (FMT === "v" ? H * 0.56 : H * 0.5) - fy * z : fy - fy * z;
+    el.style.transform = `translate(${tx}px, ${ty}px) scale(${z})`;
+    return sh[2] > 1.05;
+  }
+  // stage px of a point given in 390x844 app CSS px inside the main phone
+  const inPhone = (x, y, scroll = 0) => [L.phoneX + 14 + x * K(L.phoneW), L.phoneY + 14 + (y - scroll) * K(L.phoneW)];
+  const inMini = (x, y) => { const m = $("mini"); return [parseFloat(m.style.left) + 14 + x * K(FMT === "v" ? 270 : 230), parseFloat(m.style.top) + 14 + y * K(FMT === "v" ? 270 : 230)]; };
+
+  // ---------- the timeline (120 BPM: beat 0.5 s, bar 2 s) ----------
+  const DUR = 32;
+  function tapRing(t, t0, pt, w) {
+    // 0.25 s anticipation (ring appears and squeezes), hit at t0, ripple out over 0.4 s
+    const el = $("tap"); const k = K(w);
+    if (t < t0 - 0.3 || t > t0 + 0.45) { el.style.opacity = 0; return; }
+    box(el, 14 + pt[0] * k, 14 + pt[1] * k);
+    if (t < t0) { const a = p01(t, t0 - 0.3, 0.3); el.style.opacity = a; el.style.transform = `scale(${1.15 - 0.25 * a})`; }
+    else { const r = p01(t, t0, 0.45); el.style.opacity = 1 - r; el.style.transform = `scale(${0.9 + 1.4 * easeOutExpo(r)})`; }
+  }
+
+  window.renderAt = function (t) {
+    // pain backdrop fades into the calm studio during the turn
+    $("pain").style.opacity = 1 - p01(t, 6.0, 1.0);
+
+    // ---- S1–S2 pain (0–6) ----
+    const sPain = t < 6.25; show($("s-pain"), sPain);
+    if (sPain) {
+      const zp = 1 + 0.06 * p01(t, 0, 6); $("s-pain").style.transformOrigin = "50% 45%";
+      $("s-pain").style.transform = `scale(${t < 3 ? zp : zp + 0.08})`;  // a punch-in on the bar when the questions arrive
+      const cx = W / 2;
+      const ringOn = (t % 1.5) < 0.9 && t < 6;
+      const shake = ringOn ? Math.sin(t * 60) * 9 : 0;
+      const rx = FMT === "v" ? cx - 150 : cx - 150, ry = FMT === "v" ? 700 : 300;
+      pop($("ringer"), t, 0.0, `translate(0,0) rotate(${shake}deg)`, 0.4);
+      box($("ringer"), rx, ry);
+      ["w1", "w2"].forEach((id, i) => {
+        const ph = ((t + i * 0.45) % 0.9) / 0.9;
+        const s = 300 + ph * 260; const el = $(id);
+        box(el, rx + 150 - s / 2, ry + 150 - s / 2, s, s);
+        el.style.opacity = ringOn ? (1 - ph) * 0.8 : 0;
+      });
+      box($("note"), FMT === "v" ? 470 : 360, FMT === "v" ? 1120 : 200);
+      pop($("note"), t, 1.5, "rotate(-5deg)", 0.5);
+      $("c1").innerHTML = t < 1.5 ? T.c1a : T.c1a + "<br>" + T.c1b;
+      capPos($("c1"), FMT === "v" ? L.capY : 760);
+      rise($("c1"), t, 0.5);
+      if (t >= 3) { $("c1").style.opacity = 0; }
+      box($("b1"), FMT === "v" ? 420 : 1180, FMT === "v" ? 330 : 140);
+      pop($("b1"), t, 3.0); box($("b2"), FMT === "v" ? 70 : 1150, FMT === "v" ? 1000 : 640);
+      pop($("b2"), t, 4.0);
+    }
+
+    // ---- S3 turn (6–8) ----
+    const sTurn = t >= 6 && t < 8.1; show($("s-turn"), sTurn);
+    if (sTurn) {
+      capPos($("c3"), FMT === "v" ? 760 : 360); rise($("c3"), t, 6.0);
+      const d = $("dot"); box(d, W / 2 - 20, FMT === "v" ? 1120 : 760);
+      pop(d, t, 7.5, "", 0.3);
+      if (t > 7.9) d.style.transform = `scale(${1 + 30 * easeOutExpo(p01(t, 7.9, 0.2))})`;
+    }
+
+    // ---- S4–S6 one phone at a time (8–24) ----
+    const sOne = t >= 8 && t < 24; show($("s-one"), sOne);
+    if (sOne) {
+      const w = L.phoneW, dev = $("dev");
+      const drift = Math.sin(t * 1.3) * 14;
+      // each new app enters with a pop on its bar
+      const enter = t < 13 ? 8.0 : t < 18 ? 13.0 : 18.0;
+      pop(dev, t, enter, `translateY(${drift}px)`, 0.5);
+      let screen = "c01-customer-idle", scroll = 0;
+      if (t >= 9.5) screen = "c02-customer-sheet";
+      if (t >= 11.0) screen = "c04-customer-ordered-notif";
+      if (t >= 12.5) screen = "c05-customer-ordered";
+      if (t >= 13.0 && t < 18.0) { screen = "o02-office-new-order"; scroll = easeInOut(p01(t, 14.0, 1.5)) * 570 * K(w); }
+      if (t >= 18.0) screen = "d02-driver-stop";
+      if (t >= 19.5) screen = "d02b-driver-ontheway";
+      if (t >= 21.5) screen = "d03-driver-deliver-form";
+      if (t >= 23.0) screen = "d04-driver-done";
+      setOne(screen, scroll);
+      // taps
+      if (t < 10.4) tapRing(t, 9.5, TAP.order, w);
+      else if (t < 12) tapRing(t, 11.0, TAP.confirm, w);
+      else if (t < 20.2) tapRing(t, 19.5, TAP.way, w);
+      else tapRing(t, 21.5, TAP.delivered, w);
+      // office: the new order row lights up after the scroll
+      const hl = $("hl");
+      if (t >= 15.5 && t < 18) {
+        const k = K(w); box(hl, 14 + 10 * k, 14 + (862 - 570) * k, 370 * k, 100 * k);
+        hl.style.opacity = easeOutExpo(p01(t, 15.5, 0.3)); hl.style.transform = `scale(${1.04 - 0.04 * easeOutBack(p01(t, 15.5, 0.4))})`;
+      } else hl.style.opacity = 0;
+      // caption
+      const c4 = $("c4"); capPos(c4, L.capY, true);
+      if (t < 13) { c4.innerHTML = T.c4; rise(c4, t, 8.5); }
+      else if (t < 18) { c4.innerHTML = t < 15.0 ? T.c5a : T.c5a + "<br>" + T.c5b; rise(c4, t, 13.5); }
+      else { c4.innerHTML = t < 23.0 ? T.c6a : T.c6b; rise(c4, t, 18.5); }
+      if (t >= 13 && t < 18) capPos(c4, L.capY - 60, true);
+      // camera: wide holds with a slow push, close-ups cut on the beat
+      const ph = inPhone(195, 422);
+      const zc = FMT === "v" ? 1.75 : 1.7;
+      const close = cam($("cam"), t, [
+        [8, 10, 1, ...ph], [10, 12, 1, ...ph],
+        [12, 13, zc, ...inPhone(195, 300)],                // the ETA
+        [13, 16.5, 1, ...ph],
+        [16.5, 18, zc * 0.95, ...inPhone(195, 905, 570)],  // the new order row, assigned
+        [18, 20, 1, ...ph], [20, 22, 1, ...ph],
+        [22, 23, zc * 0.9, ...inPhone(195, 560)],          // delivered qty + empties
+        [23, 24, 1, ...ph],
+      ]);
+      c4.classList.toggle("pill", close);
+      // proof of sync: while the driver drives, the customer's phone counts down beside him
+      const mini = $("mini");
+      const miniOn = t >= 20.0 && t < 24 && !(t >= 22 && t < 23);  // hidden during the delivery close-up
+      show(mini, miniOn);
+      if (miniOn) {
+        setMini(t < 23.0 ? "c07-customer-ontheway" : "c09-customer-delivered");
+        pop(mini, t, 20.0, `rotate(${FMT === "v" ? 4 : -3}deg)`, 0.5);
+        $("miniGlow").style.opacity = t >= 23.0 ? 1 - p01(t, 23.4, 0.6) * 0.6 : 0;
+      }
+    }
+
+    // ---- S7 all three, the loop closes (24–29) ----
+    const sTrio = t >= 24 && t < 29; show($("s-trio"), sTrio);
+    if (sTrio) {
+      trio.forEach(([id], i) => {
+        const el = $(id); const order = 2 - i; // customer first
+        pop(el, t, 24.0 + order * 0.25, `translateY(${Math.sin(t * 2.2 + i * 1.3) * 14}px)`, 0.5);
+        el.querySelector(".glow").style.opacity = t >= 25.0 + order * 0.25 ? 1 - 0.55 * p01(t, 25.6 + order * 0.25, 0.8) : 0;
+        rise($("lb" + i), t, 24.5);
+      });
+      cam($("cam3"), t, [[24, 29, 1, W / 2, H * 0.45]]);
+      const drawn = easeInOut(p01(t, 24.5, 1.25));
+      const lp = $("loopPath"); lp.setAttribute("stroke-dasharray", loopLen); lp.setAttribute("stroke-dashoffset", loopLen * (1 - drawn));
+      lp.style.opacity = 1;
+      // a light keeps travelling the loop once it is closed: the order going round, again and again
+      const sp = $("spark"); const u = t < 25.75 ? drawn : (p01(t, 25.75, 1.6) + Math.floor((t - 25.75) / 1.6)) % 1;
+      const pt = $("loopPath").getPointAtLength(loopLen * (t < 25.75 ? drawn : u));
+      sp.setAttribute("cx", pt.x); sp.setAttribute("cy", pt.y); sp.style.opacity = t >= 24.5 ? 1 : 0;
+      const c7 = $("c7"); capPos(c7, L.c7Y); rise(c7, t, 25.0);
+      ["x1", "x2", "x3"].forEach((id, i) => {
+        const el = $(id);
+        if (FMT === "v") capPos(el, L.xY[i]);
+        else { el.style.top = L.xY[i] + "px"; el.style.right = 50 + i * 610 + "px"; el.style.left = "auto"; el.style.width = "600px"; el.style.fontSize = "56px"; }
+        rise(el, t, 26.0 + i);
+      });
+    }
+
+    // ---- S8 callback + end card (29–32) ----
+    const sEnd = t >= 29; show($("s-end"), sEnd);
+    if (sEnd) {
+      $("s-end").style.transformOrigin = "50% 45%"; $("s-end").style.transform = `scale(${1 + 0.04 * p01(t, 29, 3)})`;
+      const r2 = $("ringer2"); const ry = FMT === "v" ? 430 : 70;
+      box(r2, W / 2 - 150, ry); pop(r2, t, 29.0, "", 0.4);
+      const ck = $("chk"); box(ck, W / 2 + 70, ry + 200); pop(ck, t, 29.25, "", 0.4);
+      const wd = $("word"); box(wd, 0, FMT === "v" ? 860 : 410); pop(wd, t, 29.5);
+      const tg = $("tag"); capPos(tg, FMT === "v" ? 1160 : 790); rise(tg, t, 30.0);
+    }
+  };
+
+  window.DURATION = DUR;
+  Promise.all([document.fonts.ready,
+    document.fonts.load('700 60px "Plex Arabic"', "عربي"), document.fonts.load('500 60px "Plex Arabic"', "عربي"),
+    document.fonts.load('700 60px "Heebo"', "עברית"), document.fonts.load('800 60px "Heebo"', "עברית"), document.fonts.load('500 60px "Heebo"', "עברית"), ...[...document.images].map((i) => i.decode().catch(() => {}))]).then(() => {
+    renderAt(Number(Q.get("t") || 0));
+    window.ready = true;
+  });
+})();
+</script>
+</body>
+</html>

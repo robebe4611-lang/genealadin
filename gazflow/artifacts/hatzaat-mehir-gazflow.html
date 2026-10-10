@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>הצעת מחיר — גזפלו | מערכת אוטומציה לחלוקת בלוני גז</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&family=Frank+Ruhl+Libre:wght@500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #1a1612;
+      --ink-soft: #3d342c;
+      --muted: #6b5e52;
+      --line: #e4d8c8;
+      --paper: #f7f1e8;
+      --card: #fffdf8;
+      --flame: #c45c12;
+      --flame-deep: #9a3f08;
+      --navy: #1c2a38;
+      --good: #1f6b4a;
+      --warn: #8a5a12;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: #d9cfc2; color: var(--ink); font-family: Heebo, Arial, sans-serif; }
+    body { padding: 24px 12px 48px; }
+    .page {
+      width: 210mm;
+      max-width: 100%;
+      margin: 0 auto 18px;
+      background: var(--paper);
+      box-shadow: 0 18px 50px rgba(28, 22, 16, 0.18);
+      overflow: hidden;
+      page-break-after: always;
+    }
+    .page:last-child { page-break-after: auto; }
+
+    .cover {
+      min-height: 297mm;
+      background:
+        radial-gradient(1200px 500px at 100% 0%, rgba(196,92,18,0.18), transparent 55%),
+        linear-gradient(165deg, #141c24 0%, #1c2a38 48%, #243445 100%);
+      color: #f4ece3;
+      padding: 42px 48px 36px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .brand-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+    .logo {
+      display: flex; align-items: center; gap: 12px;
+      font-weight: 800; letter-spacing: -0.03em; font-size: 22px;
+    }
+    .mark {
+      width: 42px; height: 42px; border-radius: 10px;
+      background: linear-gradient(145deg, #f08a2a, #c45c12);
+      display: grid; place-items: center;
+      box-shadow: 0 8px 20px rgba(196,92,18,0.35);
+    }
+    .mark svg { width: 24px; height: 24px; }
+    .meta { text-align: left; font-size: 12px; color: #c9b9a6; line-height: 1.7; }
+    .meta strong { color: #f4ece3; font-weight: 700; }
+    .eyebrow {
+      margin-top: 72px;
+      color: #f08a2a;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.18em;
+    }
+    h1 {
+      font-family: "Frank Ruhl Libre", serif;
+      font-size: 46px;
+      line-height: 1.15;
+      margin: 14px 0 18px;
+      max-width: 14ch;
+    }
+    .lede { font-size: 18px; line-height: 1.65; color: #d7cbbb; max-width: 36em; }
+    .cover-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 18px;
+      margin-top: 40px;
+    }
+    .stat {
+      border: 1px solid rgba(244,236,227,0.12);
+      background: rgba(255,255,255,0.04);
+      padding: 16px 18px;
+      border-radius: 12px;
+    }
+    .stat b { display: block; font-size: 22px; color: #fff; margin-bottom: 4px; }
+    .stat span { font-size: 13px; color: #c9b9a6; }
+    .cover-foot {
+      display: flex; justify-content: space-between; gap: 16px;
+      border-top: 1px solid rgba(244,236,227,0.12);
+      padding-top: 18px; font-size: 12px; color: #c9b9a6;
+    }
+
+    .inner { padding: 42px 48px 48px; }
+    h2 {
+      font-family: "Frank Ruhl Libre", serif;
+      font-size: 28px;
+      margin: 0 0 10px;
+      color: var(--navy);
+    }
+    h3 { font-size: 16px; margin: 22px 0 8px; color: var(--navy); }
+    p, li { font-size: 14px; line-height: 1.75; color: var(--ink-soft); }
+    .kicker {
+      color: var(--flame);
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      margin-bottom: 6px;
+    }
+    .rule { height: 1px; background: var(--line); margin: 22px 0; }
+
+    table { width: 100%; border-collapse: collapse; margin: 12px 0 6px; }
+    th, td { text-align: right; padding: 10px 12px; font-size: 13px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { color: var(--muted); font-weight: 700; font-size: 11px; letter-spacing: 0.06em; }
+    td.num, th.num { text-align: left; white-space: nowrap; font-variant-numeric: tabular-nums; font-weight: 700; }
+    .price { color: var(--navy); }
+    .note { font-size: 12px; color: var(--muted); margin-top: 8px; }
+
+    .packages { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 18px 0; }
+    .pkg {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px 16px 18px;
+      min-height: 100%;
+    }
+    .pkg.featured {
+      border-color: #c45c12;
+      background: linear-gradient(180deg, #fff7ee, #fffdf8);
+      box-shadow: 0 10px 24px rgba(196,92,18,0.12);
+    }
+    .pkg .tag { font-size: 11px; font-weight: 800; color: var(--flame); margin-bottom: 6px; }
+    .pkg h3 { margin: 0 0 4px; font-size: 18px; }
+    .pkg .amt { font-size: 28px; font-weight: 800; color: var(--navy); letter-spacing: -0.03em; }
+    .pkg .amt small { font-size: 13px; font-weight: 600; color: var(--muted); }
+    .pkg ul { margin: 12px 0 0 18px; }
+    .pkg li { font-size: 12.5px; margin: 5px 0; }
+
+    .modules { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .mod {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px 16px;
+      background: var(--card);
+    }
+    .mod h3 { margin: 0 0 6px; font-size: 15px; }
+    .mod .amt { font-weight: 800; color: var(--flame-deep); font-size: 14px; margin-bottom: 6px; }
+
+    .callout {
+      background: #1c2a38;
+      color: #f4ece3;
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin: 16px 0;
+    }
+    .callout strong { color: #f08a2a; }
+    .callout p { color: #d7cbbb; }
+
+    .steps { counter-reset: s; display: grid; gap: 10px; }
+    .step {
+      display: grid;
+      grid-template-columns: 42px 1fr 110px;
+      gap: 12px;
+      align-items: start;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .n {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--navy); color: #fff;
+      display: grid; place-items: center; font-weight: 800; font-size: 14px;
+    }
+    .when { color: var(--muted); font-size: 12px; font-weight: 700; padding-top: 8px; }
+
+    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    ul.clean { margin: 8px 0 0 18px; }
+    ul.clean li { margin: 4px 0; }
+
+    footer.page-foot {
+      margin-top: 28px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+      display: flex; justify-content: space-between;
+      font-size: 11px; color: var(--muted);
+    }
+
+    @media print {
+      body { background: #fff; padding: 0; }
+      .page { box-shadow: none; margin: 0; width: auto; }
+      .cover { min-height: 100vh; }
+    }
+    @page { size: A4; margin: 0; }
+  </style>
+</head>
+<body>
+  <section class="page cover">
+    <div>
+      <div class="brand-row">
+        <div class="logo">
+          <div class="mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M12 3c2.8 3.2 6 6.7 6 10.2A6 6 0 1 1 6 13.2C6 9.7 9.2 6.2 12 3Z" fill="#fff"/>
+            </svg>
+          </div>
+          גזפלו
+        </div>
+        <div class="meta">
+          <div><strong>מסמך:</strong> הצעת מחיר מס׳ GF-2026-041</div>
+          <div><strong>תאריך:</strong> 7 באוקטובר 2026</div>
+          <div><strong>תוקף:</strong> 21 יום</div>
+          <div><strong>מע״מ:</strong> לא כלול</div>
+        </div>
+      </div>
+      <div class="eyebrow">הצעת מחיר מפורטת</div>
+      <h1>מערכת אוטומציה לחלוקת בלוני גז לבית</h1>
+      <p class="lede">
+        מעבר מעסק שרץ על טלפון, וואטסאפ וזיכרון — למערכת תפעול סגורה:
+        הזמנה, לקוח, מלאי, מסלול, הודעה, אספקה ותשלום. בלי להחליף את הערוץ שהלקוחות כבר מכירים.
+      </p>
+      <div class="cover-grid">
+        <div class="stat"><b>₪32,900</b><span>חבילה מומלצת להפעלה תפעולית מלאה תוך 5–6 שבועות</span></div>
+        <div class="stat"><b>₪890 / חודש</b><span>תחזוקה, אחסון, גיבוי ועדכוני הודעות — אחרי ההשקה</span></div>
+        <div class="stat"><b>6 מודולים</b><span>הזמנות · מסלול · הודעות · ניהול · אזור אישי · אוטומציה</span></div>
+        <div class="stat"><b>40 / 40 / 20</b><span>תנאי תשלום: מקדמה, אבן דרך הדגמה, מסירה</span></div>
+      </div>
+    </div>
+    <div class="cover-foot">
+      <div>סודי מסחרית · מיועד ללקוח קצה בתחום חלוקת גז ביתי</div>
+      <div>כל המחירים בש״ח, לפני מע״מ</div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="inner">
+      <div class="kicker">01 · הבנת הצורך</div>
+      <h2>למה זה משתלם עכשיו</h2>
+      <p>
+        העסק כבר יודע למכור ולספק. הבעיה היא קנה המידה: כל הזמנה נכנסת בשיחה, כל מסלול נבנה בראש,
+        וכל לקוח שואל «מתי תגיעו». האוטומציה לא מחליפה את בעל העסק — היא משחררת אותו מתיאום,
+        ומקצרת את הדרך בין «צריך גז» ל«הבלון אצלך בבית».
+      </p>
+
+      <div class="two" style="margin-top:18px">
+        <div>
+          <h3>מה קורה היום</h3>
+          <ul class="clean">
+            <li>הזמנות נכנסות בטלפון ובהודעות לא מתועדות</li>
+            <li>כתובות, קודים והערות כניסה חיים אצל נהג אחד</li>
+            <li>מסלול היום נסגר מאוחר, עם נסיעות כפולות</li>
+            <li>לקוחות מתקשרים שוב כי אין סטטוס</li>
+            <li>אין תמונת מלאי מלא/ריק ברורה</li>
+            <li>חידוש תלוי בזיכרון, לא במחזור בלון</li>
+          </ul>
+        </div>
+        <div>
+          <h3>מה מקבלים אחרי ההשקה</h3>
+          <ul class="clean">
+            <li>כל הזמנה בכרטיס, עם סטטוס ותשלום</li>
+            <li>לוח יום לנהג ולמשרד, כולל הערות כניסה</li>
+            <li>מסלול לפי אזור, חלון זמן וקיבולת רכב</li>
+            <li>הודעות אוטומטיות: התקבלה / בדרך / סופקה</li>
+            <li>מעקב מלאים, ריקים וחובות</li>
+            <li>תזכורת חידוש לפי מחזור הלקוח</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout">
+        <p>
+          <strong>עיקרון מוביל:</strong>
+          הלקוח הסופי ממשיך בוואטסאפ. האפליקציה היא בשביל בעל העסק, הנהג, והלקוחות שרוצים להזמין לבד.
+          לא כופים אפליקציה חדשה על מי שכבר מזמין בטלפון.
+        </p>
+      </div>
+
+      <div class="kicker" style="margin-top:8px">02 · החבילות</div>
+      <h2>שלוש רמות, אותו בסיס</h2>
+      <p>אפשר להתחיל בבסיס ולשדרג. המחיר בחבילה הגבוהה חוסך מול קנייה מודול-מודול.</p>
+
+      <div class="packages">
+        <article class="pkg">
+          <div class="tag">חבילה A</div>
+          <h3>בסיס תפעולי</h3>
+          <div class="amt">₪14,900 <small>+ מע״מ</small></div>
+          <p style="font-size:12px;margin-top:6px">3 שבועות · מתאים לפיילוט</p>
+          <ul>
+            <li>טופס הזמנה + רישום ידני משיחה</li>
+            <li>כרטיסי לקוחות וכתובות</li>
+            <li>לוח הזמנות יומי עם סטטוסים</li>
+            <li>סימון תשלום / חוב</li>
+            <li>דוח יומי להדפסה</li>
+            <li>הדרכה אחת למשרד</li>
+          </ul>
+        </article>
+        <article class="pkg featured">
+          <div class="tag">מומלץ · חבילה B</div>
+          <h3>תפעול + מסלול</h3>
+          <div class="amt">₪32,900 <small>+ מע״מ</small></div>
+          <p style="font-size:12px;margin-top:6px">5–6 שבועות · העסק עובד עליה</p>
+          <ul>
+            <li>הכול מחבילה A</li>
+            <li>בניית מסלול לפי אזורים וחלונות זמן</li>
+            <li>תצוגת נהג לנייד</li>
+            <li>מלאי מלא/ריק ברכב ובמחסן</li>
+            <li>תבניות הודעות ללקוח</li>
+            <li>יומן משלוחים + סיכום יום</li>
+            <li>שני סבבי הדרכה (משרד + נהג)</li>
+          </ul>
+        </article>
+        <article class="pkg">
+          <div class="tag">חבילה C</div>
+          <h3>אוטומציה מלאה</h3>
+          <div class="amt">₪54,900 <small>+ מע״מ</small></div>
+          <p style="font-size:12px;margin-top:6px">8–10 שבועות · מוצר שלם</p>
+          <ul>
+            <li>הכול מחבילה B</li>
+            <li>אזור אישי ללקוח + הזמנה חוזרת</li>
+            <li>חיבור וואטסאפ עסקי</li>
+            <li>תזכורות חידוש אוטומטיות</li>
+            <li>מפת מסלול חיה</li>
+            <li>דשבורד ניהול: הכנסות, אזורים, חובות</li>
+            <li>חבילת אוטומציות מוכנה (6 תבניות)</li>
+          </ul>
+        </article>
+      </div>
+      <p class="note">מחיר החבילה הוא מחיר הקמה חד-פעמי. עלויות שוטפות מופיעות בהמשך. לא כלול: סליקה, מספר וואטסאפ עסקי, חומרה לנהג.</p>
+      <footer class="page-foot"><span>גזפלו · GF-2026-041</span><span>עמוד 2</span></footer>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="inner">
+      <div class="kicker">03 · פירוט מודולים</div>
+      <h2>מה נכנס לכל מודול</h2>
+      <p>המחירים משמשים גם כמחירון שדרוג, אם מתחילים מחבילה נמוכה.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>מודול</th>
+            <th>מה נמסר</th>
+            <th class="num">מחיר אם בנפרד</th>
+            <th>A</th>
+            <th>B</th>
+            <th>C</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1. הזמנות</strong></td>
+            <td>טופס הזמנה, רישום משיחה, סוג בלון, כמות, החלפה מלא↔ריק, סטטוסים, ביטול, הערות כניסה</td>
+            <td class="num price">₪8,500</td>
+            <td>כן</td><td>כן</td><td>כן</td>
+          </tr>
+          <tr>
+            <td><strong>2. בניית מסלול</strong></td>
+            <td>שיוך לאזור, סידור עצירות, קיבולת רכב, חלון זמן, תצוגת נהג, סימון «הגעתי / סופק»</td>
+            <td class="num price">₪11,800</td>
+            <td>—</td><td>כן</td><td>כן</td>
+          </tr>
+          <tr>
+            <td><strong>3. מענה הודעות</strong></td>
+            <td>תבניות: התקבלה, בדרך, ETA, סופקה, תזכורת. תור שליחה + העברה לנציג אנושי</td>
+            <td class="num price">₪7,200</td>
+            <td>תבניות ידניות</td><td>תבניות + העתקה</td><td>שליחה אוטומטית</td>
+          </tr>
+          <tr>
+            <td><strong>4. מערכת ניהול</strong></td>
+            <td>לקוחות, מלאי מלא/ריק, נהגים, תשלומים וחובות, דוחות יום/שבוע, הרשאות משרד</td>
+            <td class="num price">₪9,400</td>
+            <td>בסיס</td><td>כן</td><td>כן + דשבורד</td>
+          </tr>
+          <tr>
+            <td><strong>5. אזור אישי ללקוח</strong></td>
+            <td>כניסה בקישור/קוד, הזמנה חוזרת בלחיצה, היסטוריה, עדכון כתובת, מעקב סטטוס</td>
+            <td class="num price">₪8,900</td>
+            <td>—</td><td>—</td><td>כן</td>
+          </tr>
+          <tr>
+            <td><strong>6. חבילת אוטומציה</strong></td>
+            <td>חידוש לפי מחזור בלון, תזכורת 21–28 יום, סיכום יום למשרד, התראת מלאי נמוך, לקוח לא פעיל</td>
+            <td class="num price">₪6,600</td>
+            <td>—</td><td>חלקי</td><td>כן</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="note">סכום המודולים בנפרד: ₪52,400. חבילה C ב־₪54,900 כוללת אינטגרציה, הדרכות ומסירת מקצה לקצה — לא רק אוסף מסכים.</p>
+
+      <h3>פירוט פונקציונלי קצר</h3>
+      <div class="modules">
+        <div class="mod">
+          <h3>הזמנות</h3>
+          <p>סוגי בלון (למשל 12 ק״ג / 48 ק״ג), החלפה או מכירה, כמות, מועד מועדף, מקור ההזמנה (טלפון / וואטסאפ / אתר), שיוך לנהג.</p>
+        </div>
+        <div class="mod">
+          <h3>מסלול</h3>
+          <p>סידור ידני + הצעת סדר לפי אזור. מפה לחבילה C. הנהג רואה רק את היום שלו, כולל טלפון לקוח וניווט.</p>
+        </div>
+        <div class="mod">
+          <h3>הודעות</h3>
+          <p>לא בוט שמחליף שיחה. 6 תבניות קצרות בעברית, עם שם, חלון הגעה ומעקב. חריגים תמיד עוברים לאדם.</p>
+        </div>
+        <div class="mod">
+          <h3>ניהול</h3>
+          <p>כרטיס לקוח קבוע מול חד-פעמי, יתרת חוב, מלאי מחסן ורכב, וסגירת יום: כמה סופק, כמה ריק נאסף, כמה נשאר במזומן.</p>
+        </div>
+      </div>
+
+      <footer class="page-foot"><span>גזפלו · GF-2026-041</span><span>עמוד 3</span></footer>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="inner">
+      <div class="kicker">04 · תוספות אופציונליות</div>
+      <h2>מודולים שאפשר לצרף</h2>
+      <table>
+        <thead>
+          <tr><th>תוספת</th><th>מתי זה משתלם</th><th class="num">מחיר</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>חיבור וואטסאפ Business API</td><td>מעל ~25 הודעות יזומות ביום, בלי העתקה ידנית</td><td class="num">₪4,800 הקמה</td></tr>
+          <tr><td>סליקת אשראי באתר / בקישור תשלום</td><td>כשרוצים לגבות מראש או לסגור חוב מרחוק</td><td class="num">₪3,600 הקמה</td></tr>
+          <tr><td>אפליקציית נהג ייעודית (PWA מלא)</td><td>יותר מנהג אחד, או עבודה בשטח בלי משרד</td><td class="num">₪6,900</td></tr>
+          <tr><td>מנוי «תמיד מלא» / חיוב מחזורי</td><td>לקוחות קבועים שרוצים אספקה אוטומטית</td><td class="num">₪4,200</td></tr>
+          <tr><td>דוחות חשבונאיים לייצוא Excel/חשבונית</td><td>רואה חשבון, מע״מ, סיכום חודשי</td><td class="num">₪2,400</td></tr>
+          <tr><td>מספר משתמשים נוסף (מעבר ל־3)</td><td>משרד + כמה נהגים</td><td class="num">₪180 / משתמש / חודש</td></tr>
+          <tr><td>ייבוא לקוחות קיימים מאקסל / וואטסאפ</td><td>מעל 80 לקוחות רשומים היום</td><td class="num">₪1,200–₪2,800</td></tr>
+          <tr><td>מיתוג מלא (לוגו, דומיין, סמס ממותג)</td><td>כשהמערכת פונה ללקוח הסופי בשם העסק</td><td class="num">₪1,800</td></tr>
+        </tbody>
+      </table>
+
+      <div class="kicker" style="margin-top:22px">05 · עלות שוטפת</div>
+      <h2>מה משלמים אחרי ההשקה</h2>
+      <table>
+        <thead>
+          <tr><th>רכיב</th><th>כולל</th><th class="num">חבילה B</th><th class="num">חבילה C</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>אירוח, גיבוי, תחזוקה ותיקוני באגים</td><td>שרת, SSL, גיבוי יומי, תיקונים, עדכוני אבטחה</td><td class="num">₪490</td><td class="num">₪690</td></tr>
+          <tr><td>חבילת הודעות בסיס</td><td>עד 500 הודעות תבנית / חודש דרך המערכת</td><td class="num">₪180</td><td class="num">כלול</td></tr>
+          <tr><td>וואטסאפ עסקי (ספק חיצוני)</td><td>לפי שיחות / תבניות מאושרות של מטא</td><td class="num">לא כלול</td><td class="num">החל מ־₪220</td></tr>
+          <tr><td>מפות וניווט</td><td>תצוגת מסלול; ניווט נפתח בווייז</td><td class="num">כלול ברמה בסיסית</td><td class="num">₪90</td></tr>
+          <tr><td><strong>סה״כ שוטף טיפוסי</strong></td><td>בלי סליקה ובלי חריגת הודעות</td><td class="num"><strong>₪670</strong></td><td class="num"><strong>₪890–1,100</strong></td></tr>
+        </tbody>
+      </table>
+      <p class="note">סליקה: עמלה של חברת הסליקה בלבד, בדרך כלל 1.2%–2.5% + ₪0.3–0.5 לעסקה. לא עמלה שלנו. חוזה התחזוקה הוא ל־12 חודשים, עם יציאה בהודעה של 30 יום אחרי החודש השלישי.</p>
+
+      <div class="kicker" style="margin-top:18px">06 · לוח זמנים</div>
+      <h2>איך נראה הפרויקט בחבילה המומלצת</h2>
+      <div class="steps">
+        <div class="step"><div class="n">1</div><div><strong>אפיון ממוקד</strong><p>אזורים, סוגי בלונים, תהליך הזמנה, נוסח הודעות, הרשאות.</p></div><div class="when">שבוע 1</div></div>
+        <div class="step"><div class="n">2</div><div><strong>ליבת הזמנות ולקוחות</strong><p>קליטה, כרטיס לקוח, סטטוסים, תשלום/חוב.</p></div><div class="when">שבועות 2–3</div></div>
+        <div class="step"><div class="n">3</div><div><strong>מסלול + תצוגת נהג</strong><p>לוח יום, סידור עצירות, מלאי רכב.</p></div><div class="when">שבוע 4</div></div>
+        <div class="step"><div class="n">4</div><div><strong>הודעות והרצה חיה</strong><p>תבניות, פיילוט על יום אמיתי אחד, תיקונים.</p></div><div class="when">שבוע 5</div></div>
+        <div class="step"><div class="n">5</div><div><strong>מסירה והדרכה</strong><p>הדרכת משרד ונהג, מסמך הפעלה, חודש ליווי קרוב.</p></div><div class="when">שבוע 6</div></div>
+      </div>
+      <footer class="page-foot"><span>גזפלו · GF-2026-041</span><span>עמוד 4</span></footer>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="inner">
+      <div class="kicker">07 · החזר השקעה</div>
+      <h2>מתי זה מחזיר את עצמו</h2>
+      <p>
+        חישוב שמרני לעסק עם נהג אחד ו־18 משלוחים ביום, 22 ימי עבודה בחודש.
+        לא כולל הזמנות חדשות שנפתחות כי קל יותר להזמין.
+      </p>
+      <table>
+        <thead>
+          <tr><th>חיסכון</th><th>הנחה</th><th class="num">שווי חודשי</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>שעת תיאום טלפוני ביום</td><td>₪90 לשעה × 22</td><td class="num">₪1,980</td></tr>
+          <tr><td>20–30 דק׳ נסיעה מיותרת ביום</td><td>דלק + זמן נהג</td><td class="num">₪1,100</td></tr>
+          <tr><td>2 הזמנות שאבדו / לא חודשו בחודש</td><td>רווח גולמי ~₪70 להזמנה</td><td class="num">₪140</td></tr>
+          <tr><td>תזכורת חידוש שמחזירה לקוח קבוע</td><td>4 חידושים בחודש מעל הקיים</td><td class="num">₪280+</td></tr>
+          <tr><td><strong>סה״כ שמרני</strong></td><td></td><td class="num"><strong>כ־₪3,500 / חודש</strong></td></tr>
+        </tbody>
+      </table>
+      <p class="note">חבילה B (₪32,900) מחזירה את עצמה בכ־9–11 חודשים בתרחיש הזה. אם יש שני נהגים או יותר שיחות ביום — מהר יותר.</p>
+
+      <div class="two" style="margin-top:20px">
+        <div>
+          <h3>כלול במחיר ההקמה</h3>
+          <ul class="clean">
+            <li>אפיון, עיצוב ממשק והקמה</li>
+            <li>סביבת עבודה בעברית, מותאם לנייד</li>
+            <li>עד 3 משתמשים בהשקה (משרד + נהגים)</li>
+            <li>הדרכות לפי החבילה</li>
+            <li>45 ימי אחריות לתיקון תקלות</li>
+            <li>גיבוי יומי בשנת התחזוקה</li>
+          </ul>
+        </div>
+        <div>
+          <h3>לא כלול</h3>
+          <ul class="clean">
+            <li>רישוי חלוקת גז / דרישות רגולציה</li>
+            <li>מכשירים, מדפסות, סורקים</li>
+            <li>עמלה לחברת סליקה / חשבון וואטסאפ</li>
+            <li>צילומי מיתוג, קמפיין פרסום</li>
+            <li>פיתוח תוספות אחרי חתימת האפיון</li>
+            <li>תמיכה בשטח מעבר לשעות העבודה</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="kicker" style="margin-top:22px">08 · הנחות ומסלול החלטה</div>
+      <h2>איך כדאי לבחור</h2>
+      <div class="callout">
+        <p>
+          <strong>ההמלצה שלנו:</strong> להתחיל בחבילה B — תפעול + מסלול — ולהוסיף אזור אישי ווואטסאפ אוטומטי אחרי 30 יום של שימוש אמיתי.
+          כך משלמים על מה שסוגר את היום התפעולי, ולא על פורטל לקוחות שעדיין לא הוכיח את עצמו.
+          מעבר מ־B ל־C תוך 4 חודשים מההשקה: <strong>₪18,800</strong> במקום ₪22,000 (הפרש המחירון).
+        </p>
+      </div>
+      <footer class="page-foot"><span>גזפלו · GF-2026-041</span><span>עמוד 5</span></footer>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="inner">
+      <div class="kicker">09 · מסחרי</div>
+      <h2>תנאים, תשלום ואחריות</h2>
+
+      <h3>תנאי תשלום — הקמה</h3>
+      <table>
+        <thead><tr><th>אבן דרך</th><th>מתי</th><th class="num">חבילה A</th><th class="num">חבילה B</th><th class="num">חבילה C</th></tr></thead>
+        <tbody>
+          <tr><td>40% מקדמה עם הזמנת עבודה</td><td>חתימה</td><td class="num">₪5,960</td><td class="num">₪13,160</td><td class="num">₪21,960</td></tr>
+          <tr><td>40% בהדגמת ליבה עובדת</td><td>אמצע הפרויקט</td><td class="num">₪5,960</td><td class="num">₪13,160</td><td class="num">₪21,960</td></tr>
+          <tr><td>20% במסירה והדרכה</td><td>השקה</td><td class="num">₪2,980</td><td class="num">₪6,580</td><td class="num">₪10,980</td></tr>
+          <tr><td><strong>סה״כ לפני מע״מ</strong></td><td></td><td class="num"><strong>₪14,900</strong></td><td class="num"><strong>₪32,900</strong></td><td class="num"><strong>₪54,900</strong></td></tr>
+          <tr><td>מע״מ 18%</td><td></td><td class="num">₪2,682</td><td class="num">₪5,922</td><td class="num">₪9,882</td></tr>
+          <tr><td><strong>סה״כ כולל מע״מ</strong></td><td></td><td class="num"><strong>₪17,582</strong></td><td class="num"><strong>₪38,822</strong></td><td class="num"><strong>₪64,782</strong></td></tr>
+        </tbody>
+      </table>
+
+      <h3>תנאי עבודה</h3>
+      <ul class="clean">
+        <li>תוקף ההצעה: 21 יום מתאריך המסמך.</li>
+        <li>התחלת עבודה תוך 7 ימי עסקים מקבלת מקדמה ואפיון חתום.</li>
+        <li>שינויי היקף אחרי חתימת אפיון מתומחרים ב־₪380 לשעת פיתוח, באישור מראש בכתב.</li>
+        <li>אחריות 45 יום לתיקון תקלות במסגרת מה שנמסר. לא כולל רעיונות חדשים.</li>
+        <li>קניין הרוחני של המערכת עובר ללקוח לאחר סילוק מלוא התמורה. רכיבי צד ג׳ נשארים ברישיונם.</li>
+        <li>הלקוח מספק: לוגו, רשימת אזורים, סוגי בלונים, מחירון פנימי, נוסחי הודעות רצויים, וגישה לייצוא לקוחות אם קיים.</li>
+        <li>זמני תגובה בתחזוקה: תקלה חוסמת — עד 8 שעות עסקים. תקלה רגילה — עד 2 ימי עסקים.</li>
+        <li>המערכת אינה מחליפה רישוי, ביטוח או נהלי בטיחות של חלוקת גז.</li>
+      </ul>
+
+      <div class="kicker" style="margin-top:22px">10 · סיכום להחלטה</div>
+      <h2>שורה תחתונה לשולחן</h2>
+      <table>
+        <thead><tr><th>אם המצב הוא…</th><th>לוקחים</th><th class="num">הקמה</th><th class="num">שוטף</th></tr></thead>
+        <tbody>
+          <tr><td>נהג אחד, רוצים לסדר הזמנות בלי מהפכה</td><td>חבילה A</td><td class="num">₪14,900</td><td class="num">₪490</td></tr>
+          <tr><td>יש עומס שיחות ומסלול בראש — רוב העסקים כאן</td><td>חבילה B</td><td class="num">₪32,900</td><td class="num">₪670</td></tr>
+          <tr><td>רוצים פורטל לקוח, תזכורות וואטסאפ ודשבורד מלא</td><td>חבילה C</td><td class="num">₪54,900</td><td class="num">₪890–1,100</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout" style="margin-top:22px">
+        <p>
+          <strong>הצעד הבא:</strong> בחירת חבילה, שיחת אפיון של 45 דקות (אזורים, בלונים, נהגים, נוסחי הודעות),
+          והוצאת הזמנת עבודה. אפשר לפתוח פיילוט על אזור אחד לפני הרחבה לכל הקו.
+        </p>
+      </div>
+
+      <div class="two" style="margin-top:28px">
+        <div>
+          <p style="font-size:12px;color:var(--muted)">אישור עקרוני</p>
+          <p style="margin-top:28px;border-top:1px solid var(--ink);padding-top:8px;width:80%">חתימת הלקוח + תאריך</p>
+        </div>
+        <div>
+          <p style="font-size:12px;color:var(--muted)">חבילה שנבחרה: A / B / C &nbsp;&nbsp; תוספות: __________</p>
+          <p style="margin-top:28px;border-top:1px solid var(--ink);padding-top:8px;width:80%">שם מלא / ח.פ.</p>
+        </div>
+      </div>
+
+      <footer class="page-foot">
+        <span>גזפלו · מערכת אוטומציה לחלוקת בלוני גז · סודי מסחרית</span>
+        <span>עמוד 6 · תוקף עד 28 באוקטובר 2026</span>
+      </footer>
+    </div>
+  </section>
+</body>
+</html>

@@ -1,0 +1,1149 @@
+<title>גזפלו · הדגמה חיה</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;800;900&display=swap">
+<style>
+  /* One deliberate light theme. Neutral base; color only for action and status. */
+  :root {
+    --base: #f2f6f3; --paper: #fbfdfb; --card: #ffffff; --ink: #11291c; --soft: #536a5c; --faint: #869a8d; --line: #dce7df;
+    --green: #00843d; --green-deep: #006b31; --gold: #c9a24b;
+    --glass: rgba(255,255,255,.62); --glass-line: rgba(255,255,255,.75);
+    --flame: #00843d; --flame-soft: #e1f2e7; --ok: #00843d; --ok-soft: #e1f2e7;
+    --warn: #8c2b1a; --warn-soft: #fde8e4; --blue: #1d5f8a; --blue-soft: #e2eef7;
+    --spring: cubic-bezier(.34, 1.28, .64, 1);
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--base); color: var(--ink); }
+  body { font-family: "Rubik", system-ui, sans-serif; direction: rtl; -webkit-tap-highlight-color: transparent; }
+  button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
+  button:disabled { opacity: .45; cursor: default; }
+  svg.i { width: 1em; height: 1em; flex: none; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vertical-align: -.15em; }
+
+  /* ---------- demo chrome ---------- */
+  .top { position: sticky; top: 0; z-index: 30; background: var(--green-deep); color: var(--paper); padding: 10px 16px 0; }
+  .top-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; max-width: 1440px; margin: 0 auto; }
+  .brand { font-weight: 800; font-size: 20px; }
+  .stars { color: var(--gold); font-size: 13px; letter-spacing: 2px; margin-inline-end: 4px; vertical-align: 4px; }
+  .stars-big { color: var(--gold); font-size: 22px; letter-spacing: 6px; }
+  .brand small { font-weight: 400; opacity: .7; font-size: 13px; margin-inline-start: 6px; }
+  .reset { font-size: 13px; opacity: .75; text-decoration: underline; color: var(--paper); padding: 6px; }
+  .tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; max-width: 1440px; margin: 10px auto 0; }
+  .tab { position: relative; padding: 12px 4px; font-size: 18px; font-weight: 700; color: #cfe8d8; border-radius: 14px 14px 0 0; }
+  .tab.on { background: var(--base); color: var(--ink); }
+  .badge { position: absolute; top: 4px; inset-inline-end: 10px; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px; background: var(--gold); color: #fff; font-size: 13px; line-height: 22px; display: none; }
+  .badge.show { display: inline-block; animation: pop .4s var(--spring); }
+
+  .cols { max-width: 1440px; margin: 0 auto; padding: 16px; }
+  .col { display: none; }
+  .col.on { display: block; }
+  .col-head { display: none; }
+  @media (min-width: 1100px) {
+    .tabs { display: none; }
+    .top { padding-bottom: 10px; }
+    .cols { display: grid; grid-template-columns: 400px 1.3fr 1fr; gap: 24px; align-items: start; }
+    .col { display: block; }
+    .col-head { display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; color: var(--soft); margin: 0 4px 10px; }
+  }
+  .demo-who { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; max-width: 420px; margin: 0 auto; }
+  .demo-who span { flex: none; align-self: center; font-size: 12px; color: var(--faint); }
+  .chip { flex: none; padding: 7px 12px; border-radius: 999px; background: var(--card); box-shadow: 0 0 0 1px var(--line); font-size: 14px; white-space: nowrap; }
+  .chip.on { background: var(--green-deep); color: var(--paper); box-shadow: none; }
+
+  /* ---------- customer phone ---------- */
+  .phone { position: relative; overflow: hidden; max-width: 420px; margin: 0 auto; min-height: calc(100vh - 170px); border-radius: 30px;
+    background: radial-gradient(120% 60% at 100% 0%, #e6f4ea 0%, rgba(230,244,234,0) 60%), radial-gradient(90% 50% at 0% 100%, #f7f1e1 0%, rgba(247,241,225,0) 70%), var(--paper);
+    box-shadow: 0 0 0 1px var(--line); }
+  @media (min-width: 1100px) { .phone { min-height: 760px; border-radius: 44px; box-shadow: 0 0 0 10px var(--green), 0 30px 70px rgba(0,107,49,.22); } }
+  .screen { position: relative; display: flex; flex-direction: column; min-height: inherit; padding: 22px 20px 26px; }
+  .bar { display: flex; align-items: center; justify-content: space-between; }
+  .hi { font-size: 16px; color: var(--soft); }
+  .acct { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 999px; background: var(--glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: 0 0 0 1px var(--glass-line), 0 1px 2px rgba(22,32,42,.06); font-size: 15px; font-weight: 500; }
+  .grow { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 18px; }
+  .state-in { animation: stateIn .38s var(--spring); }
+  @keyframes stateIn { from { opacity: 0; transform: translateY(14px) scale(.985); } to { opacity: 1; transform: none; } }
+
+  .order-btn { position: relative; width: 100%; aspect-ratio: 1 / .92; border-radius: 40px; background: var(--flame); color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+    box-shadow: 0 18px 40px rgba(0,132,61,.28); transition: transform .18s var(--spring), box-shadow .18s; }
+  .order-btn:active, .press:active { transform: scale(.97); }
+  .order-btn:active { box-shadow: 0 0 0 10px rgba(0,132,61,.16), 0 10px 26px rgba(0,132,61,.3); }
+  .order-btn .i { font-size: 44px; stroke-width: 1.8; }
+  .order-btn b { font-size: 54px; font-weight: 900; letter-spacing: -.01em; line-height: 1; }
+  .order-btn small { font-size: 16px; opacity: .9; }
+  .predict { text-align: center; font-size: 17px; color: var(--soft); line-height: 1.5; margin: 0; }
+  .predict b { color: var(--ink); font-weight: 600; }
+  .sub-line { display: inline-flex; align-items: center; gap: 6px; justify-content: center; font-size: 15px; color: var(--ok); }
+  .call-office { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 18px; margin: 0 auto; border-radius: 999px; font-size: 16px; color: var(--soft); box-shadow: 0 0 0 1px var(--line); background: var(--glass); }
+
+  .eta-k { font-size: 17px; color: var(--soft); text-align: center; margin: 0; }
+  .eta { font-size: clamp(40px, 12.5vw, 60px); text-wrap: balance; font-weight: 900; text-align: center; line-height: 1.02; margin: 0; letter-spacing: -.02em; }
+  .eta.live { color: var(--flame); }
+  .eta.ok { color: var(--ok); }
+  .glass { background: var(--glass); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border-radius: 26px; box-shadow: 0 0 0 1px var(--glass-line), 0 1px 3px rgba(22,32,42,.06); padding: 16px; }
+  .drv { display: flex; align-items: center; gap: 12px; }
+  .avatar { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; font-size: 22px; font-weight: 800; color: var(--ink); background: #fff; box-shadow: 0 0 0 3px var(--green); color: var(--green); flex: none; }
+  .drv .n { font-size: 20px; font-weight: 700; }
+  .drv .r { font-size: 14px; color: var(--soft); }
+  .ring { margin-inline-start: auto; width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background: var(--green-deep); color: var(--paper); font-size: 22px; transition: transform .18s var(--spring); }
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .st { text-align: center; font-size: 13px; color: var(--faint); }
+  .st i { display: block; height: 6px; border-radius: 3px; background: var(--line); margin-bottom: 7px; transition: background .4s; }
+  .st.done { color: var(--ink); font-weight: 500; }
+  .st.done i { background: var(--green-deep); }
+  .st.now i { background: var(--flame); animation: pulse 1.6s ease-in-out infinite; }
+  .st.now { color: var(--flame); font-weight: 600; }
+  @keyframes pulse { 50% { opacity: .45; } }
+  .meta { text-align: center; font-size: 15px; color: var(--soft); margin: 0; }
+  .quiet-link { font-size: 15px; color: var(--faint); text-decoration: underline; text-underline-offset: 4px; min-height: 44px; }
+  .confirm-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  .done-mark { width: 92px; height: 92px; margin: 0 auto; border-radius: 50%; display: grid; place-items: center; background: var(--ok); color: #fff; font-size: 46px; animation: pop .5s var(--spring); }
+  .receipt { display: flex; flex-direction: column; gap: 8px; font-size: 16px; }
+  .receipt div { display: flex; justify-content: space-between; gap: 10px; }
+  .receipt span { color: var(--soft); }
+  .receipt .tot { border-top: 1px dashed var(--line); padding-top: 8px; font-size: 18px; font-weight: 700; }
+  .ask { text-align: center; }
+  .ask p { font-size: 20px; font-weight: 700; margin: 0 0 12px; }
+
+  .btn { min-height: 56px; border-radius: 18px; font-size: 18px; font-weight: 700; width: 100%; transition: transform .18s var(--spring); }
+  .btn.f { background: var(--flame); color: #fff; }
+  .btn.k { background: var(--green-deep); color: var(--paper); }
+  .btn.g { background: var(--glass); box-shadow: 0 0 0 1px var(--line); }
+  .btn.w { background: var(--warn); color: #fff; }
+
+  .skel { border-radius: 18px; background: linear-gradient(90deg, #ece6dd 25%, #f6f2ec 50%, #ece6dd 75%); background-size: 200% 100%; animation: shimmer 1.1s linear infinite; }
+  @keyframes shimmer { to { background-position: -200% 0; } }
+
+  /* sheets inside the phone */
+  .scrim { position: absolute; inset: 0; z-index: 10; background: rgba(0,60,28,.28); }
+  .bsheet { position: absolute; inset-inline: 0; bottom: 0; z-index: 11; background: var(--paper); border-radius: 30px 30px 0 0; padding: 22px 18px 24px; display: flex; flex-direction: column; gap: 14px; }
+  .ssheet { position: absolute; top: 0; bottom: 0; left: 0; width: 88%; z-index: 11; background: var(--paper); padding: 22px 18px; display: flex; flex-direction: column; gap: 14px; overflow-y: auto; box-shadow: 0 0 40px rgba(22,32,42,.18); }
+  .scrim.anim { animation: fade .2s; } .bsheet.anim { animation: up .32s var(--spring); } .ssheet.anim { animation: side .32s var(--spring); } .notif.anim { animation: drop .45s var(--spring); }
+  @keyframes side { from { transform: translateX(-100%); } to { transform: none; } }
+  @keyframes up { from { transform: translateY(60px); opacity: 0; } to { transform: none; opacity: 1; } }
+  @keyframes fade { from { opacity: 0; } }
+  .seg { display: grid; gap: 8px; }
+  .seg button { min-height: 50px; border-radius: 16px; background: var(--card); box-shadow: 0 0 0 1px var(--line); font-size: 16px; font-weight: 500; }
+  .seg button.on { background: var(--green-deep); color: var(--paper); box-shadow: none; }
+  .stepper { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .stepper .ctl { display: flex; align-items: center; gap: 10px; }
+  .stepper button { width: 52px; height: 52px; border-radius: 16px; background: var(--card); box-shadow: 0 0 0 1px var(--line); font-size: 26px; font-weight: 700; }
+  .stepper b { min-width: 34px; text-align: center; font-size: 28px; }
+  .tiles2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .tile { background: var(--card); border-radius: 20px; padding: 12px 14px; box-shadow: 0 0 0 1px var(--line); }
+  .tile p { margin: 0; }
+  .big-n { font-size: 30px; font-weight: 800; font-variant-numeric: tabular-nums; }
+
+  /* Live-Activity style banner */
+  .notif { position: absolute; top: 10px; inset-inline: 10px; z-index: 20; display: flex; gap: 10px; align-items: center; padding: 12px 14px; border-radius: 22px;
+    background: rgba(0,107,49,.86); color: #fff; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+  .notif .ap { width: 34px; height: 34px; border-radius: 10px; background: #fff; color: var(--green); display: grid; place-items: center; flex: none; }
+  .notif small { display: block; font-size: 12px; opacity: .65; }
+  .notif div { font-size: 15px; line-height: 1.35; }
+  @keyframes drop { from { transform: translateY(-120%); } to { transform: none; } }
+  .undo { position: absolute; bottom: 16px; inset-inline: 16px; z-index: 9; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 14px 16px; border-radius: 18px; background: var(--green-deep); color: var(--paper); animation: up .3s var(--spring); }
+  .undo button { color: #f3dc9c; font-weight: 700; font-size: 17px; }
+
+  /* view transitions: the hero element morphs between states */
+  ::view-transition-group(hero) { animation-duration: .38s; animation-timing-function: var(--spring); }
+  ::view-transition-old(root), ::view-transition-new(root) { animation-duration: .25s; }
+
+  /* ---------- office & driver: dense, high contrast, same tokens ---------- */
+  .stack { display: flex; flex-direction: column; gap: 12px; max-width: 560px; margin: 0 auto; }
+  .card { background: var(--card); border-radius: 18px; padding: 14px; box-shadow: 0 0 0 1px var(--line); }
+  h2 { margin: 0; font-size: 17px; display: flex; align-items: center; gap: 6px; }
+  .muted { color: var(--soft); }
+  .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .tiles .card { padding: 10px 6px; text-align: center; }
+  .tiles .big-n { font-size: 26px; }
+  .tiles .muted { font-size: 14px; }
+  .pill { display: inline-block; padding: 4px 12px; border-radius: 999px; font-size: 15px; font-weight: 500; white-space: nowrap; }
+  .p-new, .p-assigned { background: #edf3ef; color: var(--ink); }
+  .p-on_the_way { background: var(--flame-soft); color: var(--flame); }
+  .p-delivered { background: var(--ok-soft); color: var(--ok); }
+  .p-held, .p-failed { background: var(--warn-soft); color: var(--warn); }
+  .p-tomorrow, .p-cancelled { background: #eee; color: var(--soft); }
+  .p-sub { background: var(--blue-soft); color: var(--blue); }
+  .list { display: flex; flex-direction: column; }
+  .li { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 4px; border-top: 1px solid var(--line); border-radius: 10px; }
+  .li:first-child { border-top: 0; }
+  .li .t { font-weight: 700; font-size: 18px; }
+  .li .s { font-size: 15px; color: var(--soft); margin-top: 2px; }
+  .alert { border-radius: 14px; padding: 12px; background: var(--warn-soft); display: flex; flex-direction: column; gap: 8px; }
+  .alert.call { background: var(--blue-soft); }
+  .acts { display: flex; flex-wrap: wrap; gap: 6px; }
+  .btn-s { padding: 9px 12px; border-radius: 12px; font-size: 14px; font-weight: 600; background: var(--card); box-shadow: 0 0 0 1px var(--line); }
+  .btn-s.f { background: var(--flame); color: #fff; box-shadow: none; }
+  .btn-s.k { background: var(--green-deep); color: var(--paper); box-shadow: none; }
+  .prog { height: 8px; border-radius: 4px; background: var(--line); overflow: hidden; margin-top: 6px; }
+  .prog i { display: block; height: 100%; background: var(--ok); transition: width .4s; }
+  .feed { font-size: 16px; display: flex; flex-direction: column; gap: 6px; max-height: 200px; overflow-y: auto; }
+  .feed div { display: flex; gap: 8px; }
+  .feed time { color: var(--soft); font-variant-numeric: tabular-nums; flex: none; }
+  .hello { font-size: 26px; font-weight: 800; margin: 0; }
+  .stop-addr { font-size: 22px; font-weight: 800; margin: 0; }
+  .qty { flex: none; background: var(--paper); box-shadow: 0 0 0 1px var(--line); border-radius: 14px; padding: 8px 12px; font-size: 20px; font-weight: 800; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .soft-btn { min-height: 52px; border-radius: 14px; background: var(--paper); box-shadow: 0 0 0 1px var(--line); font-size: 16px; font-weight: 500; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+  .dim { opacity: .6; }
+  .who { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+
+  .flash { animation: flash 1.8s ease-out; }
+  @keyframes flash { 0% { box-shadow: 0 0 0 3px var(--flame); background: var(--flame-soft); } 100% { box-shadow: 0 0 0 1px var(--line); } }
+  @keyframes pop { 0% { transform: scale(.4); } 100% { transform: scale(1); } }
+
+  .toast { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); z-index: 60; background: var(--green-deep); color: var(--paper); padding: 13px 16px; border-radius: 16px; font-size: 15px; max-width: calc(100% - 32px); width: max-content; display: flex; gap: 12px; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,.25); animation: up .3s var(--spring); }
+  .toast button { color: #f3dc9c; font-weight: 700; text-decoration: underline; white-space: nowrap; }
+  .demo-note { text-align: center; font-size: 13px; color: var(--soft); margin: 4px 0 24px; }
+
+  /* Every button is green and white: filled = green with white text; outline = white with green text and border. */
+  .order-btn, .btn.f, .btn.k, .btn.w, .btn-s.f, .btn-s.k, .ring, .chip.on, .seg button.on { background: var(--green); color: #fff; box-shadow: none; }
+  .btn.g, .btn-s, .soft-btn, .seg button, .chip, .stepper button, .call-office, .acct, .order-sheet-close {
+    background: #fff; color: var(--green); box-shadow: inset 0 0 0 2px var(--green); }
+  .quiet-link { color: var(--green); }
+  .tab { color: #fff; }
+  .tab.on { background: #fff; color: var(--green); }
+  .reset, .toast button, .undo button { color: #fff; }
+  .order-btn:active { box-shadow: 0 0 0 10px rgba(0,132,61,.18); }
+
+  /* office drill-down */
+  .tap { width: 100%; text-align: start; cursor: pointer; }
+  button.li { background: none; }
+  button.li:active, .drow:active, .frow.tap:active, .tile-btn:active { background: var(--ok-soft); }
+  .chev { color: var(--green); font-size: 22px; font-weight: 700; line-height: 1; display: inline-block; }
+  .tile-btn { cursor: pointer; width: 100%; box-shadow: inset 0 0 0 2px var(--green) !important; }
+  .tiles3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .tiles3 .card { padding: 10px 6px; text-align: center; }
+  .tiles3 .big-n { font-size: 22px; }
+  .tiles3 .muted { font-size: 14px; }
+  .drow { padding: 10px 4px; border-radius: 12px; }
+  .frow { display: flex; gap: 8px; align-items: flex-start; padding: 6px 4px; border-radius: 10px; }
+  .frow span { flex: 1; }
+  .frow .chev { font-size: 18px; }
+  .alert-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; text-align: start; font-size: 16px; }
+  .see-all { color: var(--green); font-weight: 600; font-size: 15px; display: inline-flex; align-items: center; gap: 4px; }
+  .grow-btn { flex: 1; }
+  .ov-top { display: flex; align-items: center; gap: 12px; }
+  .back { flex: none; padding: 10px 14px; border-radius: 12px; font-size: 15px; font-weight: 700; background: #fff; color: var(--green); box-shadow: inset 0 0 0 2px var(--green); }
+  .kvl { display: flex; flex-direction: column; gap: 10px; font-size: 17px; }
+  .kvl div { align-items: center; }
+  .kvl div { display: flex; justify-content: space-between; gap: 10px; border-bottom: 1px dashed var(--line); padding-bottom: 6px; }
+  .kvl div:last-child { border-bottom: 0; padding-bottom: 0; }
+  .kvl span { color: var(--soft); }
+
+  .tt { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 18px; text-align: center; }
+  .tt th { font-size: 13px; font-weight: 500; color: var(--soft); padding: 4px 2px; }
+  .tt td { padding: 8px 2px; border-top: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+  .tt td:first-child { text-align: start; font-weight: 600; }
+  .tt b { font-size: 18px; color: var(--green); }
+  .neg, .tt b.neg { color: var(--warn) !important; }
+  .money3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; text-align: center; }
+  .money3 div { display: flex; flex-direction: column; gap: 2px; }
+  .money3 span { font-size: 14px; color: var(--soft); }
+  .money3 b { font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .debt-btn { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 12px; padding: 12px; border-radius: 14px; background: var(--warn-soft); color: var(--warn); font-weight: 600; }
+  .load-card { display: flex; flex-direction: column; gap: 12px; box-shadow: inset 0 0 0 2px var(--green); }
+
+  .type-row { padding: 10px 12px; border-radius: 16px; background: #fff; box-shadow: inset 0 0 0 1px var(--line); }
+  .type-row.on { box-shadow: inset 0 0 0 2px var(--green); }
+  .type-row small { font-size: 13px; }
+
+  .cyl { display: inline-flex; align-items: baseline; gap: 5px; padding: 4px 10px; margin: 2px 0 2px 6px; border-radius: 12px; background: #e1f2e7; color: var(--green-deep); font-size: 16px; font-weight: 600; white-space: nowrap; }
+  .cyl b { font-size: 22px; font-weight: 800; line-height: 1; }
+  .cyl small { font-size: 12px; font-weight: 500; opacity: .75; }
+  .cyl.c48 { background: #f6eedb; color: #7a5a12; }
+  .chips { display: flex; flex-wrap: wrap; margin-top: 4px; }
+  .meta .cyl { font-size: 15px; }
+
+  .debt-btn.zero { background: var(--ok-soft); color: var(--green-deep); }
+  .money3.m4 { grid-template-columns: repeat(4, 1fr); }
+  .money3.m4 b { font-size: 19px; }
+  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-inline-end: 6px; vertical-align: 1px; }
+  .dot.red { background: var(--warn); } .dot.blue { background: var(--blue); }
+  .debt-btn { color: var(--ink); background: #fff; box-shadow: inset 0 0 0 2px var(--line); }
+  .debt-btn.zero { background: var(--ok-soft); }
+  .debt-lines { display: flex; flex-direction: column; gap: 6px; text-align: start; font-size: 16px; font-weight: 500; }
+  .debt-lines b { font-weight: 800; margin-inline-start: 4px; }
+  .debt-row { align-items: flex-start; }
+  .debt-acts { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex: none; }
+  .debt-acts .amt { font-size: 20px; }
+  .debt-row.debt .amt { color: var(--warn); } .debt-row.transfer .amt { color: var(--blue); }
+
+  .stock-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .stock-box { border-radius: 14px; padding: 10px; background: var(--ok-soft); display: flex; flex-direction: column; gap: 4px; }
+  .stock-box.empty { background: #eef0ef; }
+  .stock-box .lbl { font-size: 15px; font-weight: 700; color: var(--green-deep); }
+  .stock-box.empty .lbl { color: var(--soft); }
+  .stock-box.empty .cyl { background: #fff; color: var(--soft); box-shadow: inset 0 0 0 1px var(--line); }
+  .zero-n { font-size: 22px; color: var(--soft); }
+  .stock-home { text-align: start; width: 100%; display: block; }
+  .per-truck { display: flex; flex-direction: column; gap: 4px; margin-top: 10px; font-size: 15px; color: var(--soft); }
+  .per-truck b { color: var(--ink); }
+
+  .unload-btn { margin-top: 12px; min-height: 52px; font-size: 17px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .unload-ask { margin-top: 12px; padding: 12px; border-radius: 14px; background: var(--ok-soft); display: flex; flex-direction: column; gap: 10px; }
+  .unload-ask p { margin: 0; font-weight: 600; font-size: 17px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+  }
+</style>
+
+<header class="top">
+  <div class="top-row">
+    <div class="brand"><span class="stars">★★</span>גזפלו<small>הדגמה חיה · שפרעם</small></div>
+    <button class="reset" id="reset">התחל מחדש</button>
+  </div>
+  <nav class="tabs">
+    <button class="tab on" data-tab="customer">לקוח<span class="badge" id="bd-customer"></span></button>
+    <button class="tab" data-tab="office">משרד<span class="badge" id="bd-office"></span></button>
+    <button class="tab" data-tab="driver">נהג<span class="badge" id="bd-driver"></span></button>
+  </nav>
+</header>
+
+<main class="cols">
+  <section class="col on" id="col-customer">
+    <div class="col-head" id="h-customer"></div>
+    <div class="demo-who" id="demo-who"></div>
+    <div class="phone" id="phone"></div>
+  </section>
+  <section class="col" id="col-office"><div class="col-head" id="h-office"></div><div class="stack" id="office"></div></section>
+  <section class="col" id="col-driver"><div class="col-head" id="h-driver"></div><div class="stack" id="driver"></div></section>
+</main>
+<p class="demo-note">הדגמה · מחירים ונתונים לדוגמה בלבד</p>
+<div id="toasts"></div>
+
+<script>
+(function () {
+  // ---------- icon set (one family, stroke icons) ----------
+  const P = {
+    flame: '<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>',
+    phone: '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>',
+    truck: '<path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.62l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/>',
+    check: '<path d="M20 6 9 17l-5-5"/>',
+    nav: '<polygon points="3 11 22 2 13 21 11 13 3 11"/>',
+    user: '<circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/>',
+    x: '<path d="M18 6 6 18M6 6l12 12"/>',
+    repeat: '<path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/>',
+    alert: '<circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>',
+    clock: '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
+    screen: '<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>',
+    mobile: '<rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/>',
+  };
+  const I = (n) => '<svg class="i" viewBox="0 0 24 24" aria-hidden="true">' + P[n] + "</svg>";
+
+  const TYPES = { "12": { name: "בלון קטן · 12 ק\"ג", short: "קטן", one: "קטן", many: "קטנים", kg: "12 ק\"ג", price: 100 }, "48": { name: "בלון גדול · 48 ק\"ג", short: "גדול", one: "גדול", many: "גדולים", kg: "48 ק\"ג", price: 350 } };
+  const K = Object.keys(TYPES);
+  // An order holds several cylinder types: items = { "12": n, "48": m }.
+  const itemsN = (it) => K.reduce((a, k) => a + ((it && it[k]) || 0), 0);
+  const itemsPrice = (it) => K.reduce((a, k) => a + ((it && it[k]) || 0) * TYPES[k].price, 0);
+  // Words, not "4× 12": "4 קטנים ו-2 גדולים" reads at a glance.
+  const cylWord = (k, n) => n + " " + (n === 1 ? TYPES[k].one : TYPES[k].many);
+  const itemsTxt = (it) => K.filter((k) => it && it[k]).map((k) => cylWord(k, it[k])).join(" ו-") || "—";
+  // On screen: one big chip per size.
+  const itemsHtml = (it) => K.filter((k) => it && it[k]).map((k) => '<span class="cyl c' + k + '"><b>' + it[k] + "</b>" + (it[k] === 1 ? TYPES[k].one : TYPES[k].many) + "<small>" + TYPES[k].kg + "</small></span>").join("") || '<span class="muted">—</span>';
+  const it = (a, b) => ({ "12": a, "48": b });
+  const WINDOWS = { any: "כל היום", morning: "בוקר", noon: "צהריים", afternoon: "אחה\"צ" };
+  const STATUS = { new: "התקבלה", assigned: "שובצה לנהג", on_the_way: "בדרך", delivered: "סופקה", cancelled: "בוטלה", held: "מחכה למשרד", tomorrow: "עברה למחר" };
+  const PAY = { cash: "מזומן", debt: "חוב", transfer: "העברה" };
+  const REASONS = { home: "אין אף אחד בבית", addr: "כתובת לא נכונה", refused: "הלקוח סירב" };
+  const DAYS = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"];
+  const OFFICE_PHONE = "04-9861234";
+  const DAY = 864e5;
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const ago = (d) => new Date(Date.now() - d * DAY);
+  function seed() {
+    return {
+      seq: 100,
+      customers: [
+        { id: "c1", name: "סלים חדאד", zone: "צפון", street: "רחוב הזיתים 14", held: { "12": 2, "48": 0 }, balance: 0, last: it(2, 0), history: [{ d: ago(27), items: it(2, 0), pay: "cash" }, { d: ago(55), items: it(2, 0), pay: "cash" }, { d: ago(83), items: it(2, 0), pay: "cash" }] },
+        { id: "c2", name: "מרים עודה", zone: "דרום", street: "שארע אל-מדארס 27", held: { "12": 1, "48": 0 }, balance: 0, last: it(1, 0), history: [{ d: ago(19), items: it(1, 0), pay: "cash" }, { d: ago(41), items: it(1, 0), pay: "cash" }] },
+        { id: "c3", name: "אחמד נסאר", zone: "מרכז", street: "רחוב העין 3", held: { "12": 0, "48": 1 }, balance: 0, last: it(1, 1), history: [{ d: ago(9), items: it(1, 1), pay: "cash" }, { d: ago(36), items: it(1, 1), pay: "cash" }] },
+        { id: "c4", name: "נור חטיב", zone: "מרכז", street: "רחוב הכנסייה 8", held: { "12": 2, "48": 0 }, balance: 0, last: it(1, 0), history: [{ d: ago(12), items: it(1, 0), pay: "cash" }, { d: ago(38), items: it(1, 0), pay: "cash" }] },
+        { id: "c5", name: "ג'מיל מנסור", zone: "מערב", street: "רחוב הגפן 5", held: { "12": 1, "48": 0 }, balance: 0, last: it(1, 0), history: [] },
+      ],
+      drivers: [
+        { id: "d1", name: "סאמר", zones: ["מרכז", "צפון"], cash: 0, loads: [], unloads: [] },
+        { id: "d2", name: "ראמי", zones: ["דרום"], cash: 0, loads: [], unloads: [] },
+      ],
+      orders: [],
+      calls: [], payments: [],
+      feed: [],
+      me: "c1", dme: "d1", tab: "customer",
+    };
+  }
+  let S = seed();
+  let ui = { sheet: null, confirmCancel: null, skeleton: null, notif: null, notifTimer: null, undo: null };
+  let flashIds = new Set();
+  let lastKey = "";
+  let dmode = { id: null };
+
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const hm = (d) => String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
+  const now = () => hm(new Date());
+  const dm = (d) => String(d.getDate()).padStart(2, "0") + "/" + String(d.getMonth() + 1).padStart(2, "0");
+  const cust = (id) => S.customers.find((c) => c.id === id);
+  const drv = (id) => S.drivers.find((d) => d.id === id);
+  const shekel = (n) => "₪" + Math.round(n).toLocaleString("en-US");
+  const isOpen = (o) => ["new", "assigned", "on_the_way", "held"].includes(o.status);
+  const openOrder = (cid) => S.orders.find((o) => o.cid === cid && isOpen(o));
+  const route = (did) => S.orders.filter((o) => o.driver === did && ["assigned", "on_the_way"].includes(o.status)).sort((a, b) => (a.status === "on_the_way" ? -1 : 0) - (b.status === "on_the_way" ? -1 : 0) || (a.rseq || 0) - (b.rseq || 0));
+  const log = (text, o, cid) => { const at = now(); S.feed.unshift({ at, text, oid: o ? o.id : null, cid: cid || (o ? o.cid : null) }); if (o) (o.events = o.events || []).push({ at, text }); };
+  const haptic = () => { try { navigator.vibrate && navigator.vibrate(12); } catch (e) {} };
+
+  // Refill rhythm: mean of the last 3 gaps between deliveries (5–60 days), else 28.
+  function cycle(c) {
+    const ds = c.history.map((h) => h.d.getTime()).sort((a, b) => b - a);
+    const gaps = [];
+    for (let i = 0; i + 1 < ds.length && gaps.length < 3; i++) {
+      const g = (ds[i] - ds[i + 1]) / DAY;
+      if (g >= 5 && g <= 60) gaps.push(g);
+    }
+    return gaps.length ? Math.round(gaps.reduce((a, b) => a + b, 0) / gaps.length) : 28;
+  }
+  function runout(c) {
+    if (!c.history.length) return null;
+    const last = Math.max(...c.history.map((h) => h.d.getTime()));
+    return new Date(last + cycle(c) * DAY);
+  }
+  function predictText(c) {
+    if (c.sub) return null;
+    const r = runout(c);
+    if (!r) return "אחרי ההזמנה הראשונה נלמד את הקצב שלך ונזכיר לך בזמן.";
+    const days = Math.round((r - Date.now()) / DAY);
+    if (days <= 0) return "לפי הקצב שלך, <b>הגז עומד להיגמר</b> — כדאי להזמין";
+    if (days === 1) return "לפי הקצב שלך, הגז ייגמר בערך <b>מחר</b>";
+    return "לפי הקצב שלך, הגז ייגמר בערך <b>ביום " + DAYS[r.getDay()] + ", " + dm(r) + "</b>";
+  }
+  function etaMin(o) {
+    if (o.status === "on_the_way") return o.eta;
+    const idx = route(o.driver).findIndex((x) => x.id === o.id);
+    return 25 + Math.max(0, idx) * 20;
+  }
+  function fmtEta(m) {
+    if (m < 60) return "בעוד " + m + " דק'";
+    const h = Math.floor(m / 60), r = Math.round((m % 60) / 5) * 5;
+    return "בעוד " + (h === 1 ? "שעה" : h + " שעות") + (r ? " ו-" + r + " דק'" : "");
+  }
+
+  function autoAssign(o) {
+    const zone = cust(o.cid).zone;
+    const cands = S.drivers.filter((d) => d.zones.includes(zone));
+    if (!cands.length) { o.status = "held"; o.hold = "אין נהג לאזור " + zone; return null; }
+    cands.sort((a, b) => route(a.id).length - route(b.id).length);
+    o.driver = cands[0].id; o.status = "assigned"; o.hold = null; o.rseq = ++S.seq;
+    return cands[0];
+  }
+
+  // ---------- chrome ----------
+  function bump(tab) {
+    if (S.tab === tab || window.innerWidth >= 1100) return;
+    const el = $("bd-" + tab);
+    el.textContent = String((parseInt(el.textContent || "0", 10) || 0) + 1);
+    el.classList.remove("show"); void el.offsetWidth; el.classList.add("show");
+  }
+  let toastTimer = null;
+  function toast(text, goTab) {
+    const box = $("toasts");
+    box.innerHTML = '<div class="toast"><span>' + esc(text) + "</span>" + (goTab && window.innerWidth < 1100 && S.tab !== goTab ? '<button data-go="' + goTab + '">לראות ←</button>' : "") + "</div>";
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { box.innerHTML = ""; }, 4200);
+  }
+  // Live-Activity style one-liner on the customer's phone.
+  function notify(cid, text) {
+    if (cid !== S.me) return;
+    ui.notif = text; ui.notifAnim = true;
+    clearTimeout(ui.notifTimer);
+    ui.notifTimer = setTimeout(() => { ui.notif = null; const n = document.querySelector(".notif"); if (n) n.remove(); }, 4500);
+    if (S.tab !== "customer") bump("customer");
+  }
+  function setTab(tab) {
+    S.tab = tab;
+    document.querySelectorAll(".tab").forEach((b) => b.classList.toggle("on", b.dataset.tab === tab));
+    document.querySelectorAll(".col").forEach((c) => c.classList.toggle("on", c.id === "col-" + tab));
+    const bd = $("bd-" + tab); bd.textContent = ""; bd.classList.remove("show");
+    $("toasts").innerHTML = "";
+    window.scrollTo({ top: 0 });
+    render();
+  }
+
+  // ---------- customer: one screen, morphs by state ----------
+  function cstate(c) {
+    if (ui.skeleton === c.id) return { k: "skel" };
+    const o = S.orders.find((x) => x.cid === c.id && (isOpen(x) || (x.status === "tomorrow" && !x.seen)) && !x.pendingCancel);
+    if (o) return { k: "track", o };
+    if (c.receipt) return { k: "done" };
+    return { k: "idle" };
+  }
+  function custKey() {
+    const c = cust(S.me); const s = cstate(c);
+    return c.id + ":" + s.k + ":" + (s.o ? s.o.status + s.o.fails : "") + ":" + (ui.confirmCancel || "");
+  }
+
+  function renderCustomer() {
+    const c = cust(S.me);
+    const s = cstate(c);
+    $("demo-who").innerHTML = "<span>הדגמה · לקוח:</span>" + S.customers.map((x) => '<button class="chip' + (x.id === c.id ? " on" : "") + '" data-me="' + x.id + '">' + esc(x.name) + "</button>").join("");
+    const first = c.name.split(" ")[0];
+    let h = '<div class="screen">';
+    h += '<div class="bar"><span class="hi">שלום, ' + esc(first) + '</span><button class="acct press" data-acct="1">' + I("user") + " החשבון שלי</button></div>";
+    h += '<div class="grow state-in">';
+
+    if (s.k === "idle") {
+      h += '<button class="order-btn" data-act="order" style="view-transition-name:hero"><span class="stars-big">★★</span>' + I("flame") + "<b>הזמן גז</b><small>" + itemsTxt(c.last) + " · כמו בפעם הקודמת</small></button>";
+      if (c.sub) {
+        const next = new Date(Math.max(...c.history.map((x) => x.d.getTime())) + c.sub * DAY);
+        h += '<p class="predict"><span class="sub-line">' + I("repeat") + " הזמנה אוטומטית כל " + c.sub + " יום</span><br>הבאה תצא לבד ב<b>יום " + DAYS[next.getDay()] + ", " + dm(next) + "</b></p>";
+      } else {
+        h += '<p class="predict">' + predictText(c) + "</p>";
+      }
+    }
+
+    if (s.k === "skel") {
+      h += '<div style="view-transition-name:hero;display:flex;flex-direction:column;gap:14px"><div class="skel" style="height:20px;width:40%;margin:0 auto"></div><div class="skel" style="height:66px;width:80%;margin:0 auto"></div></div>';
+      h += '<div class="skel" style="height:88px;border-radius:26px"></div><div class="skel" style="height:40px"></div>';
+    }
+
+    if (s.k === "track") {
+      const o = s.o; const d = o.driver ? drv(o.driver) : null;
+      let k = "", big = "", cls = "";
+      if (o.status === "held") { k = "ההזמנה התקבלה"; big = "בבדיקה"; }
+      else if (o.status === "tomorrow") { k = "לא הצלחנו למסור היום"; big = "מחר"; }
+      else if (o.status === "on_the_way") { k = esc(d.name) + " בדרך אליך"; big = '<span data-eta="' + o.id + '">' + fmtEta(o.eta) + "</span>"; cls = "live"; }
+      else { k = "ההזמנה אצל " + esc(d.name) + " · יוצא בקרוב"; big = fmtEta(etaMin(o)); }
+      h += '<div style="view-transition-name:hero"><p class="eta-k">' + k + '</p><p class="eta ' + cls + '">' + big + "</p></div>";
+      if (o.status === "held") h += '<p class="meta">המשרד משבץ לך נהג עכשיו — זה לוקח דקות.</p>';
+      if (o.status === "tomorrow") h += '<p class="meta">המשרד יתקשר אליך לתאם שעה.</p>';
+      if (o.fails === 1 && o.status !== "tomorrow") h += '<p class="meta">הנהג לא מצא אותך — יחזור בהמשך הסבב.</p>';
+      if (d && o.status !== "tomorrow") {
+        h += '<div class="glass drv"><div class="avatar">' + esc(d.name[0]) + '</div><div><div class="n">' + esc(d.name) + '</div><div class="r">הנהג שלך היום</div></div><button class="ring press" data-ring-driver="' + d.id + '" aria-label="התקשר לנהג">' + I("phone") + "</button></div>";
+      }
+      const steps = ["new", "assigned", "on_the_way", "delivered"];
+      const idx = o.status === "held" ? 0 : o.status === "tomorrow" ? 1 : steps.indexOf(o.status);
+      h += '<div class="steps">' + ["התקבלה", "שובצה", "בדרך", "סופקה"].map((l, i) => '<div class="st' + (i < idx ? " done" : i === idx ? " now" : "") + '"><i></i>' + l + "</div>").join("") + "</div>";
+      h += '<p class="meta">' + itemsHtml(o.items) + " <b>" + shekel(itemsPrice(o.items)) + "</b></p>";
+      if (o.status === "tomorrow") h += '<button class="btn g press" data-seen="' + o.id + '">הבנתי</button>';
+      else if (o.status !== "on_the_way") {
+        h += ui.confirmCancel === o.id
+          ? '<div class="glass" style="text-align:center"><p style="margin:0 0 10px;font-weight:600;font-size:17px">לבטל את ההזמנה?</p><div class="confirm-row"><button class="btn w press" data-cancel-yes="' + o.id + '">כן, לבטל</button><button class="btn g press" data-cancel-no="1">לא</button></div></div>'
+          : '<button class="quiet-link" data-cancel-ask="' + o.id + '">ביטול הזמנה</button>';
+      }
+    }
+
+    if (s.k === "done") {
+      const r = c.receipt;
+      h += '<div style="view-transition-name:hero;text-align:center"><div class="done-mark">' + I("check") + '</div><p class="eta ok" style="font-size:46px;margin-top:12px">סופק</p></div>';
+      h += '<div class="glass receipt"><div><span>' + itemsHtml(r.items) + "</span><b>" + shekel(r.amount) + "</b></div>" +
+        "<div><span>ריקים שנאספו</span><b>" + r.empties + "</b></div><div><span>נהג</span><b>" + esc(r.driver) + " · " + r.at + '</b></div><div class="tot"><span>' + PAY[r.pay] + "</span><b>" + (r.pay === "cash" ? "שולם" : shekel(r.amount)) + "</b></div></div>";
+      if (!c.sub) {
+        const n = cycle(c);
+        h += '<div class="ask"><p>להזמין אוטומטית כל ' + n + ' יום?</p><div class="confirm-row"><button class="btn k press" data-sub="' + n + '">כן, אוטומטית</button><button class="btn g press" data-sub="0">לא עכשיו</button></div><p class="meta" style="margin-top:10px;font-size:14px;font-weight:400">תמיד אפשר לעצור מ"החשבון שלי"</p></div>';
+      } else {
+        h += '<button class="btn k press" data-sub="keep">סגור</button>';
+      }
+    }
+    h += "</div>";
+    if (s.k === "idle") h += '<button class="call-office press" data-act="call">' + I("phone") + " התקשר למשרד</button>";
+    h += "</div>";
+
+    if (ui.undo && ui.undo.cid === c.id) h += '<div class="undo"><span>ההזמנה בוטלה</span><button data-undo="1">החזר (' + ui.undo.left + ")</button></div>";
+    if (ui.notif) h += '<div class="notif' + (ui.notifAnim ? " anim" : "") + '"><span class="ap">' + I("flame") + '</span><div><small>גזפלו · עכשיו</small>' + esc(ui.notif) + "</div></div>";
+    if (ui.sheet === "order") h += orderSheetHtml(c);
+    if (ui.sheet === "acct") h += acctSheetHtml(c);
+    $("phone").innerHTML = h;
+  }
+
+  function orderSheetHtml(c) {
+    const st = ui.draft;
+    return '<div class="scrim' + (ui.anim ? " anim" : "") + '" data-close="1"></div><div class="bsheet' + (ui.anim ? " anim" : "") + '">' +
+      '<h2 style="font-size:22px">לאשר את ההזמנה?</h2>' +
+      K.map((k) => '<div class="stepper type-row' + (st.items[k] ? " on" : "") + '"><span><b style="font-size:19px">' + TYPES[k].name + '</b><br><small class="muted">' + shekel(TYPES[k].price) + ' ליחידה</small></span><div class="ctl"><button data-q="' + k + '" data-n="-1">−</button><b>' + st.items[k] + '</b><button data-q="' + k + '" data-n="1">+</button></div></div>').join("") +
+      '<div class="seg" style="grid-template-columns:repeat(4,1fr)">' + Object.keys(WINDOWS).map((k) => '<button class="' + (st.window === k ? "on" : "") + '" data-win="' + k + '">' + WINDOWS[k] + "</button>").join("") + "</div>" +
+      '<div class="row" style="font-size:18px"><span class="muted">לתשלום לנהג</span><b>' + shekel(itemsPrice(st.items)) + "</b></div>" +
+      '<button class="btn f press" style="min-height:62px;font-size:22px" data-confirm="1"' + (itemsN(st.items) ? "" : " disabled") + '>אישור</button><button class="quiet-link" data-close="1">חזרה</button></div>';
+  }
+  function acctSheetHtml(c) {
+    const r = runout(c);
+    return '<div class="scrim' + (ui.anim ? " anim" : "") + '" data-close="1"></div><div class="ssheet' + (ui.anim ? " anim" : "") + '">' +
+      '<div class="row"><h2 style="font-size:22px">החשבון שלי</h2><button class="acct" data-close="1">' + I("x") + "</button></div>" +
+      '<div class="tiles2"><div class="tile"><p class="muted">בלונים בבית</p><p class="big-n">' + (c.held["12"] + c.held["48"]) + '</p><p style="margin-top:6px">' + itemsHtml(c.held) + "</p></div>" +
+      '<div class="tile"><p class="muted">יתרה לתשלום</p><p class="big-n" style="color:' + (c.balance > 0 ? "var(--warn)" : "var(--ink)") + '">' + shekel(c.balance) + "</p></div></div>" +
+      '<div class="tile"><div class="row"><span>הזמנה אוטומטית</span>' + (c.sub ? '<button class="btn-s" data-unsub="1">לעצור (כל ' + c.sub + " יום)</button>" : '<span class="muted" style="font-size:14px">כבויה</span>') + "</div>" +
+      (r ? '<p class="muted" style="margin:8px 0 0;font-size:14px">הקצב שלך: כל ' + cycle(c) + " יום בערך</p>" : "") + "</div>" +
+      '<div class="tile"><h2>היסטוריה</h2><div class="list" style="margin-top:6px">' +
+      (c.history.length ? [...c.history].sort((a, b) => b.d - a.d).map((x) => '<div class="li"><span>' + dm(x.d) + " " + itemsHtml(x.items) + '</span><span class="s">' + PAY[x.pay] + "</span></div>").join("") : '<div class="li"><span class="s">עוד אין משלוחים</span></div>') +
+      "</div></div><p class=\"muted\" style=\"font-size:14px;margin:0\">" + esc(c.street) + " · אזור " + esc(c.zone) + "</p></div>";
+  }
+
+  function placeOrder(cid, st) {
+    const c = cust(cid);
+    if (ui.undo && ui.undo.cid === cid) commitCancel();
+    const o = { id: "o" + (++S.seq), cid, items: { ...st.items }, window: st.window, status: "new", driver: null, fails: 0, hold: null, at: now() };
+    S.orders.push(o);
+    c.last = { ...st.items };
+    const d = autoAssign(o);
+    if (d) {
+      log(c.name + " הזמין/ה " + itemsTxt(o.items) + " → שובץ ל" + d.name + " לבד (אזור " + c.zone + ")", o);
+      notify(cid, "ההזמנה התקבלה · " + d.name + " יביא לך " + itemsN(o.items) + " " + (itemsN(o.items) === 1 ? "בלון" : "בלונים") + " היום");
+      bump("driver");
+    } else {
+      log(c.name + " הזמין/ה — אין נהג לאזור " + c.zone + ", מחכה למשרד", o);
+      notify(cid, "ההזמנה התקבלה · המשרד מאשר אותה עכשיו");
+    }
+    flashIds.add("o-" + o.id); flashIds.add("feed");
+    bump("office");
+    return d;
+  }
+
+  function commitCancel() {
+    if (!ui.undo) return;
+    const o = S.orders.find((x) => x.id === ui.undo.oid);
+    clearInterval(ui.undo.timer);
+    o.status = "cancelled"; o.pendingCancel = false;
+    log(cust(o.cid).name + " ביטל/ה את ההזמנה", o);
+    flashIds.add("o-" + o.id); bump("office");
+    ui.undo = null;
+  }
+
+  // ---------- office: home + drill-down pages ----------
+  // ov = { v: "home" } | { v: "list", f } | { v: "driver", id } | { v: "order", id } | { v: "customer", id }
+  let ov = { v: "home" };
+  let ovStack = [];
+  const LISTS = {
+    today: { title: "הזמנות היום", test: (o) => !["tomorrow", "cancelled"].includes(o.status) },
+    on_the_way: { title: "בדרך עכשיו", test: (o) => o.status === "on_the_way" },
+    delivered: { title: "סופקו היום", test: (o) => o.status === "delivered" },
+    all: { title: "כל ההזמנות", test: () => true },
+  };
+  const chev = '<span class="chev">‹</span>';
+  const fl = (id) => (flashIds.has(id) ? " flash" : "");
+
+  function needsData() {
+    const held = S.orders.filter((o) => o.status === "held");
+    const flagged = S.orders.filter((o) => o.status === "tomorrow" && !o.ack);
+    const calls = S.calls.filter((x) => !x.handled);
+    return { held, flagged, calls, n: held.length + flagged.length + calls.length };
+  }
+  function orderRow(o, sub, items) {
+    const c = cust(o.cid); const d = o.driver ? drv(o.driver) : null;
+    return '<button class="li tap' + fl("o-" + o.id) + '" data-open="order" data-id="' + o.id + '"><div><div class="t">' + esc(c.name) + '</div><div class="chips">' + itemsHtml(items || o.items) + '</div><div class="s">' +
+      (sub || "הוזמן " + o.at + " · " + esc(c.zone) + (d ? " · " + esc(d.name) : "")) +
+      '</div></div><span class="row" style="gap:6px"><span class="pill p-' + o.status + '">' + STATUS[o.status] + "</span>" + chev + "</span></button>";
+  }
+  function needsHtml() {
+    const { held, flagged, calls, n } = needsData();
+    let h = "";
+    if (!n) h += '<p class="muted" style="margin:0">הכול זורם לבד. אין מה לעשות כרגע.</p>';
+    calls.forEach((x) => {
+      const c = cust(x.cid);
+      h += '<div class="alert call' + fl("call-" + x.id) + '"><button class="alert-head" data-open="customer" data-id="' + c.id + '"><b>' + esc(c.name) + "</b> לחץ «התקשר» · " + x.at + chev + '</button><div class="muted" style="font-size:15px">בדרך כלל: ' + itemsHtml(c.last) + " " + esc(c.street) + '</div><div class="acts">' +
+        (openOrder(c.id) ? "" : '<button class="btn-s f" data-like="' + x.id + '">הזמנה כמו קודם</button>') + '<button class="btn-s" data-handled="' + x.id + '">טופל</button></div></div>';
+    });
+    held.forEach((o) => {
+      const c = cust(o.cid);
+      h += '<div class="alert' + fl("o-" + o.id) + '"><button class="alert-head" data-open="order" data-id="' + o.id + '"><b>' + esc(c.name) + "</b> " + itemsHtml(o.items) + chev + '</button><div class="muted" style="font-size:15px">' + esc(o.hold) + '</div><div class="acts">' +
+        S.drivers.map((d) => '<button class="btn-s k" data-assign="' + o.id + '" data-d="' + d.id + '">שבץ ל' + esc(d.name) + "</button>").join("") + '<button class="btn-s" data-cancel="' + o.id + '">בטל</button></div></div>';
+    });
+    flagged.forEach((o) => {
+      const c = cust(o.cid);
+      h += '<div class="alert' + fl("o-" + o.id) + '"><button class="alert-head" data-open="order" data-id="' + o.id + '"><b>' + esc(c.name) + "</b>" + chev + '</button><div class="muted" style="font-size:15px">נכשל פעמיים (' + esc(o.reason || "") + ') — עבר למחר. כדאי להתקשר.</div><div class="acts"><button class="btn-s" data-ack="' + o.id + '">ראיתי</button></div></div>';
+    });
+    return h;
+  }
+  // Money per delivered order: cash is collected; debt and unconfirmed transfer are still owed.
+  const amountOf = (o) => itemsPrice(o.dq || o.items);
+  function money(rows) {
+    const done = rows.filter((o) => o.status === "delivered");
+    const sold = done.reduce((a, o) => a + amountOf(o), 0);
+    // A debt or transfer the office later marked as paid counts as collected.
+    const cash = done.filter((o) => o.pay === "cash" || o.settled).reduce((a, o) => a + amountOf(o), 0);
+    const debt = done.filter((o) => o.pay === "debt" && !o.settled).reduce((a, o) => a + amountOf(o), 0);
+    const transfer = done.filter((o) => o.pay === "transfer" && !o.settled).reduce((a, o) => a + amountOf(o), 0);
+    return { sold, cash, debt, transfer, open: debt + transfer };
+  }
+  // What is on the truck: loaded − delivered, per cylinder type; empties collected.
+  function truck(d) {
+    const t = {};
+    Object.keys(TYPES).forEach((k) => {
+      const loaded = d.loads.reduce((a, l) => a + (l[k] || 0), 0);
+      const done = S.orders.filter((o) => o.driver === d.id && o.status === "delivered");
+      const delivered = done.reduce((a, o) => a + ((o.dq || o.items)[k] || 0), 0);
+      const empties = done.reduce((a, o) => a + ((o.de || {})[k] || 0), 0);
+      // Empties stay on the truck until the driver unloads them at the warehouse.
+      const unloaded = d.unloads.reduce((a, u) => a + (u[k] || 0), 0);
+      t[k] = { loaded, delivered, left: loaded - delivered, collected: empties, unloaded, empties: empties - unloaded };
+    });
+    return t;
+  }
+  const truckLine = (d) => { const t = truck(d); return d.loads.length ? "על המשאית: " + Object.keys(TYPES).filter((k) => t[k].loaded).map((k) => cylWord(k, t[k].left)).join(" · ") : "עוד לא רשם העמסה"; };
+  function truckTable(d) {
+    const t = truck(d);
+    return '<table class="tt"><tr><th></th><th>הועמסו</th><th>נמסרו</th><th>על המשאית</th><th>ריקים עליה</th></tr>' +
+      Object.keys(TYPES).map((k) => "<tr><td>" + TYPES[k].short + '<br><small class="muted">' + TYPES[k].kg + "</small></td><td>" + t[k].loaded + "</td><td>" + t[k].delivered + '</td><td><b class="' + (t[k].left < 0 ? "neg" : "") + '">' + t[k].left + "</b></td><td>" + t[k].empties + "</td></tr>").join("") + "</table>";
+  }
+  function moneyTiles(m) {
+    return '<div class="tiles"><div class="card"><div class="big-n">' + shekel(m.sold) + '</div><div class="muted">סופק</div></div><div class="card"><div class="big-n" style="color:var(--ok)">' + shekel(m.cash) + '</div><div class="muted">נגבה</div></div><div class="card"><div class="big-n" style="color:' + (m.debt ? "var(--warn)" : "var(--ink)") + '">' + shekel(m.debt) + '</div><div class="muted">בחוב</div></div><div class="card"><div class="big-n">' + shekel(m.transfer) + '</div><div class="muted">העברה לאישור</div></div></div>';
+  }
+  function driverStats(d) {
+    const mine = S.orders.filter((o) => o.driver === d.id && ["assigned", "on_the_way", "delivered"].includes(o.status));
+    const done = mine.filter((o) => o.status === "delivered");
+    const debt = done.filter((o) => o.pay !== "cash" && !o.settled).reduce((a, o) => a + amountOf(o), 0);
+    return { mine, done, left: route(d.id), debt };
+  }
+  function back(title) {
+    return '<div class="ov-top"><button class="back" data-back="1">→ חזרה</button><h2 style="font-size:22px">' + title + "</h2></div>";
+  }
+
+  function officeHome() {
+    const live = S.orders.filter(LISTS.today.test);
+    const cnt = (s) => S.orders.filter((o) => o.status === s).length;
+    const { n } = needsData();
+    let h = '<div class="tiles">' +
+      '<button class="card tile-btn" data-open="list" data-id="today"><div class="big-n">' + live.length + '</div><div class="muted">הזמנות היום</div></button>' +
+      '<button class="card tile-btn" data-open="list" data-id="on_the_way"><div class="big-n" style="color:' + (cnt("on_the_way") ? "var(--flame)" : "var(--ink)") + '">' + cnt("on_the_way") + '</div><div class="muted">בדרך</div></button>' +
+      '<button class="card tile-btn" data-open="list" data-id="delivered"><div class="big-n">' + cnt("delivered") + '</div><div class="muted">סופקו</div></button>' +
+      '<button class="card tile-btn" data-open="needs"><div class="big-n" style="color:' + (n ? "var(--warn)" : "var(--ink)") + '">' + n + '</div><div class="muted">צריך אותך</div></button></div>';
+
+    h += '<div class="card"><h2>' + I("alert") + ' מחכה לך</h2><div style="display:flex;flex-direction:column;gap:8px;margin-top:10px">' + needsHtml() + "</div></div>";
+
+    const m = money(S.orders);
+    const debtors = S.customers.filter((c) => c.balance > 0);
+    const debtTotal = debtors.reduce((a, c) => a + c.balance, 0);
+    h += '<div class="card"><h2>כסף היום</h2><div class="money3 m4"><div><span>סופק</span><b>' + shekel(m.sold) + '</b></div><div><span>נגבה</span><b style="color:var(--ok)">' + shekel(m.cash) + '</b></div><div><span>חוב</span><b style="color:' + (m.debt ? "var(--warn)" : "var(--ink)") + '">' + shekel(m.debt) + '</b></div><div><span>העברה לאישור</span><b style="color:' + (m.transfer ? "var(--blue)" : "var(--ink)") + '">' + shekel(m.transfer) + "</b></div></div>" +
+      (() => { const dl = openBy("debt"), tl = openBy("transfer"); const sd = dl.reduce((a, x) => a + x.amount, 0), st = tl.reduce((a, x) => a + x.amount, 0);
+        return '<button class="debt-btn tap' + (sd + st ? "" : " zero") + '" data-open="debts"><span class="debt-lines"><span><span class="dot red"></span>חוב שלא נגבה · ' + dl.length + ' <b>' + shekel(sd) + '</b></span><span><span class="dot blue"></span>העברה לאישור · ' + tl.length + ' <b>' + shekel(st) + "</b></span></span>" + chev + "</button></div>"; })();
+    const stk = stockTotals();
+    h += '<button class="card tap stock-home" data-open="stock"><div class="row"><h2>' + I("truck") + ' מלאי בחוץ</h2>' + chev + "</div>" + stockCard(stk) +
+      '<div class="per-truck">' + S.drivers.map((d) => { const tk = truck(d); return "<span><b>" + esc(d.name) + ":</b> " + (d.loads.length ? K.map((k) => Math.max(0, tk[k].left) + " " + TYPES[k].many).join(", ") + " · " + K.reduce((a, k) => a + tk[k].empties, 0) + " ריקים" : "לא העמיס") + "</span>"; }).join("") + "</div></button>";
+    h += '<div class="card"><h2>' + I("truck") + ' נהגים</h2><div style="display:flex;flex-direction:column;gap:4px;margin-top:6px">';
+    S.drivers.forEach((d) => {
+      const st = driverStats(d);
+      h += '<button class="drow tap" data-open="driver" data-id="' + d.id + '"><div class="row"><span><b>' + esc(d.name) + '</b> <span class="muted" style="font-size:15px">' + d.zones.join(", ") + '</span></span><span class="row" style="gap:6px"><span class="muted" style="font-size:15px">' + st.done.length + "/" + st.mine.length + " · " + shekel(d.cash) + " מזומן</span>" + chev + '</span></div><div class="s muted" style="font-size:15px;margin-top:2px">' + truckLine(d) + '</div><div class="prog"><i style="width:' + (st.mine.length ? (st.done.length / st.mine.length) * 100 : 0) + '%"></i></div></button>';
+    });
+    h += "</div></div>";
+
+    const recent = [...S.orders].reverse();
+    h += '<div class="card"><div class="row"><h2>כל ההזמנות</h2><button class="see-all" data-open="list" data-id="all">הכול ' + chev + '</button></div><div class="list" style="margin-top:6px">' + (recent.length ? recent.slice(0, 5).map((o) => orderRow(o)).join("") : '<p class="muted" style="margin:6px 0 0">עוד אין הזמנות היום. הזמן מלשונית «לקוח» ותראה אותה כאן.</p>') + "</div></div>";
+
+    h += '<div class="card' + fl("feed") + '"><h2>' + I("clock") + ' מה קרה עכשיו</h2><div class="feed" style="margin-top:8px">' + (S.feed.length ? "" : '<p class="muted" style="margin:0">כל פעולה של לקוח, נהג או משרד תופיע כאן.</p>') +
+      S.feed.map((f) => (f.oid ? '<button class="frow tap" data-open="order" data-id="' + f.oid + '">' : f.cid ? '<button class="frow tap" data-open="customer" data-id="' + f.cid + '">' : '<div class="frow">') + "<time>" + f.at + "</time><span>" + esc(f.text) + "</span>" + (f.oid || f.cid ? chev + "</button>" : "</div>")).join("") + "</div></div>";
+
+    const due = S.customers.map((c) => ({ c, r: runout(c) })).filter((x) => x.r && !openOrder(x.c.id) && (x.r - Date.now()) / DAY <= 7).sort((a, b) => a.r - b.r);
+    h += '<div class="card"><h2>צריכים גז השבוע</h2><p class="muted" style="margin:4px 0 0;font-size:15px">לפי הקצב של כל לקוח</p><div class="list" style="margin-top:6px">' +
+      (due.length ? due.map(({ c, r }) => '<div class="li"><button class="tap grow-btn" data-open="customer" data-id="' + c.id + '"><div class="t">' + esc(c.name) + (c.sub ? ' <span class="pill p-sub">מנוי</span>' : "") + '</div><div class="s">נגמר בערך ' + dm(r) + " · " + esc(c.street) + '</div></button><button class="btn-s" data-office-order="' + c.id + '">הזמן</button></div>').join("") : '<div class="li"><span class="s">כולם מסודרים</span></div>') + "</div></div>";
+
+    h += '<div class="card"><h2>' + I("user") + ' לקוחות</h2><div class="list" style="margin-top:6px">' +
+      S.customers.map((c) => '<button class="li tap" data-open="customer" data-id="' + c.id + '"><div><div class="t">' + esc(c.name) + '</div><div class="s">' + esc(c.street) + " · " + esc(c.zone) + (c.balance > 0 ? " · חוב " + shekel(c.balance) : "") + "</div></div>" + chev + "</button>").join("") + "</div></div>";
+    return h;
+  }
+
+  function officeList(f) {
+    const L = LISTS[f];
+    const rows = [...S.orders].reverse().filter(L.test);
+    const m = money(rows);
+    const cyl = rows.reduce((a, o) => a + itemsN(o.dq || o.items), 0);
+    let h = back(L.title + " · " + rows.length);
+    h += '<div class="tiles3"><div class="card"><div class="big-n">' + rows.length + '</div><div class="muted">הזמנות</div></div><div class="card"><div class="big-n">' + cyl + '</div><div class="muted">בלונים</div></div></div>' + (m.sold ? moneyTiles(m) : "");
+    S.drivers.forEach((d) => {
+      const mine = rows.filter((o) => o.driver === d.id);
+      if (!mine.length) return;
+      h += '<div class="card"><button class="row tap" style="width:100%" data-open="driver" data-id="' + d.id + '"><h2>' + I("truck") + " " + esc(d.name) + " · " + mine.length + "</h2>" + chev + '</button><div class="list" style="margin-top:6px">' + mine.map((o) => orderRow(o)).join("") + "</div></div>";
+    });
+    const none = rows.filter((o) => !o.driver);
+    if (none.length) h += '<div class="card"><h2>בלי נהג · ' + none.length + '</h2><div class="list" style="margin-top:6px">' + none.map((o) => orderRow(o)).join("") + "</div></div>";
+    if (!rows.length) h += '<div class="card"><p class="muted" style="margin:0">אין הזמנות כאן כרגע.</p></div>';
+    return h;
+  }
+
+  function officeDriver(id) {
+    const d = drv(id); const st = driverStats(d);
+    const cur = st.left[0];
+    let h = back(I("truck") + " " + esc(d.name));
+    h += '<p class="muted" style="margin:-4px 0 0">אזורים: ' + d.zones.join(", ") + "</p>";
+    h += '<div class="tiles"><div class="card"><div class="big-n">' + st.left.length + '</div><div class="muted">נשארו</div></div><div class="card"><div class="big-n">' + st.done.length + '</div><div class="muted">סופקו</div></div><div class="card"><div class="big-n">' + (d.loads.length ? Object.keys(TYPES).reduce((a, k) => a + Math.max(0, truck(d)[k].left), 0) : "—") + '</div><div class="muted">על המשאית</div></div><div class="card"><div class="big-n">' + Object.keys(TYPES).reduce((a, k) => a + truck(d)[k].empties, 0) + '</div><div class="muted">ריקים נאספו</div></div></div>';
+    const dm2 = money(S.orders.filter((o) => o.driver === d.id));
+    h += '<div class="card"><h2>' + I("truck") + ' העמסה היום</h2>' + (d.loads.length ? truckTable(d) + '<p class="muted" style="margin:8px 0 0;font-size:15px">' + d.loads.map((l) => "העמיס ב-" + l.at + ": " + itemsTxt(l)).join("<br>") + "</p>" : '<p class="muted" style="margin:8px 0 0">עוד לא רשם העמסה היום</p>') + "</div>";
+    h += '<div class="card"><h2>כסף</h2><div class="money3 m4"><div><span>סופק</span><b>' + shekel(dm2.sold) + '</b></div><div><span>מזומן אצלו</span><b style="color:var(--ok)">' + shekel(d.cash) + '</b></div><div><span>חוב / העברה</span><b style="color:' + (dm2.open ? "var(--warn)" : "var(--ink)") + '">' + shekel(dm2.open) + "</b></div></div></div>";
+    h += '<div class="card"><h2>עכשיו</h2><p style="margin:8px 0 0;font-size:17px">' + (cur ? (cur.status === "on_the_way" ? "בדרך ל" : "התחנה הבאה: ") + "<b>" + esc(cust(cur.cid).name) + "</b> · " + esc(cust(cur.cid).street) + (cur.status === "on_the_way" ? " · מגיע " + fmtEta(cur.eta) : "") : "סיים את כל התחנות להיום") + '</p><div class="two" style="margin-top:10px"><button class="soft-btn" data-ring-driver="' + d.id + '">' + I("phone") + " התקשר ל" + esc(d.name) + '</button><button class="soft-btn" data-view-as="' + d.id + '">' + I("mobile") + " המסך שלו</button></div></div>";
+    h += '<div class="card"><h2>המסלול לפי הסדר · ' + st.left.length + '</h2><div class="list" style="margin-top:6px">' + (st.left.length ? st.left.map((o, i) => orderRow(o, "תחנה " + (i + 1) + " · " + esc(cust(o.cid).street) + (o.fails ? " · ניסיון שני" : ""))).join("") : '<div class="li"><span class="s">אין תחנות פתוחות</span></div>') + "</div></div>";
+    h += '<div class="card"><h2>סופקו · ' + st.done.length + '</h2><div class="list" style="margin-top:6px">' + (st.done.length ? st.done.map((o) => orderRow(o, PAY[o.pay || "cash"] + " · " + shekel(amountOf(o)), o.dq)).join("") : '<div class="li"><span class="s">עוד לא סופק כלום</span></div>') + "</div></div>";
+    const fails = S.orders.filter((o) => o.driver === d.id && o.fails);
+    if (fails.length) h += '<div class="card"><h2>ניסיונות שנכשלו</h2><div class="list" style="margin-top:6px">' + fails.map((o) => orderRow(o, esc(o.reason || "") + " · " + o.fails + " פעמים")).join("") + "</div></div>";
+    return h;
+  }
+
+  function officeOrder(id) {
+    const o = S.orders.find((x) => x.id === id); const c = cust(o.cid); const d = o.driver ? drv(o.driver) : null;
+    const amount = amountOf(o);
+    let h = back("הזמנה · " + esc(c.name));
+    h += '<div class="card"><div class="row"><span class="pill p-' + o.status + '" style="font-size:15px">' + STATUS[o.status] + "</span>" + (o.status === "on_the_way" ? '<b style="color:var(--flame)">מגיע ' + fmtEta(o.eta) + "</b>" : "") + '</div><div class="kvl" style="margin-top:10px">' +
+      "<div><span>מה הוזמן</span><b>" + itemsHtml(o.items) + "</b></div>" +
+      "<div><span>כתובת</span><b>" + esc(c.street) + " · " + esc(c.zone) + "</b></div>" +
+      "<div><span>חלון זמן</span><b>" + WINDOWS[o.window] + "</b></div>" +
+      "<div><span>נהג</span><b>" + (d ? esc(d.name) : "עוד לא שובץ") + "</b></div>" +
+      "<div><span>לתשלום</span><b>" + shekel(amount) + "</b></div>" +
+      (o.status === "delivered" ? (() => { const paid = o.pay === "cash" || o.settled; return "<div><span>נגבה</span><b style=\"color:var(--ok)\">" + shekel(paid ? amount : 0) + (o.settled ? " · במשרד " + o.settled : "") + "</b></div><div><span>" + (o.pay === "transfer" ? "העברה לאישור" : "חוב") + "</span><b style=\"color:" + (paid ? "var(--ink)" : "var(--warn)") + "\">" + shekel(paid ? 0 : amount) + "</b></div>"; })() : "") +
+      (o.dq ? "<div><span>נמסרו מלאים</span><b>" + itemsHtml(o.dq) + "</b></div><div><span>נאספו ריקים</span><b>" + itemsHtml(o.de) + "</b></div>" : "") +
+      (o.fails ? "<div><span>ניסיונות שנכשלו</span><b>" + o.fails + " · " + esc(o.reason || "") + "</b></div>" : "") + "</div></div>";
+    h += '<div class="card"><h2>' + I("clock") + ' מה קרה עם ההזמנה</h2><div class="feed" style="margin-top:8px;max-height:none">' + (o.events || []).slice().reverse().map((e) => '<div class="frow"><time>' + e.at + "</time><span>" + esc(e.text) + "</span></div>").join("") + "</div></div>";
+    if (["assigned", "held", "new", "tomorrow"].includes(o.status)) {
+      h += '<div class="card"><h2>פעולות</h2><div class="acts" style="margin-top:10px">' + S.drivers.filter((x) => x.id !== o.driver).map((x) => '<button class="btn-s k" data-assign="' + o.id + '" data-d="' + x.id + '">העבר ל' + esc(x.name) + "</button>").join("") + '<button class="btn-s" data-cancel="' + o.id + '">בטל הזמנה</button></div></div>';
+    }
+    h += '<div class="two"><button class="soft-btn" data-open="customer" data-id="' + c.id + '">' + I("user") + " הכרטיס של " + esc(c.name.split(" ")[0]) + "</button>" + (d ? '<button class="soft-btn" data-open="driver" data-id="' + d.id + '">' + I("truck") + " " + esc(d.name) + "</button>" : "") + "</div>";
+    return h;
+  }
+
+  // Open money per customer, split by kind: debt nobody paid vs. a transfer the customer says they sent.
+  function openBy(kind) {
+    const rows = S.orders.filter((o) => o.status === "delivered" && o.pay === kind && !o.settled);
+    const by = {};
+    rows.forEach((o) => { (by[o.cid] = by[o.cid] || { c: cust(o.cid), amount: 0, orders: [] }); by[o.cid].amount += amountOf(o); by[o.cid].orders.push(o); });
+    return Object.values(by).sort((x, y) => y.amount - x.amount);
+  }
+  function officeDebts() {
+    const debts = openBy("debt"), transfers = openBy("transfer");
+    const sum = (l) => l.reduce((a, x) => a + x.amount, 0);
+    let h = back("חובות פתוחים");
+    h += '<div class="tiles2"><div class="card" style="text-align:center"><div class="big-n" style="color:var(--warn)">' + shekel(sum(debts)) + '</div><div class="muted">חוב שלא נגבה · ' + debts.length + ' לקוחות</div></div><div class="card" style="text-align:center"><div class="big-n" style="color:var(--blue)">' + shekel(sum(transfers)) + '</div><div class="muted">העברות לאישור · ' + transfers.length + "</div></div></div>";
+    const row = (x, kind) => '<div class="li debt-row ' + kind + '"><button class="tap grow-btn" data-open="customer" data-id="' + x.c.id + '"><div class="t">' + esc(x.c.name) + '</div><div class="s">' + x.orders.map((o) => "סופק " + (o.events && o.events.length ? o.events[o.events.length - 1].at : o.at) + " · " + itemsTxt(o.dq || o.items)).join("<br>") + '</div></button><div class="debt-acts"><b class="amt">' + shekel(x.amount) + "</b>" +
+      (kind === "debt" ? '<button class="btn-s f" data-settle="' + x.c.id + '" data-kind="debt">נגבה</button>' : '<button class="btn-s f" data-settle="' + x.c.id + '" data-kind="transfer">ההעברה הגיעה</button><button class="btn-s" data-bounce="' + x.c.id + '">לא הגיעה</button>') + "</div></div>";
+    h += '<div class="card debt-sec"><h2><span class="dot red"></span> חוב שלא נגבה</h2><p class="muted" style="margin:4px 0 0;font-size:15px">הלקוח לא שילם — צריך לגבות</p><div class="list" style="margin-top:6px">' + (debts.length ? debts.map((x) => row(x, "debt")).join("") : '<div class="li"><span class="s">אין</span></div>') + "</div></div>";
+    h += '<div class="card debt-sec"><h2><span class="dot blue"></span> מחכה לאישור העברה</h2><p class="muted" style="margin:4px 0 0;font-size:15px">הלקוח אמר שהעביר — לבדוק בבנק ולאשר</p><div class="list" style="margin-top:6px">' + (transfers.length ? transfers.map((x) => row(x, "transfer")).join("") : '<div class="li"><span class="s">אין</span></div>') + "</div></div>";
+    if (S.payments.length) h += '<div class="card"><h2>נגבה היום במשרד</h2><div class="list" style="margin-top:6px">' + S.payments.map((x) => '<div class="li"><span>' + x.at + " · " + esc(cust(x.cid).name) + ' <span class="muted">' + x.what + '</span></span><b style="color:var(--ok)">' + shekel(x.amount) + "</b></div>").join("") + "</div></div>";
+    return h;
+  }
+
+  // Everything outside the warehouse: full and empty cylinders on each truck, plus what sits at customers.
+  function stockTotals() {
+    const t = { full: {}, empty: {} };
+    K.forEach((k) => { t.full[k] = 0; t.empty[k] = 0; });
+    S.drivers.forEach((d) => { const tk = truck(d); K.forEach((k) => { t.full[k] += Math.max(0, tk[k].left); t.empty[k] += tk[k].empties; }); });
+    return t;
+  }
+  function stockCard(t, title, open) {
+    return '<div class="stock-pair">' +
+      '<div class="stock-box"><span class="lbl">מלאים</span><div class="chips">' + (itemsN(t.full) ? itemsHtml(t.full) : '<b class="zero-n">0</b>') + "</div></div>" +
+      '<div class="stock-box empty"><span class="lbl">ריקים</span><div class="chips">' + (itemsN(t.empty) ? itemsHtml(t.empty) : '<b class="zero-n">0</b>') + "</div></div></div>";
+  }
+  function officeStock() {
+    const all = stockTotals();
+    let h = back("מלאי בחוץ");
+    h += '<div class="card"><h2>' + I("truck") + " סה״כ על " + S.drivers.length + " המשאיות</h2>" + stockCard(all) + "</div>";
+    S.drivers.forEach((d) => {
+      const tk = truck(d);
+      const one = { full: {}, empty: {} }; K.forEach((k) => { one.full[k] = Math.max(0, tk[k].left); one.empty[k] = tk[k].empties; });
+      h += '<div class="card"><button class="row tap" style="width:100%" data-open="driver" data-id="' + d.id + '"><h2>' + I("truck") + " " + esc(d.name) + ' <span class="muted" style="font-size:15px;font-weight:400">' + d.zones.join(", ") + "</span></h2>" + chev + "</button>" +
+        (d.loads.length ? stockCard(one) + truckTable(d) : '<p class="muted" style="margin:8px 0 0">עוד לא רשם העמסה היום — המשאית ריקה</p>') +
+        (d.unloads.length ? '<p class="muted" style="margin:8px 0 0;font-size:15px">' + d.unloads.map((u) => "פרק במחסן ב-" + u.at + ": " + itemsTxt(u) + " ריקים").join("<br>") + "</p>" : "") + "</div>";
+    });
+    const back2 = {}; K.forEach((k) => { back2[k] = S.drivers.reduce((a, d) => a + d.unloads.reduce((x, u) => x + (u[k] || 0), 0), 0); });
+    h += '<div class="card"><h2>' + I("check") + ' ריקים שחזרו למחסן היום</h2><div class="chips" style="margin-top:8px">' + (itemsN(back2) ? itemsHtml(back2) : '<span class="muted">עוד לא נפרק כלום</span>') + "</div></div>";
+    const home = {}; K.forEach((k) => { home[k] = S.customers.reduce((a, c) => a + (c.held[k] || 0), 0); });
+    h += '<div class="card"><h2>' + I("user") + ' אצל הלקוחות</h2><p class="muted" style="margin:4px 0 0;font-size:15px">בלונים של החברה שנמצאים בבתים · ' + S.customers.length + ' לקוחות</p><div class="chips" style="margin-top:8px">' + itemsHtml(home) + "</div></div>";
+    return h;
+  }
+
+  function officeCustomer(id) {
+    const c = cust(id); const r = runout(c); const o = openOrder(c.id);
+    let h = back(I("user") + " " + esc(c.name));
+    h += '<p class="muted" style="margin:-4px 0 0">' + esc(c.street) + " · אזור " + esc(c.zone) + "</p>";
+    h += '<div class="tiles"><div class="card"><div class="big-n">' + (c.held["12"] + c.held["48"]) + '</div><div class="muted">בלונים בבית</div></div><div class="card"><div class="big-n" style="color:' + (c.balance > 0 ? "var(--warn)" : "var(--ink)") + '">' + shekel(c.balance) + '</div><div class="muted">חוב</div></div><div class="card"><div class="big-n">' + cycle(c) + '</div><div class="muted">ימים בין הזמנות</div></div><div class="card"><div class="big-n" style="font-size:20px">' + (r ? dm(r) : "—") + '</div><div class="muted">ייגמר בערך</div></div></div>';
+    h += '<div class="card"><div class="kvl"><div><span>הזמנה רגילה</span><b>' + itemsHtml(c.last) + "</b></div><div><span>הזמנה אוטומטית</span><b>" + (c.sub ? "כל " + c.sub + " יום" : "לא") + "</b></div></div>" +
+      '<div class="acts" style="margin-top:12px">' + (o ? '<button class="btn-s" data-open="order" data-id="' + o.id + '">ההזמנה הפתוחה ' + chev + "</button>" : '<button class="btn-s f" data-office-order="' + c.id + '">הזמנה כמו קודם</button>') + '<button class="btn-s" data-ring="' + c.id + '">' + I("phone") + " התקשר</button>" + (c.balance > 0 ? '<button class="btn-s" data-paid="' + c.id + '">רשום תשלום</button>' : "") + "</div></div>";
+    const orders = [...S.orders].reverse().filter((x) => x.cid === c.id);
+    if (orders.length) h += '<div class="card"><h2>הזמנות היום</h2><div class="list" style="margin-top:6px">' + orders.map((x) => orderRow(x)).join("") + "</div></div>";
+    h += '<div class="card"><h2>היסטוריית משלוחים</h2><div class="list" style="margin-top:6px">' + (c.history.length ? [...c.history].sort((a, b) => b.d - a.d).map((x) => '<div class="li"><span>' + dm(x.d) + " " + itemsHtml(x.items) + '</span><span class="s">' + PAY[x.pay] + "</span></div>").join("") : '<div class="li"><span class="s">עוד אין משלוחים</span></div>') + "</div></div>";
+    return h;
+  }
+
+  function renderOffice() {
+    if (ov.v === "order" && !S.orders.some((x) => x.id === ov.id)) ov = { v: "home" };
+    const h = ov.v === "stock" ? officeStock() : ov.v === "debts" ? officeDebts() : ov.v === "list" ? officeList(ov.f) : ov.v === "needs" ? back("צריך אותך") + '<div class="card" style="display:flex;flex-direction:column;gap:8px">' + needsHtml() + "</div>"
+      : ov.v === "driver" ? officeDriver(ov.id) : ov.v === "order" ? officeOrder(ov.id) : ov.v === "customer" ? officeCustomer(ov.id) : officeHome();
+    $("office").innerHTML = h;
+  }
+  function openOv(kind, id) {
+    ovStack.push(ov);
+    ov = kind === "list" ? { v: "list", f: id } : kind === "needs" || kind === "debts" || kind === "stock" ? { v: kind } : { v: kind, id };
+    if (S.tab !== "office") setTab("office"); else { render(); const el = $("col-office"); if (window.innerWidth < 1100) window.scrollTo({ top: 0 }); else el.scrollIntoView({ block: "start" }); }
+  }
+
+  function officeOrderFor(cid, why) {
+    const c = cust(cid);
+    if (openOrder(cid)) return null;
+    const d = placeOrder(cid, { items: { ...c.last }, window: "any" });
+    S.feed[0].text = "המשרד פתח הזמנה ל" + c.name + (why ? " (" + why + ")" : "") + (d ? " → שובץ ל" + d.name : " → אין נהג לאזור");
+    const no = S.orders[S.orders.length - 1]; if (no.events) no.events[no.events.length - 1].text = S.feed[0].text;
+    return d;
+  }
+
+  // ---------- driver ----------
+  let lform = {};
+  let unloadAsk = null;
+  function renderDriver() {
+    const d = drv(S.dme);
+    const stops = route(d.id);
+    const done = S.orders.filter((o) => o.driver === d.id && o.status === "delivered");
+    let h = '<div class="who">' + S.drivers.map((x) => '<button class="chip' + (x.id === d.id ? " on" : "") + '" data-dme="' + x.id + '">' + esc(x.name) + " · " + x.zones.join(", ") + "</button>").join("") + "</div>";
+    h += '<div><p class="muted" style="margin:0">היום שלי</p><p class="hello">' + esc(d.name) + "</p></div>";
+    h += '<div class="tiles2"><div class="tile"><p class="muted">תחנות שנשארו</p><p class="big-n">' + stops.length + '</p></div><div class="tile"><p class="muted">מזומן בכיס</p><p class="big-n">' + shekel(d.cash) + "</p></div></div>";
+    const lf = lform[d.id];
+    if (!d.loads.length || lf) {
+      const f = lf || (lform[d.id] = { "12": 0, "48": 0 });
+      h += '<div class="card load-card"><h2>' + I("truck") + " " + (d.loads.length ? "העמסה נוספת" : "לפני שיוצאים: מה העמסת?") + '</h2><p class="muted" style="margin:0;font-size:14px">' + (d.loads.length ? "" : "לפי ההזמנות של היום צריך: " + Object.keys(TYPES).map((k) => stops.reduce((a, o) => a + (o.items[k] || 0), 0) + " " + TYPES[k].many).join(" · ")) + "</p>" +
+        Object.keys(TYPES).map((k) => '<div class="stepper"><span style="font-size:17px;font-weight:500">' + TYPES[k].name + '</span><div class="ctl"><button data-lq="' + k + '" data-n="-1">−</button><b>' + f[k] + '</b><button data-lq="' + k + '" data-n="1">+</button></div></div>').join("") +
+        '<button class="btn f press" data-load="' + d.id + '"' + (f["12"] + f["48"] ? "" : " disabled") + ">שמור העמסה</button>" + (d.loads.length ? '<button class="quiet-link" data-load-cancel="' + d.id + '">חזרה</button>' : "") + "</div>";
+    } else {
+      const tk0 = truck(d); const emp = {}; K.forEach((k) => { emp[k] = tk0[k].empties; });
+      h += '<div class="card"><div class="row"><h2>' + I("truck") + ' המשאית שלי</h2><button class="btn-s" data-load-more="' + d.id + '">+ העמסה</button></div>' + truckTable(d) +
+        (unloadAsk === d.id
+          ? '<div class="unload-ask"><p>לפרוק במחסן: ' + itemsHtml(emp) + '</p><div class="confirm-row"><button class="btn f press" data-unload="' + d.id + '">כן, פרקתי</button><button class="btn g press" data-unload-no="1">לא</button></div></div>'
+          : '<button class="btn g press unload-btn" data-unload-ask="' + d.id + '"' + (itemsN(emp) ? "" : " disabled") + ">" + I("check") + " פרקתי ריקים במחסן" + (itemsN(emp) ? " · " + itemsN(emp) : "") + "</button>") +
+        (d.unloads.length ? '<p class="muted" style="margin:8px 0 0;font-size:15px">' + d.unloads.map((u) => "פרק ב-" + u.at + ": " + itemsTxt(u) + " ריקים").join("<br>") + "</p>" : "") + "</div>";
+    }
+    if (!stops.length) h += '<div class="card"><p style="text-align:center;font-size:19px;font-weight:600;margin:8px 0">סיימתי את כל התחנות להיום</p></div>';
+    stops.forEach((o, i) => {
+      const c = cust(o.cid); const cur = i === 0;
+      if (cur && dmode.id !== o.id) dmode = { id: o.id, mode: "idle", q: { ...o.items }, e: { ...o.items }, pay: "cash" };
+      h += '<div class="card' + (cur ? "" : " dim") + (flashIds.has("o-" + o.id) ? " flash" : "") + '" style="display:flex;flex-direction:column;gap:12px">';
+      h += '<div class="row" style="align-items:flex-start"><div><p class="stop-addr">' + esc(c.street) + '</p><p class="muted" style="margin:2px 0 0;font-size:16px">' + esc(c.name) + " · " + esc(c.zone) + '</p></div><span class="chips" style="flex-direction:column;align-items:flex-end">' + itemsHtml(o.items) + "</span></div>";
+      h += '<p class="muted" style="margin:0">' + WINDOWS[o.window] + (o.status === "on_the_way" ? " · בדרך" : "") + (o.fails ? " · ניסיון שני" : "") + (c.balance > 0 ? " · חוב " + shekel(c.balance) : "") + "</p>";
+      if (cur) {
+        const tk = truck(d);
+        const short = K.filter((k) => (o.items[k] || 0) > Math.max(0, tk[k].left)).map((k) => "צריך " + cylWord(k, o.items[k]) + ", יש " + Math.max(0, tk[k].left));
+        h += '<div class="two"><button class="soft-btn" data-nav="1">' + I("nav") + ' ניווט</button><button class="soft-btn" data-ring="' + c.id + '">' + I("phone") + " התקשר</button></div>";
+        if (dmode.mode === "idle") {
+          h += o.status !== "on_the_way" ? '<button class="btn k press" style="min-height:62px;font-size:22px" data-way="' + o.id + '"' + (short.length ? " disabled" : "") + '>יצאתי</button>' + (short.length ? '<p class="neg" style="margin:-4px 0 0;text-align:center;font-size:15px;font-weight:600">' + (d.loads.length ? "אין מספיק על המשאית: " + short.join(", ") + " — רשום העמסה" : "המשאית ריקה — קודם רושמים העמסה למעלה") + "</p>" : "") : '<button class="btn f press" style="min-height:62px;font-size:22px" data-mode="deliver">סופק</button>';
+          h += '<button class="quiet-link" data-mode="fail">לא הצלחתי</button>';
+        } else if (dmode.mode === "deliver") {
+          h += '<div style="border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:12px">' +
+            K.filter((k) => o.items[k]).map((k) => '<p style="margin:0;font-weight:700">' + TYPES[k].name + ' <span class="muted" style="font-weight:400;font-size:14px">· על המשאית ' + Math.max(0, tk[k].left) + '</span></p>' +
+              '<div class="stepper"><span style="font-size:16px">מלאים שנמסרו</span><div class="ctl"><button data-dq="' + k + '" data-n="-1">−</button><b>' + dmode.q[k] + '</b><button data-dq="' + k + '" data-n="1"' + (dmode.q[k] >= Math.max(0, tk[k].left) ? " disabled" : "") + '>+</button></div></div>' +
+              '<div class="stepper"><span style="font-size:16px">ריקים שנאספו</span><div class="ctl"><button data-de="' + k + '" data-n="-1">−</button><b>' + dmode.e[k] + '</b><button data-de="' + k + '" data-n="1">+</button></div></div>').join("") +
+            '<div class="row"><span style="font-size:17px;font-weight:500">תשלום</span><b style="font-size:20px">' + shekel(itemsPrice(dmode.q)) + "</b></div>" +
+            '<div class="seg" style="grid-template-columns:repeat(3,1fr)">' + Object.keys(PAY).map((k) => '<button class="' + (dmode.pay === k ? "on" : "") + '" data-pay="' + k + '">' + PAY[k] + "</button>").join("") + "</div>" +
+            '<button class="btn f press" data-deliver="' + o.id + '"' + (itemsN(dmode.q) + itemsN(dmode.e) === 0 || K.some((k) => dmode.q[k] > Math.max(0, tk[k].left)) ? " disabled" : "") + '>אישור</button><button class="quiet-link" data-mode="idle">חזרה</button></div>';
+        } else {
+          h += '<div style="border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:8px">' +
+            Object.keys(REASONS).map((k) => '<button class="soft-btn" data-fail="' + o.id + '" data-r="' + k + '">' + REASONS[k] + "</button>").join("") + '<button class="quiet-link" data-mode="idle">חזרה</button></div>';
+        }
+      }
+      h += "</div>";
+    });
+    if (done.length) h += '<div class="card"><h2>סופקו היום · ' + done.length + '</h2><div class="list" style="margin-top:6px">' + done.map((o) => '<div class="li"><span>' + esc(cust(o.cid).name) + '</span><span class="s">' + itemsHtml(o.dq || o.items) + " · " + PAY[o.pay || "cash"] + "</span></div>").join("") + "</div></div>";
+    $("driver").innerHTML = h;
+  }
+
+  // ---------- actions ----------
+  function act(b) {
+    const ds = b.dataset;
+    if (ds.tab) { if (ds.tab === "office" && S.tab === "office") { ov = { v: "home" }; ovStack = []; } return setTab(ds.tab); }
+    if (ds.open) return openOv(ds.open, ds.id);
+    if (ds.back) { ov = ovStack.pop() || { v: "home" }; return render(); }
+    if (ds.viewAs) { S.dme = ds.viewAs; dmode = { id: null }; if (window.innerWidth < 1100) return setTab("driver"); return render(); }
+    if (ds.paid || ds.settle) {
+      const c = cust(ds.paid || ds.settle); const kinds = ds.settle ? [ds.kind] : ["debt", "transfer"];
+      const rows = S.orders.filter((o) => o.cid === c.id && o.status === "delivered" && kinds.includes(o.pay) && !o.settled);
+      const amount = rows.reduce((a, o) => a + amountOf(o), 0);
+      const what = kinds.length === 1 && kinds[0] === "transfer" ? "העברה אושרה" : "חוב נגבה";
+      rows.forEach((o) => { o.settled = now(); (o.events = o.events || []).push({ at: o.settled, text: what + " במשרד · " + shekel(amountOf(o)) }); });
+      c.balance = Math.max(0, c.balance - amount);
+      S.payments.unshift({ at: now(), cid: c.id, amount, what });
+      log("המשרד: " + what + " מ" + c.name + " · " + shekel(amount), null, c.id);
+      render(); return toast(what + " · " + shekel(amount) + (c.balance ? " · נשאר " + shekel(c.balance) : " · הלקוח רואה ₪0"));
+    }
+    if (ds.bounce) {
+      const c = cust(ds.bounce);
+      const rows = S.orders.filter((o) => o.cid === c.id && o.status === "delivered" && o.pay === "transfer" && !o.settled);
+      rows.forEach((o) => { o.pay = "debt"; (o.events = o.events || []).push({ at: now(), text: "ההעברה לא הגיעה → עבר לחוב" }); });
+      log("המשרד: ההעברה של " + c.name + " לא הגיעה → עברה לחוב", null, c.id);
+      render(); return toast("עבר ל«חוב שלא נגבה»");
+    }
+    if (ds.go) return setTab(ds.go);
+    if (ds.me) { S.me = ds.me; ui.sheet = null; ui.confirmCancel = null; ui.notif = null; return render(); }
+    if (ds.dme) { S.dme = ds.dme; dmode = { id: null }; return render(); }
+
+    // customer
+    if (ds.act === "order") { haptic(); const c = cust(S.me); ui.draft = { items: { ...c.last }, window: "any" }; ui.sheet = "order"; ui.anim = true; return render(); }
+    if (ds.acct) { ui.sheet = "acct"; ui.anim = true; return render(); }
+    if (ds.close) { ui.sheet = null; return render(); }
+    if (ds.q) { ui.draft.items[ds.q] = Math.max(0, Math.min(6, ui.draft.items[ds.q] + Number(ds.n))); return render(); }
+    if (ds.win) { ui.draft.window = ds.win; return render(); }
+    if (ds.confirm) {
+      haptic();
+      const cid = S.me, st = ui.draft;
+      ui.sheet = null; ui.skeleton = cid; render();
+      setTimeout(() => {
+        ui.skeleton = null;
+        const d = placeOrder(cid, st);
+        render();
+        toast(d ? "ההזמנה הגיעה למשרד ושובצה ל" + d.name + " לבד" : "ההזמנה הגיעה למשרד · אין נהג לאזור", "office");
+      }, 650);
+      return;
+    }
+    if (ds.act === "call") {
+      haptic();
+      const c = cust(S.me);
+      const x = { id: "k" + (++S.seq), cid: c.id, at: now(), handled: false };
+      S.calls.push(x); flashIds.add("call-" + x.id);
+      log(c.name + " לחץ «התקשר» באפליקציה", null, c.id);
+      bump("office"); render();
+      return toast("מחייג למשרד " + OFFICE_PHONE + " · המשרד כבר רואה שזה " + c.name, "office");
+    }
+    if (ds.ringDriver) return toast("כאן הטלפון מחייג ל" + drv(ds.ringDriver).name);
+    if (ds.cancelAsk) { ui.confirmCancel = ds.cancelAsk; return render(); }
+    if (ds.cancelNo) { ui.confirmCancel = null; return render(); }
+    if (ds.cancelYes) {
+      if (ui.undo) commitCancel();
+      const o = S.orders.find((x) => x.id === ds.cancelYes);
+      o.pendingCancel = true; ui.confirmCancel = null;
+      ui.undo = { oid: o.id, cid: o.cid, left: 5 };
+      ui.undo.timer = setInterval(() => {
+        if (!ui.undo) return;
+        ui.undo.left -= 1;
+        if (ui.undo.left <= 0) { commitCancel(); render(); }
+        else { const b = document.querySelector("[data-undo]"); if (b) b.textContent = "החזר (" + ui.undo.left + ")"; }
+      }, 1000);
+      return render();
+    }
+    if (ds.undo) { const o = S.orders.find((x) => x.id === ui.undo.oid); o.pendingCancel = false; clearInterval(ui.undo.timer); ui.undo = null; return render(); }
+    if (ds.seen) { S.orders.find((x) => x.id === ds.seen).seen = true; return render(); }
+    if (ds.sub) {
+      const c = cust(S.me);
+      if (ds.sub !== "0" && ds.sub !== "keep") { c.sub = Number(ds.sub); log(c.name + " עבר/ה להזמנה אוטומטית כל " + c.sub + " יום", null, c.id); flashIds.add("feed"); bump("office"); toast("נרשם · ההזמנה הבאה תצא לבד", "office"); }
+      c.receipt = null; return render();
+    }
+    if (ds.unsub) { const c = cust(S.me); c.sub = null; log(c.name + " עצר/ה את ההזמנה האוטומטית", null, c.id); return render(); }
+
+    // office
+    if (ds.handled) { S.calls.find((x) => x.id === ds.handled).handled = true; return render(); }
+    if (ds.like) { const x = S.calls.find((y) => y.id === ds.like); x.handled = true; officeOrderFor(x.cid, "אחרי שיחה"); render(); return toast("ההזמנה נפתחה · הלקוח רואה אותה באפליקציה", "customer"); }
+    if (ds.officeOrder) { officeOrderFor(ds.officeOrder, "לפי הקצב"); render(); return toast("ההזמנה נפתחה ושובצה לבד", "driver"); }
+    if (ds.assign) {
+      const o = S.orders.find((x) => x.id === ds.assign); const d = drv(ds.d);
+      o.status = "assigned"; o.driver = d.id; o.hold = null; o.rseq = ++S.seq;
+      log("המשרד שיבץ את " + cust(o.cid).name + " ל" + d.name, o);
+      notify(o.cid, d.name + " יביא לך את ההזמנה היום");
+      flashIds.add("o-" + o.id); bump("driver"); render();
+      return toast("שובץ ל" + d.name + " · מופיע אצלו עכשיו", "driver");
+    }
+    if (ds.cancel) { const o = S.orders.find((x) => x.id === ds.cancel); o.status = "cancelled"; log("המשרד ביטל הזמנה של " + cust(o.cid).name, o); notify(o.cid, "ההזמנה בוטלה על ידי המשרד"); return render(); }
+    if (ds.ack) { S.orders.find((x) => x.id === ds.ack).ack = true; return render(); }
+
+    // driver
+    if (ds.mode) { dmode.mode = ds.mode; return render(); }
+    if (ds.lq) { const f = lform[S.dme]; f[ds.lq] = Math.max(0, Math.min(40, f[ds.lq] + Number(ds.n))); return render(); }
+    if (ds.unloadAsk) { unloadAsk = ds.unloadAsk; return render(); }
+    if (ds.unloadNo) { unloadAsk = null; return render(); }
+    if (ds.unload) {
+      const d = drv(ds.unload); const tk = truck(d); const u = { at: now() };
+      K.forEach((k) => { u[k] = tk[k].empties; });
+      d.unloads.push(u); unloadAsk = null;
+      log(d.name + " פרק במחסן: " + itemsTxt(u) + " ריקים");
+      flashIds.add("feed"); bump("office"); render();
+      return toast("נפרק · " + itemsN(u) + " ריקים נכנסו למחסן", "office");
+    }
+    if (ds.loadMore) { lform[ds.loadMore] = { "12": 0, "48": 0 }; return render(); }
+    if (ds.loadCancel) { delete lform[ds.loadCancel]; return render(); }
+    if (ds.load) {
+      const d = drv(ds.load); const f = lform[d.id];
+      d.loads.push({ at: now(), "12": f["12"], "48": f["48"] }); delete lform[d.id];
+      log(d.name + " רשם העמסה: " + itemsTxt(f));
+      flashIds.add("feed"); bump("office"); render();
+      return toast("ההעמסה נשמרה · המשרד רואה מה יש על המשאית", "office");
+    }
+    if (ds.nav) return toast("כאן נפתח Waze עם הכתובת");
+    if (ds.ring) return toast("כאן הטלפון מחייג ל" + cust(ds.ring).name);
+    if (ds.way) {
+      haptic();
+      const o = S.orders.find((x) => x.id === ds.way); const d = drv(o.driver);
+      o.status = "on_the_way"; o.eta = 18;
+      log(d.name + " יצא ל" + cust(o.cid).name, o);
+      notify(o.cid, d.name + " יצא אליך · בעוד 18 דק'");
+      flashIds.add("o-" + o.id); bump("office"); render();
+      return toast("הלקוח קיבל: «" + d.name + " יצא אליך · בעוד 18 דק'»", "customer");
+    }
+    if (ds.dq) { const left = Math.max(0, truck(drv(S.dme))[ds.dq].left); dmode.q[ds.dq] = Math.max(0, Math.min(left, dmode.q[ds.dq] + Number(ds.n))); return render(); }
+    if (ds.de) { dmode.e[ds.de] = Math.max(0, Math.min(10, dmode.e[ds.de] + Number(ds.n))); return render(); }
+    if (ds.pay) { dmode.pay = ds.pay; return render(); }
+    if (ds.deliver) {
+      haptic();
+      const o = S.orders.find((x) => x.id === ds.deliver); const c = cust(o.cid); const d = drv(o.driver);
+      const amount = itemsPrice(dmode.q);
+      o.status = "delivered"; o.dq = { ...dmode.q }; o.de = { ...dmode.e }; o.pay = dmode.pay;
+      K.forEach((k) => { c.held[k] = Math.max(0, c.held[k] - dmode.e[k]) + dmode.q[k]; });
+      if (dmode.pay === "cash") d.cash += amount; else c.balance += amount;
+      c.history.push({ d: new Date(), items: { ...dmode.q }, pay: dmode.pay });
+      c.receipt = { items: { ...dmode.q }, empties: itemsN(dmode.e), pay: dmode.pay, amount, driver: d.name, at: now() };
+      log(d.name + " סיפק ל" + c.name + ": " + itemsTxt(dmode.q) + " · אסף " + itemsN(dmode.e) + " ריקים · " + PAY[dmode.pay] + " " + shekel(amount), o);
+      notify(c.id, "סופק · " + itemsN(dmode.q) + " " + (itemsN(dmode.q) === 1 ? "בלון" : "בלונים") + " · " + shekel(amount) + " " + PAY[dmode.pay]);
+      flashIds.add("o-" + o.id); bump("office");
+      dmode = { id: null }; render();
+      return toast("נסגר · המלאי של הלקוח והקופה התעדכנו לבד", "customer");
+    }
+    if (ds.fail) {
+      const o = S.orders.find((x) => x.id === ds.fail); const c = cust(o.cid); const d = drv(o.driver);
+      o.fails += 1; o.reason = REASONS[ds.r];
+      if (o.fails >= 2) {
+        o.status = "tomorrow";
+        log(c.name + ": נכשל פעמיים → עבר למחר, המשרד קיבל התראה", o);
+        notify(c.id, "ההזמנה עברה למחר · המשרד יתקשר אליך");
+        toast("עבר למחר · המשרד קיבל התראה", "office");
+      } else {
+        o.rseq = ++S.seq; o.status = "assigned";
+        log(c.name + ": " + REASONS[ds.r] + " → עבר לסוף המסלול", o);
+        notify(c.id, d.name + " לא מצא אותך · ינסה שוב בהמשך היום");
+        toast("עבר לסוף המסלול · ננסה שוב בהמשך");
+      }
+      flashIds.add("o-" + o.id); bump("office");
+      dmode = { id: null }; return render();
+    }
+  }
+
+  function draw() {
+    const y = window.scrollY;
+    renderCustomer(); renderOffice(); renderDriver();
+    flashIds = new Set(); ui.anim = false; ui.notifAnim = false;
+    if (window.scrollY !== y) window.scrollTo(0, y);
+  }
+  // The customer screen morphs (shared hero element) when its state changes.
+  function render() {
+    const key = custKey();
+    const changed = key !== lastKey;
+    const first = lastKey === "";
+    lastKey = key;
+    const phoneVisible = window.innerWidth >= 1100 || S.tab === "customer";
+    if (changed && !first && !reduced && phoneVisible && document.startViewTransition) {
+      document.startViewTransition(draw);
+    } else {
+      draw();
+    }
+    if (!changed) document.querySelectorAll("#phone .state-in").forEach((n) => n.classList.remove("state-in"));
+  }
+
+  // ETA counts down while the driver is on the way.
+  setInterval(() => {
+    S.orders.forEach((o) => {
+      if (o.status !== "on_the_way" || o.eta <= 3) return;
+      o.eta -= 1;
+      document.querySelectorAll('[data-eta="' + o.id + '"]').forEach((n) => { n.textContent = fmtEta(o.eta); });
+    });
+  }, 4000);
+
+  document.addEventListener("click", (e) => { const b = e.target.closest("button, .scrim"); if (b) act(b); });
+  $("reset").onclick = () => {
+    if (ui.undo) clearInterval(ui.undo.timer);
+    S = seed(); ui = { sheet: null, confirmCancel: null, skeleton: null, notif: null, notifTimer: null, undo: null }; dmode = { id: null }; lastKey = ""; ov = { v: "home" }; ovStack = []; lform = {}; unloadAsk = null;
+    document.querySelectorAll(".badge").forEach((b) => { b.textContent = ""; b.classList.remove("show"); });
+    setTab("customer");
+  };
+  $("h-customer").innerHTML = I("mobile") + " האפליקציה של הלקוח";
+  $("h-office").innerHTML = I("screen") + " המשרד";
+  $("h-driver").innerHTML = I("truck") + " האפליקציה של הנהג";
+  render();
+})();
+</script>

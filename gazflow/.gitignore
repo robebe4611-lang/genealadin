@@ -1,0 +1,13 @@
+# The repo-root .gitignore is a Python template that ignores `lib/`; this app
+# keeps source under src/lib, so re-include it.
+!lib/
+
+node_modules/
+.vercel/
+.tanstack/
+.nitro/
+.output/
+dist/
+.node_modules.lock
+*.log
+e2e-results/
