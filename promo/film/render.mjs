@@ -23,7 +23,7 @@ for (let f = 0; f < total; f++) {
   if (f % 150 === 0) console.log(`frame ${f}/${total} · ${Math.round((Date.now() - t0) / 1000)}s`);
 }
 await b.close(); srv.kill();
-const out = `gazflow${process.env.FILM === "film2" ? "-v2" : ""}-${lang}-${fmt === "v" ? "9x16" : "16x9"}.mp4`;
+const out = `gazflow${{ film2: "-v2", film3: "-v3" }[process.env.FILM] || ""}-${lang}-${fmt === "v" ? "9x16" : "16x9"}.mp4`;
 execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-framerate", String(FPS), "-i", `${frames}/%04d.jpg`, "-i", process.env.MUSIC || "music.wav",
   "-c:v", "libx264", "-crf", "18", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "192k", "-shortest", "-movflags", "+faststart", out]);
 console.log("done", out);

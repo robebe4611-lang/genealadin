@@ -1,0 +1,323 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>GazFlow promo v3 — dark premium</title>
+<style>
+  @font-face { font-family: "Plex Arabic"; font-weight: 500; src: url(node_modules/@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-500-normal.woff2) format("woff2"); unicode-range: U+0600-06FF, U+0750-077F, U+FB50-FDFF, U+FE70-FEFF; }
+  @font-face { font-family: "Plex Arabic"; font-weight: 700; src: url(node_modules/@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-700-normal.woff2) format("woff2"); unicode-range: U+0600-06FF, U+0750-077F, U+FB50-FDFF, U+FE70-FEFF; }
+  @font-face { font-family: "Heebo"; font-weight: 500; src: url(node_modules/@fontsource/heebo/files/heebo-hebrew-500-normal.woff2) format("woff2"); unicode-range: U+0590-05FF; }
+  @font-face { font-family: "Heebo"; font-weight: 700; src: url(node_modules/@fontsource/heebo/files/heebo-hebrew-700-normal.woff2) format("woff2"); unicode-range: U+0590-05FF; }
+  @font-face { font-family: "Heebo"; font-weight: 800; src: url(node_modules/@fontsource/heebo/files/heebo-hebrew-800-normal.woff2) format("woff2"); unicode-range: U+0590-05FF; }
+  @font-face { font-family: "Heebo"; font-weight: 500; src: url(node_modules/@fontsource/heebo/files/heebo-latin-500-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Heebo"; font-weight: 800; src: url(node_modules/@fontsource/heebo/files/heebo-latin-800-normal.woff2) format("woff2"); }
+
+  :root { --bg: #0B0F15; --em: #10B981; --em2: #00C853; --white: #F5F7F8; --dim: rgba(245,247,248,.55); }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); overflow: hidden; }
+  #stage { position: relative; overflow: hidden; direction: rtl; color: var(--white); background: var(--bg); font-family: "Plex Arabic", "Heebo", sans-serif; }
+  #stage.he { font-family: "Heebo", "Plex Arabic", sans-serif; }
+  .glowbg { position: absolute; inset: -20%; background: radial-gradient(40% 35% at 50% 55%, rgba(16,185,129,.18) 0%, rgba(16,185,129,0) 70%), radial-gradient(30% 30% at 15% 10%, rgba(0,200,83,.08) 0%, rgba(0,200,83,0) 70%); }
+  .grid { position: absolute; inset: 0; opacity: .5; background-image: linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px); background-size: 80px 80px;
+    -webkit-mask-image: radial-gradient(60% 60% at 50% 50%, #000 0%, transparent 80%); mask-image: radial-gradient(60% 60% at 50% 50%, #000 0%, transparent 80%); }
+  .layer { position: absolute; inset: 0; }
+  .persp { position: absolute; inset: 0; perspective: 2200px; perspective-origin: 50% 40%; }
+
+  .kw { position: absolute; left: 0; right: 0; text-align: center; font-weight: 800; letter-spacing: -0.02em; line-height: 1.05; }
+  .kw.em { color: var(--em); text-shadow: 0 0 60px rgba(16,185,129,.55); }
+  .cap { position: absolute; left: 80px; right: 80px; text-align: center; font-weight: 700; line-height: 1.15; letter-spacing: -0.01em; z-index: 5; }
+  .cap .g { color: var(--em); }
+  .sub { position: absolute; left: 80px; right: 80px; text-align: center; font-weight: 500; color: var(--dim); z-index: 5; }
+
+  /* floating translucent glass card holding a real screen */
+  .glass { position: absolute; padding: 16px; border-radius: 40px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.14);
+    box-shadow: 0 0 0 1px rgba(16,185,129,.18), 0 40px 120px rgba(0,0,0,.55), 0 0 90px rgba(16,185,129,.18);
+    backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); transform-style: preserve-3d; }
+  .glass .win { position: relative; overflow: hidden; border-radius: 26px; background: #fff; }
+  .glass img { display: block; width: 100%; }
+  .chipglow { position: absolute; border-radius: 999px; box-shadow: 0 0 0 4px var(--em), 0 0 40px rgba(16,185,129,.8); opacity: 0; }
+
+  .gauge { position: absolute; text-align: center; }
+  .gauge svg { width: 100%; height: auto; overflow: visible; }
+  .gauge .num { position: absolute; left: 0; right: 0; font-weight: 800; color: var(--white); font-family: "Heebo", sans-serif; direction: ltr; }
+  .gauge .lbl { margin-top: 18px; font-weight: 700; color: var(--white); }
+  .gauge .lbl small { display: block; font-weight: 500; color: var(--dim); }
+
+  .logo { position: absolute; left: 0; right: 0; text-align: center; font-weight: 800; letter-spacing: -0.02em; }
+  .logo .dot { display: inline-block; width: .42em; height: .42em; border-radius: 50%; background: var(--em); box-shadow: 0 0 40px var(--em), 0 0 90px rgba(16,185,129,.7); margin-inline-start: .2em; vertical-align: .08em; }
+  .cta { position: absolute; left: 50%; padding: 24px 56px; border-radius: 999px; background: var(--em); color: #04120B; font-weight: 800; white-space: nowrap; box-shadow: 0 0 60px rgba(16,185,129,.55); }
+  .sweep { position: absolute; height: 3px; background: linear-gradient(90deg, transparent, var(--em), transparent); box-shadow: 0 0 24px var(--em); }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="glowbg" id="glowbg"></div>
+  <div class="grid" id="grid"></div>
+
+  <div class="layer" id="s1"><div class="kw" id="w0"></div><div class="kw" id="w1"></div><div class="kw" id="w2"></div><div class="kw" id="w3"></div><div class="kw em" id="w4"></div></div>
+
+  <div class="layer" id="s2"><div class="persp"><div class="glass" id="sys"><div class="win"><img src="../capture/shots3/w01-office-laptop.png"></div></div></div>
+    <div class="cap" id="c2"></div><div class="sweep" id="sw"></div></div>
+
+  <div class="layer" id="s3">
+    <div class="layer" id="cam3">
+      <div class="glass" id="route"><div class="win" id="routeWin"><img id="routeImg" src="../capture/shots3/r01-driver-route.png"></div></div>
+      <div class="glass" id="orders"><div class="win"><img src="../capture/shots3/r02-orders-status.png"></div><div class="chipglow" id="cg1"></div><div class="chipglow" id="cg2"></div><div class="chipglow" id="cg3"></div></div>
+      <div class="glass" id="fleet"><div class="win"><img src="../capture/shots3/r03-fleet.png"></div></div>
+    </div>
+    <div class="cap" id="c3"></div>
+  </div>
+
+  <div class="layer" id="s4">
+    <div class="gauge" id="g0"></div><div class="gauge" id="g1"></div><div class="gauge" id="g2"></div>
+    <div class="glass" id="stock"><div class="win"><img src="../capture/shots3/s01-stock-home.png"></div></div>
+    <div class="cap" id="c4"></div>
+  </div>
+
+  <div class="layer" id="s5">
+    <div class="persp">
+      <div class="glass" id="o-sys"><div class="win"><img src="../capture/shots3/w01-office-laptop.png"></div></div>
+      <div class="glass" id="o-route"><div class="win" style="height:100%"><img src="../capture/shots3/r01-driver-route.png"></div></div>
+      <div class="glass" id="o-stock"><div class="win"><img src="../capture/shots3/s01-stock-home.png"></div></div>
+    </div>
+    <div class="logo" id="logo"></div>
+    <div class="sub" id="tag"></div>
+    <div class="cta" id="cta"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const Q = new URLSearchParams(location.search);
+  const LANG = Q.get("lang") === "ar" ? "ar" : "he";
+  const V = Q.get("fmt") === "v";
+  const W = V ? 1080 : 1920, H = V ? 1920 : 1080;
+
+  // Copy. No billing. "Updates on its own", never "real-time". Arabic: Galilee spoken register — Rabea checks it.
+  const T = {
+    he: {
+      w: ["טלפונים.", "פתקים.", "נהגים בלי מסלול.", "מלאי שאף אחד לא סופר.", "יש דרך אחרת."],
+      c2: 'גזפלו. <span class="g">חדר הבקרה</span> של חלוקת הגז.',
+      c3: ['מסלול מסודר <span class="g">לכל נהג.</span>', 'סטטוס שמתעדכן <span class="g">לבד.</span>', 'כל הצי — <span class="g">במבט אחד.</span>'],
+      c4: ['מה נשאר <span class="g">על כל משאית.</span>', 'מלאים וריקים — <span class="g">בלי לספור ידנית.</span>'],
+      g: [["סאמר", "בלונים קטנים"], ["סאמר", "בלונים גדולים"], ["ראמי", "בלונים קטנים"]],
+      word: "גזפלו", tag: "חלוקת גז. בשליטה מלאה.", cta: "תנסה בעצמך · הקישור בהודעה",
+    },
+    ar: {
+      w: ["تلفونات.", "أوراق.", "سوّاقين بلا خط سير.", "مخزون ما حدا بيعدّه.", "في طريقة ثانية."],
+      c2: 'غازفلو. <span class="g">غرفة التحكّم</span> بتوزيع الغاز.',
+      c3: ['خط سير مرتّب <span class="g">لكل سوّاق.</span>', 'الحالة بتتحدّث <span class="g">لحالها.</span>', 'كل السيارات — <span class="g">بنظرة وحدة.</span>'],
+      c4: ['شو ضايل <span class="g">على كل سيارة.</span>', 'مليانين وفاضيين — <span class="g">بلا عدّ بالإيد.</span>'],
+      g: [["سامر", "جرار صغيرة"], ["سامر", "جرار كبيرة"], ["رامي", "جرار صغيرة"]],
+      word: "غازفلو", tag: "توزيع الغاز. تحت السيطرة.", cta: "جرّبها بنفسك · الرابط بالرسالة",
+    },
+  }[LANG];
+  // Real truck numbers from the captured demo day (stock page): left on truck / loaded.
+  const GAUGES = [[8, 10], [3, 3], [5, 6]];
+
+  const stage = document.getElementById("stage");
+  stage.style.width = W + "px"; stage.style.height = H + "px";
+  if (LANG === "he") stage.classList.add("he");
+  const $ = (id) => document.getElementById(id);
+
+  // ---------- pure motion ----------
+  const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+  const p01 = (t, a, d) => clamp((t - a) / d);
+  const easeOutExpo = (x) => (x >= 1 ? 1 : 1 - Math.pow(2, -10 * x));
+  const easeInOut = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+  // damped spring 0 → 1 with a small overshoot
+  const spring = (x) => (x <= 0 ? 0 : x >= 1.6 ? 1 : 1 - Math.exp(-6.5 * x) * Math.cos(9 * x));
+  const show = (el, on) => { el.style.display = on ? "" : "none"; };
+  const box = (el, x, y, w, h) => { el.style.left = x + "px"; el.style.top = y + "px"; if (w != null) el.style.width = w + "px"; if (h != null) el.style.height = h + "px"; };
+  function rise(el, t, t0, dist = 50) {
+    const k = easeOutExpo(p01(t, t0, 0.5));
+    el.style.opacity = t < t0 ? 0 : k; el.style.transform = `translateY(${(1 - k) * dist}px)`; el.style.filter = `blur(${(1 - k) * 12}px)`;
+  }
+  // card enters on a spring: scale 0.9 → 1, rises 60 px
+  function springIn(el, t, t0, extra = "") {
+    const s = spring(p01(t, t0, 1.6) * 1.6);
+    el.style.opacity = t < t0 ? 0 : clamp((t - t0) / 0.18);
+    el.style.transform = `${extra} translateY(${(1 - s) * 60}px) scale(${0.9 + 0.1 * s})`;
+  }
+  const FS = (vSize, hSize) => (V ? vSize : hSize) + "px";
+
+  // ---------- S1 kinetic hook ----------
+  T.w.forEach((w, i) => { $("w" + i).textContent = w; });
+  const wT = [0.0, 0.75, 1.5, 2.5, 3.75];
+
+  // ---------- S2 system ----------
+  const sysW = V ? 1000 : 1240, sysH = sysW * (1800 / 2880);
+  box($("sys"), (W - sysW - 32) / 2, V ? 620 : 210, sysW + 32);
+  $("c2").innerHTML = T.c2; $("c2").style.fontSize = FS(68, 64);
+
+  // ---------- S3 routes, statuses, fleet ----------
+  // route: a phone-shaped window onto the driver's real day (top 844 css px of the capture)
+  const rW = V ? 640 : 440;
+  box($("route"), V ? (W - rW - 32) / 2 : 260, V ? 470 : 120, rW + 32);
+  $("routeWin").style.height = rW * (844 / 390) + "px";
+  const oW = V ? 860 : 620, fW = V ? 900 : 760;
+  box($("orders"), V ? (W - oW - 32) / 2 : 230, V ? 440 : 90, oW + 32);
+  box($("fleet"), V ? (W - fW - 32) / 2 : 160, V ? 760 : 300, fW + 32);
+  // status chips in the orders card (css px of the 366-wide card capture): delivered / assigned / on the way / delivered
+  const CHIPS = [[18, 82, 70, 28], [18, 196, 104, 28], [18, 312, 62, 28]];
+  $("c3").style.fontSize = FS(72, 70);
+
+  // ---------- S4 gauges + stock ----------
+  const gR = 120, gC = 2 * Math.PI * gR;
+  GAUGES.forEach(([l, n], i) => {
+    const g = $("g" + i);
+    g.innerHTML = `<svg viewBox="-150 -150 300 300"><circle r="${gR}" fill="none" stroke="rgba(255,255,255,.09)" stroke-width="22"/>
+      <circle class="arc" r="${gR}" fill="none" stroke="#10B981" stroke-width="22" stroke-linecap="round" transform="rotate(-90)" stroke-dasharray="${gC}" stroke-dashoffset="${gC}" style="filter:drop-shadow(0 0 14px rgba(16,185,129,.8))"/></svg>
+      <div class="num"></div><div class="lbl">${T.g[i][0]}<small>${T.g[i][1]}</small></div>`;
+    const gw = V ? 300 : 340;
+    const gx = V ? (i === 2 ? (W - gw) / 2 : i === 0 ? W / 2 + 20 : W / 2 - gw - 20) : W / 2 + 560 - i * 560 - gw / 2;
+    const gy = V ? (i === 2 ? 1120 : 560) : 210;
+    box(g, gx, gy, gw);
+    g.querySelector(".num").style.top = gw * 0.36 + "px"; g.querySelector(".num").style.fontSize = (V ? 76 : 86) + "px";
+    g.querySelector(".lbl").style.fontSize = (V ? 40 : 44) + "px";
+  });
+  const sW = V ? 940 : 1100;
+  box($("stock"), (W - sW - 32) / 2, V ? 640 : 230, sW + 32);
+  $("c4").style.fontSize = FS(72, 70);
+
+  // ---------- S5 overview + logo ----------
+  const ow = V ? 900 : 1000;
+  box($("o-sys"), (W - ow - 32) / 2, V ? 300 : 120, ow + 32);
+  const orW = V ? 300 : 260;
+  box($("o-route"), V ? 40 : 160, V ? 860 : 330, orW + 32, (V ? 560 : 480));
+  const osW = V ? 560 : 560;
+  box($("o-stock"), V ? W - osW - 72 : W - osW - 200, V ? 1000 : 520, osW + 32);
+  $("logo").innerHTML = T.word + '<span class="dot"></span>'; $("logo").style.fontSize = FS(170, 170);
+  $("tag").textContent = T.tag; $("tag").style.fontSize = FS(56, 52);
+  $("cta").textContent = T.cta; $("cta").style.fontSize = FS(50, 44);
+
+  // ---------- timeline: 120 BPM ----------
+  const DUR = 30;
+  window.renderAt = function (t) {
+    // living background: glow breathes, grid drifts
+    $("glowbg").style.transform = `translate(${Math.sin(t * 0.4) * 30}px, ${Math.cos(t * 0.33) * 24}px) scale(${1 + 0.05 * Math.sin(t * 0.7)})`;
+    $("grid").style.backgroundPosition = `${t * 12}px ${t * 6}px`;
+
+    // S1 0–5: one word per beat, stacking upward; the turn line in emerald
+    const s1 = t < 5; show($("s1"), s1);
+    if (s1) {
+      const base = V ? 980 : 560, step = V ? 150 : 120;
+      for (let i = 0; i < 5; i++) {
+        const el = $("w" + i); const t0 = wT[i];
+        el.style.fontSize = (i === 4 ? (V ? 140 : 150) : (V ? 112 : 118)) + "px";
+        if (t < t0) { el.style.opacity = 0; continue; }
+        if (i < 4) {
+          const newer = wT.filter((x, j) => j > i && j < 4 && t >= x).length; // how many words came after
+          const y = base - newer * step;
+          const k = spring(p01(t, t0, 1.2) * 1.6);
+          el.style.top = y - (V ? 60 : 70) + "px";
+          el.style.transform = `scale(${0.7 + 0.3 * k}) translateY(${(1 - k) * 40}px)`;
+          el.style.opacity = (newer === 0 ? 1 : 0.28) * (t >= 3.75 ? 1 - p01(t, 3.75, 0.25) : 1);
+          el.style.filter = `blur(${(1 - Math.min(1, k)) * 10}px)`;
+        } else {
+          const k = spring(p01(t, t0, 1.2) * 1.6);
+          el.style.top = base - (V ? 80 : 90) + "px"; el.style.opacity = clamp((t - t0) / 0.15);
+          el.style.transform = `scale(${0.6 + 0.4 * k})`; el.style.letterSpacing = `${(1 - Math.min(1, k)) * 0.2}em`;
+        }
+      }
+    }
+
+    // S2 5–10: the system enters in 3D and settles flat
+    const s2 = t >= 5 && t < 10; show($("s2"), s2);
+    if (s2) {
+      const k = spring(p01(t, 5, 2.0) * 1.6), e = clamp(k);
+      const rx = 30 * (1 - e) + 6 * Math.max(0, 1 - p01(t, 7, 3)), ry = -22 * (1 - e) - 4 * Math.max(0, 1 - p01(t, 7, 3));
+      const z = -700 * (1 - k);
+      const drift = 1 + 0.04 * easeInOut(p01(t, 7, 3));
+      $("sys").style.opacity = clamp((t - 5) / 0.3);
+      $("sys").style.transform = `translateZ(${z}px) rotateX(${rx}deg) rotateY(${ry}deg) scale(${drift})`;
+      const c = $("c2"); c.style.top = (V ? 330 : 70) + "px"; rise(c, t, 6.0);
+      const sw = $("sw"), sy = V ? 620 + sysH + 70 : 210 + sysH + 50;
+      box(sw, (W - sysW) / 2, sy, sysW); sw.style.opacity = t >= 5.6 && t < 7 ? 1 - p01(t, 6.4, 0.6) : 0;
+      sw.style.transform = `scaleX(${easeOutExpo(p01(t, 5.6, 0.8))})`;
+    }
+
+    // S3 10–17: route (zoom into the live stop), statuses, fleet
+    const s3 = t >= 10 && t < 17; show($("s3"), s3);
+    if (s3) {
+      const seg = t < 12.5 ? 0 : t < 15 ? 1 : 2, t0 = [10, 12.5, 15][seg];
+      show($("route"), seg === 0); show($("orders"), seg === 1); show($("fleet"), seg === 2);
+      const el = $(["route", "orders", "fleet"][seg]);
+      springIn(el, t, t0);
+      // camera: push toward the current stop on the route, gentle push elsewhere
+      const cam = $("cam3");
+      if (seg === 0) {
+        const z = 1 + (V ? 0.4 : 0.55) * easeInOut(p01(t, 10.9, 1.4));
+        const fx = parseFloat($("route").style.left) + 16 + rW / 2, fy = parseFloat($("route").style.top) + 16 + 600 * (rW / 390);
+        const tx = (V ? W / 2 : 560) - fx, ty = (V ? H * 0.64 : H * 0.5) - fy;
+        const k = easeInOut(p01(t, 10.9, 1.4));
+        cam.style.transformOrigin = `${fx}px ${fy}px`;
+        cam.style.transform = `translate(${tx * k}px, ${ty * k}px) scale(${z})`;
+      } else {
+        const b = el.getBoundingClientRect ? null : null;
+        cam.style.transformOrigin = "50% 50%"; cam.style.transform = `scale(${1 + 0.05 * easeInOut(p01(t, t0, 2.5))})`;
+      }
+      // status chips light up one after another
+      ["cg1", "cg2", "cg3"].forEach((id, i) => {
+        const g = $(id); const k = oW / 366; const c = CHIPS[i];
+        box(g, 16 + c[0] * k, 16 + c[1] * k, c[2] * k, c[3] * k);
+        g.style.opacity = seg === 1 && t >= 13.0 + i * 0.5 ? 1 - 0.6 * p01(t, 13.3 + i * 0.5, 0.6) : 0;
+      });
+      const c = $("c3"); c.innerHTML = T.c3[seg];
+      if (V) { c.style.top = "250px"; c.style.left = "80px"; c.style.right = "80px"; }
+      else { c.style.top = "440px"; c.style.left = "1060px"; c.style.right = "110px"; c.style.textAlign = "right"; }
+      rise(c, t, t0 + 0.3);
+      const pill = V && seg === 0 && t > 11;
+      c.style.background = pill ? "rgba(11,15,21,.82)" : "none"; c.style.borderRadius = "28px"; c.style.padding = pill ? "12px 20px" : "0";
+    }
+
+    // S4 17–24: gauges fill to the real numbers, then the stock card
+    const s4 = t >= 17 && t < 24; show($("s4"), s4);
+    if (s4) {
+      const gOn = t < 20.5;
+      GAUGES.forEach(([l, n], i) => {
+        const g = $("g" + i); show(g, gOn);
+        if (!gOn) return;
+        const t0 = 17.25 + i * 0.5;
+        springIn(g, t, t0);
+        const k = easeOutExpo(p01(t, t0 + 0.1, 1.2));
+        g.querySelector(".arc").setAttribute("stroke-dashoffset", gC * (1 - (l / n) * k));
+        g.querySelector(".num").textContent = `${Math.round(l * k)}/${n}`;
+      });
+      show($("stock"), !gOn);
+      if (!gOn) { springIn($("stock"), t, 20.5); $("stock").style.transform += ` scale(${1 + 0.04 * easeInOut(p01(t, 21, 3))})`; }
+      const c = $("c4"); c.innerHTML = gOn ? T.c4[0] : T.c4[1];
+      c.style.top = (V ? 280 : (gOn ? 760 : 110)) + "px"; c.style.left = "80px"; c.style.right = "80px"; c.style.textAlign = "center";
+      rise(c, t, gOn ? 17.5 : 20.8);
+    }
+
+    // S5 24–30: overview, then the glowing logo and the call to action
+    const s5 = t >= 24; show($("s5"), s5);
+    if (s5) {
+      const out = p01(t, 26.2, 0.5);
+      [["o-sys", 24.0], ["o-route", 24.25], ["o-stock", 24.5]].forEach(([id, t0], i) => {
+        const el = $(id); springIn(el, t, t0, `rotateY(${(i - 1) * -8}deg) rotateX(6deg)`);
+        el.style.opacity = (t < t0 ? 0 : clamp((t - t0) / 0.18)) * (1 - out);
+        el.style.filter = `blur(${out * 16}px)`;
+      });
+      const lg = $("logo"); lg.style.top = (V ? 760 : 330) + "px";
+      const k = spring(p01(t, 26.5, 1.2) * 1.6);
+      lg.style.opacity = t < 26.5 ? 0 : clamp((t - 26.5) / 0.2); lg.style.transform = `scale(${0.8 + 0.2 * k})`;
+      lg.querySelector(".dot").style.transform = `scale(${1 + 0.15 * Math.sin(t * 6)})`;
+      const tg = $("tag"); tg.style.top = (V ? 1000 : 560) + "px"; rise(tg, t, 27.0);
+      const ct = $("cta"); ct.style.top = (V ? 1180 : 700) + "px";
+      const kc = spring(p01(t, 27.5, 1.2) * 1.6);
+      ct.style.opacity = t < 27.5 ? 0 : clamp((t - 27.5) / 0.2); ct.style.transform = `translateX(-50%) scale(${0.85 + 0.15 * kc})`;
+    }
+  };
+
+  window.DURATION = DUR;
+  Promise.all([document.fonts.ready,
+    document.fonts.load('700 60px "Plex Arabic"', "عربي"), document.fonts.load('500 60px "Plex Arabic"', "عربي"),
+    document.fonts.load('700 60px "Heebo"', "עברית"), document.fonts.load('800 60px "Heebo"', "עברית"), document.fonts.load('500 60px "Heebo"', "עברית"),
+    document.fonts.load('800 60px "Heebo"', "0123"),
+    ...[...document.images].map((i) => i.decode().catch(() => {}))]).then(() => { renderAt(Number(Q.get("t") || 0)); window.ready = true; });
+})();
+</script>
+</body>
+</html>
