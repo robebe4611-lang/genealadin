@@ -14,6 +14,9 @@ cut = diff spike >18 and >3x local median, librosa beat_track) and replace this 
 | Time in motion | 40–60 % |
 | Tempo | 120–136 BPM |
 
+## Tone (Rabea, binding)
+Positive only. We join the owner's success and give hours back; we never "save" them from disorder. No pain openings, no chaos imagery, no "there is another way". See gazflow/docs/design-winners.md.
+
 ## Rules for this film
 - **Length 32 s**, no voice-over. On-screen text only, readable with the sound off.
 - **Tempo 120 BPM**: beat = 0.5 s, bar = 2 s. Every cut and every text hit lands on a beat (frame-exact at 30 fps: beats are frames 0, 15, 30…).

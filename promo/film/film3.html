@@ -93,23 +93,24 @@
   const V = Q.get("fmt") === "v";
   const W = V ? 1080 : 1920, H = V ? 1920 : 1080;
 
-  // Copy. No billing. "Updates on its own", never "real-time". Arabic: Galilee spoken register — Rabea checks it.
+  // Copy. Tone: we join their success and give hours back — never "we save you from chaos".
+  // No billing. "Updates on its own", never "real-time". Arabic: Galilee spoken register — Rabea checks it.
   const T = {
     he: {
-      w: ["טלפונים.", "פתקים.", "נהגים בלי מסלול.", "מלאי שאף אחד לא סופר.", "יש דרך אחרת."],
-      c2: 'גזפלו. <span class="g">חדר הבקרה</span> של חלוקת הגז.',
-      c3: ['מסלול מסודר <span class="g">לכל נהג.</span>', 'סטטוס שמתעדכן <span class="g">לבד.</span>', 'כל הצי — <span class="g">במבט אחד.</span>'],
-      c4: ['מה נשאר <span class="g">על כל משאית.</span>', 'מלאים וריקים — <span class="g">בלי לספור ידנית.</span>'],
+      w: ["הלקוחות שלך.", "הנהגים שלך.", "הסדר שלך.", "עכשיו זורם לבד.", "ושעות חוזרות אליך."],
+      c2: 'גזפלו <span class="g">משתלב</span> בדרך שבה אתה כבר עובד.',
+      c3: ['כל הזמנה מגיעה <span class="g">לנהג הנכון.</span>', 'הסטטוס מתעדכן <span class="g">לבד.</span>', 'כל הצי — <span class="g">במבט אחד.</span>'],
+      c4: ['מה יצא ומה נשאר — <span class="g">מתעדכן לבד.</span>', 'מלאים וריקים — <span class="g">תמיד מעודכנים.</span>'],
       g: [["סאמר", "בלונים קטנים"], ["סאמר", "בלונים גדולים"], ["ראמי", "בלונים קטנים"]],
-      word: "גזפלו", tag: "חלוקת גז. בשליטה מלאה.", cta: "תנסה בעצמך · הקישור בהודעה",
+      word: "גזפלו", tag: "פחות שעות תפעול. יותר זמן לעסק.", cta: "תנסה בעצמך · הקישור בהודעה",
     },
     ar: {
-      w: ["تلفونات.", "أوراق.", "سوّاقين بلا خط سير.", "مخزون ما حدا بيعدّه.", "في طريقة ثانية."],
-      c2: 'غازفلو. <span class="g">غرفة التحكّم</span> بتوزيع الغاز.',
-      c3: ['خط سير مرتّب <span class="g">لكل سوّاق.</span>', 'الحالة بتتحدّث <span class="g">لحالها.</span>', 'كل السيارات — <span class="g">بنظرة وحدة.</span>'],
-      c4: ['شو ضايل <span class="g">على كل سيارة.</span>', 'مليانين وفاضيين — <span class="g">بلا عدّ بالإيد.</span>'],
+      w: ["زباينك.", "سوّاقينك.", "ترتيبك.", "هلّق بيمشي لحاله.", "وساعات بترجعلك."],
+      c2: 'غازفلو <span class="g">بيندمج</span> بطريقة شغلك.',
+      c3: ['كل طلبية بتوصل <span class="g">للسوّاق الصح.</span>', 'الحالة بتتحدّث <span class="g">لحالها.</span>', 'كل السيارات — <span class="g">بنظرة وحدة.</span>'],
+      c4: ['شو طلع وشو ضايل — <span class="g">بيتحدّث لحاله.</span>', 'مليانين وفاضيين — <span class="g">دايماً محدّثين.</span>'],
       g: [["سامر", "جرار صغيرة"], ["سامر", "جرار كبيرة"], ["رامي", "جرار صغيرة"]],
-      word: "غازفلو", tag: "توزيع الغاز. تحت السيطرة.", cta: "جرّبها بنفسك · الرابط بالرسالة",
+      word: "غازفلو", tag: "ساعات تشغيل أقل. وقت أكثر للشغل.", cta: "جرّبها بنفسك · الرابط بالرسالة",
     },
   }[LANG];
   // Real truck numbers from the captured demo day (stock page): left on truck / loaded.

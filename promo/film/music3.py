@@ -85,7 +85,7 @@ def note(midi):
 for t0 in [0.0, 0.75, 1.5, 2.5, 3.75]:
     add(kick(), t0, 0.55)
     add(tick(), t0, 0.25, pan=0.15)
-drone = sum(tone(note(m), 5.0, "tri") for m in [45, 52]) / 2
+drone = sum(tone(note(m), 5.0, "tri") for m in [48, 55, 64]) / 3
 add(drone * np.minimum(1, np.arange(len(drone)) / (SR * 0.8)), 0.0, 0.05)
 
 # ---- turn: riser 6.0 → 7.75, then silence
@@ -98,7 +98,7 @@ add(riser, 4.0, 0.3)
 
 # ---- groove 8 → 29
 # progression per 2-s bar: C – G – Am – F (bright, steady)
-prog = [(45, [57, 60, 64]), (41, [57, 60, 65]), (48, [55, 60, 64]), (43, [55, 59, 62])]
+prog = [(48, [60, 64, 67]), (43, [59, 62, 67]), (45, [60, 64, 69]), (41, [60, 65, 69])]  # bright: C – G – Am – F
 for bar in range(10):
     t0 = 5 + bar * 2
     if t0 >= 24:
@@ -132,7 +132,7 @@ for i, m in enumerate([76, 79, 84]):
     add(chime(note(m)), 24.0 + 0.25 * i, 0.2, pan=0.4 - 0.4 * i)
 
 # ---- end card
-pad = sum(tone(note(m), 6.0, "tri") for m in [57, 60, 64, 69]) / 4
+pad = sum(tone(note(m), 6.0, "tri") for m in [60, 64, 67, 72]) / 4
 add(pad * np.minimum(1, np.arange(len(pad)) / (SR * 0.4)), 24.0, 0.12)
 add(kick(), 26.5, 0.8)
 add(chime(note(81)), 26.5, 0.3)
