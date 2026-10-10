@@ -1,0 +1,729 @@
+{
+ "_note": "GazFlow launch film v4 — 'the zone': one isometric industrial zone, one take. Every word, time and colour lives here.",
+ "colors": {
+  "bg": "#0B0F15",
+  "ground": "#121922",
+  "plot": "#18212b",
+  "road": "#232c37",
+  "roadEdge": "#2c3642",
+  "emerald": "#10B981",
+  "emeraldDeep": "#00843D",
+  "amber": "#E3A53A",
+  "white": "#F5F7F8",
+  "dim": "rgba(245,247,248,0.55)",
+  "ink": "#11291C",
+  "soft": "#536A5C",
+  "bldTop": "#3b4756",
+  "bldLeft": "#2b3440",
+  "bldRight": "#222a34",
+  "houseTop": "#4a5664",
+  "truckTop": "#e9eef1",
+  "truckLeft": "#c3ccd2",
+  "truckRight": "#a6b1b9"
+ },
+ "bpm": 120,
+ "grooveStart": 9.0,
+ "duration": 42,
+ "opening": [
+  {
+   "in": 0.0,
+   "brightUntil": 1.6,
+   "key": "o1"
+  },
+  {
+   "in": 1.6,
+   "brightUntil": 3.0,
+   "key": "o2"
+  },
+  {
+   "in": 3.0,
+   "brightUntil": 4.4,
+   "key": "o3"
+  },
+  {
+   "in": 4.4,
+   "brightUntil": 6.4,
+   "key": "o4"
+  }
+ ],
+ "peak": {
+  "in": 6.4,
+  "out": 9.0,
+  "key": "peak"
+ },
+ "zone": {
+  "dimIn": 6.9,
+  "dimLevel": 0.22,
+  "reveal": [
+   8.4,
+   9.2
+  ]
+ },
+ "labels": {
+  "factory": 9.8,
+  "office": 10.4,
+  "parking": 11.0,
+  "customer": 11.6,
+  "off": 13.3
+ },
+ "captions": [
+  {
+   "key": "c1",
+   "in": 9.2,
+   "out": 12.6,
+   "focusEnd": 13.6,
+   "element": "zone"
+  },
+  {
+   "key": "c2a",
+   "in": 13.6,
+   "out": 16.9,
+   "focusEnd": 17.4,
+   "element": "order"
+  },
+  {
+   "key": "c2b",
+   "in": 17.2,
+   "out": 21.4,
+   "focusEnd": 23.5,
+   "element": "pill"
+  },
+  {
+   "key": "c3",
+   "in": 23.5,
+   "out": 26.8,
+   "focusEnd": 27.6,
+   "element": "rings"
+  },
+  {
+   "key": "c4",
+   "in": 27.8,
+   "out": 30.9,
+   "focusEnd": 31.5,
+   "element": "stock"
+  },
+  {
+   "key": "end",
+   "in": 36.8,
+   "out": 42.0,
+   "focusEnd": 42.0,
+   "element": "end"
+  }
+ ],
+ "cards": {
+  "order": [
+   13.4,
+   15.2
+  ],
+  "driver": [
+   15.2,
+   17.1
+  ],
+  "pill": [
+   16.9,
+   23.7
+  ],
+  "rings": [
+   23.9,
+   27.6
+  ],
+  "stock": [
+   27.8,
+   31.4
+  ],
+  "quiet": [
+   32.2,
+   36.6
+  ]
+ },
+ "glow": {
+  "orderToOffice": [
+   13.9,
+   15.0
+  ],
+  "officeToParking": [
+   14.9,
+   15.3
+  ],
+  "truckLit": 15.0,
+  "flowAll": 31.6
+ },
+ "truck": {
+  "loadAt": [
+   18.3,
+   19.0
+  ],
+  "emptiesAt": 21.6,
+  "route": [
+   {
+    "t": [
+     17.0,
+     18.2
+    ],
+    "pts": [
+     [
+      10.5,
+      9.9
+     ],
+     [
+      10.5,
+      6.7
+     ],
+     [
+      5.0,
+      6.7
+     ]
+    ]
+   },
+   {
+    "t": [
+     19.0,
+     20.8
+    ],
+    "pts": [
+     [
+      5.0,
+      6.7
+     ],
+     [
+      1.2,
+      6.7
+     ],
+     [
+      1.2,
+      12.3
+     ],
+     [
+      3.7,
+      12.3
+     ]
+    ]
+   },
+   {
+    "t": [
+     23.5,
+     25.8
+    ],
+    "pts": [
+     [
+      3.7,
+      12.3
+     ],
+     [
+      8.3,
+      12.3
+     ],
+     [
+      8.3,
+      7.3
+     ],
+     [
+      10.5,
+      7.3
+     ],
+     [
+      10.5,
+      9.9
+     ]
+    ]
+   }
+  ]
+ },
+ "status": {
+  "toOnTheWay": 19.0,
+  "toDelivered": 21.0
+ },
+ "endCard": {
+  "dim": 36.0,
+  "lineIn": 36.8,
+  "logoIn": 37.8,
+  "ctaIn": 38.4
+ },
+ "camera": {
+  "h": [
+   {
+    "t": 0,
+    "at": "overview",
+    "zoom": 0.9
+   },
+   {
+    "t": 9.0,
+    "at": "overview",
+    "zoom": 0.92
+   },
+   {
+    "t": 12.8,
+    "at": "overview",
+    "zoom": 1.05,
+    "dy": -70
+   },
+   {
+    "t": 13.6,
+    "at": "customer",
+    "zoom": 1.8,
+    "dy": -95
+   },
+   {
+    "t": 15.0,
+    "at": "customer",
+    "zoom": 1.84,
+    "dy": -95
+   },
+   {
+    "t": 15.7,
+    "at": "parking",
+    "zoom": 1.8,
+    "dy": -200
+   },
+   {
+    "t": 16.8,
+    "at": "parking",
+    "zoom": 1.84,
+    "dy": -200
+   },
+   {
+    "t": 17.5,
+    "at": "truck",
+    "zoom": 1.55,
+    "dy": -55
+   },
+   {
+    "t": 20.3,
+    "at": "truck",
+    "zoom": 1.6,
+    "dy": -55
+   },
+   {
+    "t": 21.0,
+    "at": "customer",
+    "zoom": 2.0,
+    "dy": -60
+   },
+   {
+    "t": 23.4,
+    "at": "customer",
+    "zoom": 2.1,
+    "dy": -60
+   },
+   {
+    "t": 24.3,
+    "at": "office",
+    "zoom": 1.7,
+    "dy": -180
+   },
+   {
+    "t": 27.4,
+    "at": "office",
+    "zoom": 1.74,
+    "dy": -180
+   },
+   {
+    "t": 28.3,
+    "at": "factory",
+    "zoom": 1.7,
+    "dy": -180
+   },
+   {
+    "t": 31.2,
+    "at": "factory",
+    "zoom": 1.74,
+    "dy": -180
+   },
+   {
+    "t": 33.0,
+    "at": "overview",
+    "zoom": 1.12,
+    "dy": -110
+   },
+   {
+    "t": 36.0,
+    "at": "overview",
+    "zoom": 1.14,
+    "dy": -110
+   },
+   {
+    "t": 42.0,
+    "at": "overview",
+    "zoom": 1.08,
+    "dy": -110
+   }
+  ],
+  "v": [
+   {
+    "t": 0,
+    "at": "overview",
+    "zoom": 0.55
+   },
+   {
+    "t": 9.0,
+    "at": "overview",
+    "zoom": 0.56
+   },
+   {
+    "t": 17.0,
+    "at": "parking",
+    "zoom": 1.45,
+    "dy": -70
+   },
+   {
+    "t": 17.6,
+    "at": "truck",
+    "zoom": 1.4,
+    "dy": -70
+   },
+   {
+    "t": 20.3,
+    "at": "truck",
+    "zoom": 1.45,
+    "dy": -70
+   },
+   {
+    "t": 21.0,
+    "at": "customer",
+    "zoom": 1.75,
+    "dy": -70
+   },
+   {
+    "t": 23.5,
+    "at": "customer",
+    "zoom": 1.85,
+    "dy": -70
+   },
+   {
+    "t": 36.0,
+    "at": "overview",
+    "zoom": 0.6,
+    "dy": -40
+   },
+   {
+    "t": 42.0,
+    "at": "overview",
+    "zoom": 0.63,
+    "dy": -40
+   }
+  ]
+ },
+ "data": {
+  "trucks": [
+   {
+    "who": "samer",
+    "full": 11,
+    "loaded": 13,
+    "empty": 2
+   },
+   {
+    "who": "rami",
+    "full": 5,
+    "loaded": 6,
+    "empty": 1
+   }
+  ],
+  "stock": {
+   "full": {
+    "small": 13,
+    "large": 3
+   },
+   "empty": {
+    "small": 3
+   }
+  },
+  "_source": "Demo day from the app demo (promo/capture/capture3.mjs): Samer 11/13 on the truck with 2 empties, Rami 5/6 with 1; office stock out: 13 small + 3 large full, 3 small empty."
+ },
+ "cuts": {
+  "main": {
+   "duration": 42.0,
+   "segments": [
+    [
+     0.0,
+     42.0
+    ]
+   ]
+  },
+  "vert15": {
+   "duration": 15.0,
+   "segments": [
+    [
+     6.4,
+     9.0
+    ],
+    [
+     17.0,
+     23.5
+    ],
+    [
+     36.0,
+     41.9
+    ]
+   ]
+  },
+  "bump6": {
+   "duration": 6.0,
+   "segments": [
+    [
+     20.2,
+     23.5
+    ],
+    [
+     38.0,
+     40.7
+    ]
+   ]
+  }
+ },
+ "text": {
+  "he": {
+   "o1": "הלקוחות שלך.",
+   "o2": "הנהגים שלך.",
+   "o3": "הסדר שלך.",
+   "o4": "עכשיו זורם לבד.",
+   "peak": "ומפנה לך זמן.",
+   "c1": "גזפלו משתלב בדרך שבה אתה כבר עובד.",
+   "c2a": "כל הזמנה מגיעה לנהג הנכון.",
+   "c2b": "והסטטוס מתעדכן לבד.",
+   "c3": "מה יצא ומה נשאר — מול העיניים.",
+   "c4": "מלאים וריקים — תמיד מדויקים.",
+   "end": "העסק רץ. <g>אתה מוביל.</g>",
+   "_endPending": "ממתין לאישור רביע",
+   "word": "גזפלו",
+   "cta": "תנסה בעצמך · הקישור בהודעה",
+   "ringWho": {
+    "samer": "סאמר",
+    "rami": "ראמי"
+   },
+   "truckSub": "מלאים על המשאית",
+   "empty1": "ריק",
+   "emptyN": "ריקים",
+   "place": {
+    "factory": "מפעל מילוי",
+    "office": "משרד",
+    "parking": "חניה",
+    "customer": "לקוח"
+   }
+  },
+  "ar": {
+   "o1": "زباينك.",
+   "o2": "سوّاقينك.",
+   "o3": "ترتيبك.",
+   "o4": "اسا بمشي لحالو.",
+   "peak": "وبفضّيلك وقت.",
+   "c1": "غازفلو بِركب عَ شغلك متل ما هو.",
+   "c2a": "كل طلبية بتوصل للسوّاق الصح.",
+   "c2b": "والحالة بتتغيّر لحالها.",
+   "c3": "شو طلع وشو ضالل — قدّام عينك.",
+   "c4": "الملان والفاضي — دايماً مزبوط.",
+   "end": "أقل انشغال. <g>وقت اكثر للمصلحة.</g>",
+   "_endPending": "ממתין להחלטה; חלופה: «المصلحة ماشية. وإنت بتقود.»",
+   "word": "غازفلو",
+   "cta": "جرّبها بنفسك · الرابط بالرسالة",
+   "ringWho": {
+    "samer": "سامر",
+    "rami": "رامي"
+   },
+   "truckSub": "ملان عالسيارة",
+   "empty1": "فاضي",
+   "emptyN": "فاضي",
+   "place": {
+    "factory": "مصنع تعبئة",
+    "office": "المكتب",
+    "parking": "الباركينغ",
+    "customer": "الزبون"
+   },
+   "_placePending": "תוויות המקום בערבית — לאישור רביע"
+  }
+ },
+ "ui": {
+  "he": {
+   "hello": "שלום, סלים",
+   "orderBtn": "הזמן גז",
+   "orderSub": "2 קטנים · כמו בפעם הקודמת",
+   "predict": "לפי הקצב שלך, הגז ייגמר בערך מחר",
+   "sent": "ההזמנה התקבלה",
+   "steps": [
+    "התקבלה",
+    "שובצה",
+    "בדרך",
+    "סופקה"
+   ],
+   "tiles": {
+    "today": "היום",
+    "remaining": "נשארו",
+    "delivered": "סופקו",
+    "needsYou": "מחכה לך"
+   },
+   "allOrders": "כל ההזמנות היום",
+   "rows": [
+    {
+     "name": "סלים חדאד",
+     "meta": "08:31 · צפון",
+     "items": [
+      {
+       "n": 2,
+       "label": "קטנים",
+       "kg": "12 ק\"ג"
+      }
+     ]
+    },
+    {
+     "name": "נור חטיב",
+     "meta": "08:06 · מרכז · סאמר",
+     "items": [
+      {
+       "n": 1,
+       "label": "קטן",
+       "kg": "12 ק\"ג"
+      }
+     ],
+     "pill": "בדרך",
+     "tone": "on"
+    },
+    {
+     "name": "מרים עודה",
+     "meta": "08:12 · דרום · ראמי",
+     "items": [
+      {
+       "n": 1,
+       "label": "קטן",
+       "kg": "12 ק\"ג"
+      }
+     ],
+     "pill": "סופקה",
+     "tone": "done"
+    }
+   ],
+   "newPill": [
+    "התקבלה",
+    "שובצה לנהג"
+   ],
+   "assignedTo": "סאמר",
+   "driverDay": "היום שלי",
+   "driver": "סאמר",
+   "address": "רחוב הזיתים 14",
+   "customer": "סלים חדאד",
+   "zone": "צפון",
+   "navigate": "ניווט",
+   "call": "התקשר",
+   "items": [
+    {
+     "n": 2,
+     "label": "קטנים",
+     "kg": "12 ק\"ג"
+    }
+   ],
+   "status": [
+    "שובצה לנהג",
+    "בדרך",
+    "סופקה"
+   ],
+   "quietTitle": "מחכה לך",
+   "quiet": "הכול זורם לבד. אין מה לעשות כרגע.",
+   "_quietSource": "promo/capture/app.html (the demo dashboard)",
+   "stock": {
+    "title": "מלאי בחוץ",
+    "full": "מלאים",
+    "empty": "ריקים",
+    "small": "קטנים",
+    "large": "גדולים",
+    "smallKg": "12 ק\"ג",
+    "largeKg": "48 ק\"ג"
+   },
+   "trucksTitle": "המשאיות היום"
+  },
+  "ar": {
+   "hello": "سليم",
+   "orderBtn": "اطلب مثل المرة السابقة",
+   "orderSub": "2 × جرة 12 كغ",
+   "predict": "حسب استهلاكك، الغاز على وشك أن ينفد",
+   "sent": "تم استلام الطلب",
+   "steps": [
+    "تم الاستلام",
+    "في الدور",
+    "في الطريق",
+    "تم التوصيل"
+   ],
+   "tiles": {
+    "today": "اليوم",
+    "remaining": "متبقي",
+    "delivered": "تم التوصيل",
+    "needsYou": "بانتظارك"
+   },
+   "allOrders": "كل طلبات اليوم",
+   "rows": [
+    {
+     "name": "سليم حداد",
+     "meta": "08:31 · الشمال",
+     "items": [
+      {
+       "n": 2,
+       "label": "جرة 12 كغ",
+       "kg": ""
+      }
+     ]
+    },
+    {
+     "name": "نور خطيب",
+     "meta": "08:06 · الوسط · سامر",
+     "items": [
+      {
+       "n": 1,
+       "label": "جرة 12 كغ",
+       "kg": ""
+      }
+     ],
+     "pill": "السائق في الطريق",
+     "tone": "on"
+    },
+    {
+     "name": "مريم عودة",
+     "meta": "08:12 · الجنوب · رامي",
+     "items": [
+      {
+       "n": 1,
+       "label": "جرة 12 كغ",
+       "kg": ""
+      }
+     ],
+     "pill": "تم التوصيل",
+     "tone": "done"
+    }
+   ],
+   "newPill": [
+    "تم الاستلام",
+    "في الدور لليوم"
+   ],
+   "assignedTo": "سامر",
+   "driverDay": "يومي",
+   "driver": "سامر",
+   "address": "شارع الزيتون 14",
+   "customer": "سليم حداد",
+   "zone": "الشمال",
+   "navigate": "ملاحة",
+   "call": "اتصل",
+   "items": [
+    {
+     "n": 2,
+     "label": "جرة 12 كغ",
+     "kg": ""
+    }
+   ],
+   "status": [
+    "في الدور لليوم",
+    "السائق في الطريق",
+    "تم التوصيل"
+   ],
+   "quietTitle": "بانتظارك",
+   "quiet": "كل شيء يعمل وحده. لا شيء مطلوب الآن.",
+   "_quietSource": "gazflow/src/lib/ops/i18n.ts allQuiet (ar)",
+   "stock": {
+    "title": "מלאי בחוץ",
+    "full": "מלאים",
+    "empty": "ריקים",
+    "small": "קטנים",
+    "large": "גדולים",
+    "smallKg": "12 ק\"ג",
+    "largeKg": "48 ק\"ג"
+   },
+   "_stockNote": "The stock screen has no Arabic in the app — kept in Hebrew and reported.",
+   "trucksTitle": "اليوم"
+  }
+ }
+}

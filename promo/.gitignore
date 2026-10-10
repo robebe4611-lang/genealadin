@@ -9,3 +9,10 @@ v4/*.mp4
 v4/*.wav
 v4/qa-*.jpg
 v4/*.log
+v4-zone/board-*
+v4-zone/storyboard/
+v4-zone/frames-*/
+v4-zone/*.mp4
+v4-zone/*.wav
+v4-zone/*.log
+v4-zone/qa-*.jpg
